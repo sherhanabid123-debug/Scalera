@@ -4,7 +4,7 @@ import gsap from 'gsap';
 const services = [
     { title: 'Premium Website Design', desc: 'Custom, high-conversion aesthetics that command authority.' },
     { title: 'Business Landing Pages', desc: 'Focused, fast-loading pages engineered for lead generation.' },
-    { title: 'Restaurant & Local Sites', desc: 'Immersive digital storefronts with integrated booking.' },
+    { title: 'Restaurant & other businesses', desc: 'Immersive digital storefronts with integrated booking.' },
     { title: 'WhatsApp Integration', desc: 'Seamless direct-to-chat workflows for modern consumers.' },
     { title: 'Performance Optimization', desc: 'Awwwards-level smooth scrolling and instant load times.' }
 ];
