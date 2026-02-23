@@ -1,10 +1,12 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const Marquee = () => {
     const containerRef = useRef();
 
     useLayoutEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
         let ctx = gsap.context(() => {
             gsap.to('.marquee-inner', {
                 xPercent: -50,

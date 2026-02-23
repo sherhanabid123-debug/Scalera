@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const projects = [
     { id: 1, title: 'Thar - Taste of Rajasthan', category: 'Restaurant Website', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
@@ -43,8 +44,8 @@ const Portfolio = () => {
                 skewSetter = gsap.quickSetter(".portfolio-item", "skewY", "deg"),
                 clamp = gsap.utils.clamp(-8, 8); // clamp the max skew to look elegant, not broken
 
-            gsap.registerPlugin(gsap.ScrollTrigger);
-            gsap.ScrollTrigger.create({
+            gsap.registerPlugin(ScrollTrigger);
+            ScrollTrigger.create({
                 onUpdate: (self) => {
                     let skew = clamp(self.getVelocity() / -150);
                     // Only do the work if the skew has significantly changed
