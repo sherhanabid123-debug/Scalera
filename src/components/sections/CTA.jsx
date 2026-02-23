@@ -51,20 +51,23 @@ const CTA = () => {
                     style={{
                         color: 'var(--text-primary)', padding: '1.25rem 3rem', borderRadius: '40px',
                         fontWeight: 600, fontSize: '1.125rem', cursor: 'pointer', transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.3)', display: 'inline-block'
+                        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.5)', display: 'inline-block',
+                        background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)'
                     }}
                     onMouseMove={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const x = e.clientX - rect.left - rect.width / 2;
                         const y = e.clientY - rect.top - rect.height / 2;
                         e.currentTarget.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                        e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.5)';
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                        e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                        e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.6)';
                     }}
                     onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translate(0px, 0px) scale(1)';
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
-                        e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.3)';
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                        e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+                        e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.5)';
                     }}
                 >
                     Let's Build Your Presence
