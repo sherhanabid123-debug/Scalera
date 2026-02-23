@@ -48,16 +48,16 @@ function App() {
     // Stagger in the letters of "SCALERA"
     tl.fromTo('.preloader-char',
       { y: 80, opacity: 0, rotationX: -50 },
-      { y: 0, opacity: 1, rotationX: 0, duration: 0.6, stagger: 0.04, ease: 'expo.out', delay: 0.1 }
+      { y: 0, opacity: 1, rotationX: 0, duration: 0.3, stagger: 0.02, ease: 'expo.out' }
     )
-      // Stagger out the letters
+      // Stagger out the letters almost instantly after
       .to('.preloader-char', {
-        y: -50, opacity: 0, duration: 0.4, stagger: 0.03, ease: 'power3.in', delay: 0.1
+        y: -50, opacity: 0, duration: 0.2, stagger: 0.01, ease: 'power3.in', delay: 0.05
       })
-      // Simulate load time, then curtain raise the preloader
+      // Simulate load time, then curtain raise the preloader fast
       .to('.preloader', {
         yPercent: -100,
-        duration: 0.8,
+        duration: 0.5,
         ease: 'expo.inOut'
       }).add(() => setLoading(false));
 
