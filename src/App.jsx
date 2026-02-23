@@ -44,13 +44,22 @@ function App() {
     requestAnimationFrame(raf);
 
     const tl = gsap.timeline();
-    // Simulate load time, then curtain raise the preloader
-    tl.to('.preloader', {
-      yPercent: -100,
-      duration: 1.2,
-      ease: 'expo.inOut',
-      delay: 0.8
-    }).add(() => setLoading(false));
+
+    // Stagger in the letters of "SCALERA"
+    tl.fromTo('.preloader-char',
+      { y: 80, opacity: 0, rotationX: -50 },
+      { y: 0, opacity: 1, rotationX: 0, duration: 1, stagger: 0.08, ease: 'expo.out', delay: 0.2 }
+    )
+      // Stagger out the letters
+      .to('.preloader-char', {
+        y: -50, opacity: 0, duration: 0.6, stagger: 0.05, ease: 'power3.in', delay: 0.4
+      })
+      // Simulate load time, then curtain raise the preloader
+      .to('.preloader', {
+        yPercent: -100,
+        duration: 1.2,
+        ease: 'expo.inOut'
+      }).add(() => setLoading(false));
 
     return () => {
       lenis.destroy();
@@ -95,7 +104,7 @@ function App() {
         </a>
       </div>
 
-      {/* Cinematic Preloader */}
+      {/* Cinematic Branded Preloader */}
       {loading && (
         <div
           className="preloader"
@@ -106,24 +115,23 @@ function App() {
             flexDirection: 'column'
           }}
         >
-          <div style={{
-            width: '60px', height: '2px', background: 'rgba(255,255,255,0.1)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{
-              position: 'absolute', top: 0, left: 0, height: '100%', width: '100%',
-              background: 'var(--text-primary)',
-              animation: 'loaderProgress 1s cubic-bezier(0.16, 1, 0.3, 1) forwards'
-            }} />
+          <div style={{ perspective: '1000px', display: 'flex', overflow: 'hidden', padding: '10px' }}>
+            {"SCALERA".split('').map((char, index) => (
+              <span
+                key={index}
+                className="preloader-char text-gradient-accent"
+                style={{
+                  display: 'inline-block',
+                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                  fontWeight: 700,
+                  letterSpacing: '0.2em',
+                  marginRight: index === "SCALERA".length - 1 ? '0' : '0.1em'
+                }}
+              >
+                {char}
+              </span>
+            ))}
           </div>
-          <style>{`
-                @keyframes loaderProgress {
-                    0% { transform: scaleX(0); transform-origin: left; }
-                    50% { transform: scaleX(1); transform-origin: left; }
-                    51% { transform: scaleX(1); transform-origin: right; }
-                    100% { transform: scaleX(0); transform-origin: right; }
-                }
-            `}</style>
         </div>
       )}
     </>
