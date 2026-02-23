@@ -55,6 +55,7 @@ function App() {
   return (
     <>
       <Background3D />
+      <div className="noise-bg" />
 
       <div className="main-content" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
         <Navbar />

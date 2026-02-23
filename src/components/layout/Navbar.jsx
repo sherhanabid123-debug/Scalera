@@ -20,14 +20,12 @@ const Navbar = () => {
     };
 
     return (
-        <nav style={{
-            position: 'fixed', top: 0, width: '100%', padding: scrolled ? '16px 5%' : '24px 5%',
+        <nav className={scrolled ? 'glass-nav' : ''} style={{
+            position: 'fixed', top: 0, width: '100%', padding: scrolled ? '16px 5%' : '32px 5%',
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             zIndex: 100, pointerEvents: 'auto',
-            background: scrolled ? 'rgba(10, 10, 10, 0.8)' : 'transparent',
-            backdropFilter: scrolled ? 'blur(12px)' : 'none',
-            borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            background: !scrolled ? 'transparent' : undefined,
         }}>
             <div style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 Scalera<span style={{ color: 'var(--accent-color)' }}>.</span>
