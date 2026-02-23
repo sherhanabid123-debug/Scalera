@@ -10,12 +10,12 @@ const About = () => {
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
             gsap.fromTo('.about-text',
-                { y: 50, opacity: 0 },
+                { y: 80, opacity: 0, rotationX: -15 },
                 {
-                    y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: 'power3.out',
+                    y: 0, opacity: 1, rotationX: 0, duration: 1.5, stagger: 0.2, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: 'top 80%',
+                        start: 'top 75%',
                         toggleActions: 'play none none reverse'
                     }
                 }

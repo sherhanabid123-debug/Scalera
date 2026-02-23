@@ -22,18 +22,18 @@ const WhyScalera = () => {
             });
 
             tl.fromTo('.why-title',
-                { y: 40, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
+                { y: 60, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1.2, ease: 'expo.out' }
             )
                 .fromTo('.divider-line',
                     { scaleX: 0 },
-                    { scaleX: 1, duration: 0.8, stagger: 0.15, ease: 'power3.inOut', transformOrigin: 'left center' },
-                    "-=0.4"
+                    { scaleX: 1, duration: 1.2, stagger: 0.15, ease: 'expo.inOut', transformOrigin: 'left center' },
+                    "-=0.6"
                 )
                 .fromTo('.why-item-text',
-                    { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: 'power3.out' },
-                    "-=0.8"
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'expo.out' },
+                    "-=1"
                 );
         }, containerRef);
         return () => ctx.revert();

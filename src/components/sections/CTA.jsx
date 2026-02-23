@@ -43,21 +43,30 @@ const CTA = () => {
                 <h2 style={{ fontSize: 'clamp(4rem, 8vw, 7rem)', fontWeight: 600, letterSpacing: '-0.04em', marginBottom: '2rem', lineHeight: 1 }}>
                     Ready to Scale?
                 </h2>
-                <a href="https://wa.me/917483537959" target="_blank" rel="noopener noreferrer" className="glass" style={{
-                    color: 'var(--text-primary)', padding: '1.25rem 3rem', borderRadius: '40px',
-                    fontWeight: 600, fontSize: '1.125rem', cursor: 'pointer', transition: 'all 0.3s ease',
-                    boxShadow: '0 0 20px rgba(255,255,255,0.05)', display: 'inline-block'
-                }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#f5f5f5';
-                        e.currentTarget.style.color = '#0a0a0a';
-                        e.currentTarget.style.transform = 'translateY(-3px)';
+                <a
+                    href="https://wa.me/917483537959"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass"
+                    style={{
+                        color: 'var(--text-primary)', padding: '1.25rem 3rem', borderRadius: '40px',
+                        fontWeight: 600, fontSize: '1.125rem', cursor: 'pointer', transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.3)', display: 'inline-block'
+                    }}
+                    onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        e.currentTarget.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.5)';
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-                        e.currentTarget.style.color = 'var(--text-primary)';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                    }}>
+                        e.currentTarget.style.transform = 'translate(0px, 0px) scale(1)';
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                        e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.3)';
+                    }}
+                >
                     Let's Build Your Presence
                 </a>
             </div>

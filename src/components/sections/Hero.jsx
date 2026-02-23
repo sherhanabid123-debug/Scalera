@@ -9,18 +9,18 @@ const Hero = () => {
             // Intro animation
             const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-            tl.fromTo('.hero-title',
-                { y: 50, opacity: 0, rotationX: -20 },
-                { y: 0, opacity: 1, rotationX: 0, duration: 1.2, stagger: 0.1, delay: 0.5 }
+            tl.fromTo('.hero-word',
+                { y: 60, opacity: 0, rotationX: -30 },
+                { y: 0, opacity: 1, rotationX: 0, duration: 1.4, stagger: 0.08, ease: 'expo.out', delay: 0.2 }
             )
                 .fromTo('.hero-sub',
-                    { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 1 },
-                    "-=0.8"
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' },
+                    "-=1"
                 )
                 .fromTo('.hero-btn',
-                    { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.1 },
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power4.out' },
                     "-=0.8"
                 );
 
@@ -43,9 +43,16 @@ const Hero = () => {
     return (
         <section ref={containerRef} className="section" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 5%' }}>
             <div className="hero-content" style={{ maxWidth: '800px', position: 'relative', zIndex: 2, perspective: '1000px' }}>
-                <h1 style={{ fontSize: 'clamp(3.5rem, 7vw, 7rem)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '1.5rem' }}>
-                    <div className="hero-title" style={{ transformOrigin: 'left center' }}>Scaling Brands</div>
-                    <div className="hero-title text-gradient-accent" style={{ transformOrigin: 'left center' }}>Through Digital Precision.</div>
+                <h1 style={{ fontSize: 'clamp(3.5rem, 7vw, 7rem)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ perspective: '1000px', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                        <span className="hero-word" style={{ display: 'inline-block', transformOrigin: 'left center' }}>Scaling</span>
+                        <span className="hero-word" style={{ display: 'inline-block', transformOrigin: 'left center' }}>Brands</span>
+                    </div>
+                    <div className="text-gradient-accent" style={{ perspective: '1000px', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                        <span className="hero-word" style={{ display: 'inline-block', transformOrigin: 'left center' }}>Through</span>
+                        <span className="hero-word" style={{ display: 'inline-block', transformOrigin: 'left center' }}>Digital</span>
+                        <span className="hero-word" style={{ display: 'inline-block', transformOrigin: 'left center' }}>Precision.</span>
+                    </div>
                 </h1>
                 <p className="hero-sub" style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', maxWidth: '600px', marginBottom: '3rem', lineHeight: 1.6 }}>
                     We craft high-performance websites designed to elevate your brand and accelerate growth.
