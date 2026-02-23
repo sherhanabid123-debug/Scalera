@@ -2,10 +2,10 @@ import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const projects = [
-    { id: 1, title: 'Aura Fintech', category: 'Web Design & Next.js', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' },
+    { id: 1, title: 'Thar - Taste of Rajasthan', category: 'Restaurant Website', link: 'https://tharthetasteofrajasthan.com', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200' },
     { id: 2, title: 'Lumina Studio', category: 'Portfolio', img: 'https://images.unsplash.com/photo-1555448248-2571daf6344b?auto=format&fit=crop&q=80&w=1200' },
     { id: 3, title: 'Nova Logistics', category: 'Corporate Site', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200' },
-    { id: 4, title: 'The Second House', category: 'Restaurant & Booking', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200' }
+    { id: 4, title: 'Aura Fintech', category: 'Web Design & Next.js', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' }
 ];
 
 const Portfolio = () => {
@@ -62,10 +62,13 @@ const Portfolio = () => {
                         const imgRef = useRef();
 
                         return (
-                            <div
+                            <a
+                                href={project.link || '#'}
+                                target={project.link ? '_blank' : '_self'}
+                                rel={project.link ? 'noopener noreferrer' : ''}
                                 key={project.id}
                                 className="portfolio-item group"
-                                style={{ cursor: 'pointer', perspective: '1000px' }}
+                                style={{ cursor: 'pointer', perspective: '1000px', display: 'block' }}
                                 onMouseMove={(e) => handleMouseMove(e, imgRef)}
                                 onMouseLeave={() => handleMouseLeave(imgRef)}
                             >
@@ -90,7 +93,7 @@ const Portfolio = () => {
                                 </div>
                                 <h3 style={{ fontSize: '1.5rem', fontWeight: 500, letterSpacing: '-0.01em', marginBottom: '0.25rem' }}>{project.title}</h3>
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{project.category}</p>
-                            </div>
+                            </a>
                         );
                     })}
                 </div>
