@@ -3,7 +3,7 @@ import gsap from 'gsap';
 
 const projects = [
     { id: 1, title: 'Thar - Taste of Rajasthan', category: 'Restaurant Website', link: 'https://tharthetasteofrajasthan.com', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200' },
-    { id: 2, title: 'Lumina Studio', category: 'Portfolio', img: 'https://images.unsplash.com/photo-1555448248-2571daf6344b?auto=format&fit=crop&q=80&w=1200' },
+    { id: 2, title: 'Kryptic Shop', category: 'E-commerce', link: 'https://kryptic.shop', img: 'https://images.unsplash.com/photo-1555448248-2571daf6344b?auto=format&fit=crop&q=80&w=1200' },
     { id: 3, title: 'Nova Logistics', category: 'Corporate Site', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200' },
     { id: 4, title: 'Aura Fintech', category: 'Web Design & Next.js', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' }
 ];
