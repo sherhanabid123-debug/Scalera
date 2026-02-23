@@ -2,8 +2,8 @@ import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const projects = [
-    { id: 1, title: 'Thar - Taste of Rajasthan', category: 'Restaurant Website', link: 'https://tharthetasteofrajasthan.com', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200' },
-    { id: 2, title: 'Kryptic Shop', category: 'E-commerce', link: 'https://kryptic.shop', img: 'https://images.unsplash.com/photo-1555448248-2571daf6344b?auto=format&fit=crop&q=80&w=1200' },
+    { id: 1, title: 'Thar - Taste of Rajasthan', category: 'Restaurant Website', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
+    { id: 2, title: 'Kryptic Shop', category: 'E-commerce', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
     { id: 3, title: 'Nova Logistics', category: 'Corporate Site', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200' },
     { id: 4, title: 'Aura Fintech', category: 'Web Design & Next.js', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' }
 ];
@@ -82,7 +82,7 @@ const Portfolio = () => {
                                             width: '100%', height: '100%',
                                             backgroundImage: `url(${project.img})`,
                                             backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
+                                            backgroundPosition: 'top center',
                                             transition: 'filter 0.5s ease',
                                             filter: 'grayscale(0.4) brightness(0.8)'
                                         }}
