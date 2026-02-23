@@ -22,6 +22,11 @@ const Hero = () => {
                     { y: 30, opacity: 0 },
                     { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power4.out' },
                     "-=0.8"
+                )
+                .fromTo('.scroll-indicator',
+                    { opacity: 0 },
+                    { opacity: 1, duration: 1, ease: 'power2.out' },
+                    "-=0.5"
                 );
 
             // Scroll parallax
@@ -75,6 +80,33 @@ const Hero = () => {
                         Start a Project
                     </a>
                 </div>
+            </div>
+
+            {/* Scroll Indicator */}
+            <div className="scroll-indicator" style={{
+                position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0
+            }}>
+                <span style={{
+                    fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em',
+                    marginBottom: '1rem', color: 'var(--text-secondary)'
+                }}>Scroll</span>
+                <div style={{
+                    width: '1px', height: '60px', background: 'rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden'
+                }}>
+                    <div style={{
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                        background: 'var(--accent-color)',
+                        animation: 'scrollDrop 2s cubic-bezier(0.16, 1, 0.3, 1) infinite'
+                    }} />
+                </div>
+                <style>{`
+                    @keyframes scrollDrop {
+                        0% { transform: translateY(-100%); }
+                        50% { transform: translateY(100%); }
+                        100% { transform: translateY(100%); }
+                    }
+                `}</style>
             </div>
         </section>
     );

@@ -10,6 +10,7 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Services from './components/sections/Services';
 import Portfolio from './components/sections/Portfolio';
+import Marquee from './components/sections/Marquee';
 import WhyScalera from './components/sections/WhyScalera';
 import CTA from './components/sections/CTA';
 import Footer from './components/layout/Footer';
@@ -82,6 +83,7 @@ function App() {
           <About />
           <Services />
           <Portfolio />
+          <Marquee />
           <WhyScalera />
           <CTA />
         </main>
