@@ -15,9 +15,9 @@ const Services = () => {
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
             gsap.fromTo('.service-card',
-                { y: 60, opacity: 0 },
+                { y: 150, z: -200, rotationX: -30, opacity: 0, scale: 0.8 },
                 {
-                    y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+                    y: 0, z: 0, rotationX: 0, opacity: 1, scale: 1, duration: 1.4, stagger: 0.15, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
                         start: 'top 75%',

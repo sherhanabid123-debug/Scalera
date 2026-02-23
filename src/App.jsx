@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { MessageCircle } from 'lucide-react';
 
 import Background3D from './components/canvas/Background3D';
+import CustomCursor from './components/ui/CustomCursor';
 import Navbar from './components/layout/Navbar';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
@@ -13,6 +14,7 @@ import WhyScalera from './components/sections/WhyScalera';
 import CTA from './components/sections/CTA';
 import Footer from './components/layout/Footer';
 
+// ... (skipping unchanged code for brevity in instruction, using exactly what was targeted)
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -41,19 +43,25 @@ function App() {
     };
     requestAnimationFrame(raf);
 
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    const tl = gsap.timeline();
+    // Simulate load time, then curtain raise the preloader
+    tl.to('.preloader', {
+      yPercent: -100,
+      duration: 1.2,
+      ease: 'expo.inOut',
+      delay: 0.8
+    }).add(() => setLoading(false));
 
     return () => {
       lenis.destroy();
       gsap.ticker.remove(lenis.raf);
-      clearTimeout(timer);
+      tl.kill();
     };
   }, []);
 
   return (
     <>
+      <CustomCursor />
       <Background3D />
       <div className="noise-bg" />
 
@@ -87,12 +95,35 @@ function App() {
         </a>
       </div>
 
+      {/* Cinematic Preloader */}
       {loading && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-          backgroundColor: '#0a0a0a', zIndex: 9999, transition: 'opacity 0.8s ease',
-          pointerEvents: 'none'
-        }}>
+        <div
+          className="preloader"
+          style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            backgroundColor: '#050505', zIndex: 10000,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'column'
+          }}
+        >
+          <div style={{
+            width: '60px', height: '2px', background: 'rgba(255,255,255,0.1)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute', top: 0, left: 0, height: '100%', width: '100%',
+              background: 'var(--text-primary)',
+              animation: 'loaderProgress 1s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+            }} />
+          </div>
+          <style>{`
+                @keyframes loaderProgress {
+                    0% { transform: scaleX(0); transform-origin: left; }
+                    50% { transform: scaleX(1); transform-origin: left; }
+                    51% { transform: scaleX(1); transform-origin: right; }
+                    100% { transform: scaleX(0); transform-origin: right; }
+                }
+            `}</style>
         </div>
       )}
     </>

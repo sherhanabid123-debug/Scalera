@@ -16,13 +16,27 @@ const Portfolio = () => {
             gsap.fromTo('.portfolio-item',
                 { y: 100, opacity: 0 },
                 {
-                    y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: 'power3.out',
+                    y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: 'top 70%'
+                        start: 'top 75%'
                     }
                 }
             );
+
+            // True Image Parallax
+            gsap.utils.toArray('.parallax-bg').forEach((bg) => {
+                gsap.to(bg, {
+                    yPercent: 20,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: bg.parentElement,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1 // smooth scrubbing
+                    }
+                });
+            });
         }, containerRef);
         return () => ctx.revert();
     }, []);
@@ -78,8 +92,10 @@ const Portfolio = () => {
                                 }}>
                                     <div
                                         ref={imgRef}
+                                        className="parallax-bg"
                                         style={{
-                                            width: '100%', height: '100%',
+                                            position: 'absolute', top: '-10%', left: 0,
+                                            width: '100%', height: '120%',
                                             backgroundImage: `url(${project.img})`,
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'top center',
