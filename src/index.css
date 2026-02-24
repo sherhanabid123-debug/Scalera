@@ -7,9 +7,13 @@
   /* Crisp clean white */
   --text-secondary: #94a3b8;
   /* Professional muted grey/blue */
-  --accent-color: #3b82f6;
-  /* Trustworthy B2B Blue */
-  --accent-glow: rgba(59, 130, 246, 0.15);
+  --accent-sky: #38bdf8;
+  /* Sky Blue Accent */
+  --accent-orange: #f97316;
+  /* Vibrant Orange Accent */
+  --accent-color: #38bdf8;
+  /* Default interactive accent */
+  --accent-glow: rgba(56, 189, 248, 0.15);
   --border-subtle: rgba(248, 250, 252, 0.08);
   /* Faint structural borders */
   /* Architectural thin borders */
@@ -72,7 +76,7 @@ p {
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-sky) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -145,7 +149,7 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, rgba(56, 189, 248, 0.08) 35%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;

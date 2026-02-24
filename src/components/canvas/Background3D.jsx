@@ -35,9 +35,9 @@ const TechNetwork = () => {
     // Create line segment geometry and materials
     const linesGeo = useMemo(() => new THREE.BufferGeometry(), []);
     const linesMat = useMemo(() => new THREE.LineBasicMaterial({
-        color: '#3b82f6', /* Blue structural lines */
+        color: '#f97316', /* Dynamic Orange structural lines */
         transparent: true,
-        opacity: 0.15,
+        opacity: 0.25,
         depthWrite: false
     }), []);
 
@@ -115,11 +115,11 @@ const TechNetwork = () => {
             <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
                 <PointMaterial
                     transparent
-                    color="#94a3b8" /* Light slate particles */
-                    size={0.06}
+                    color="#38bdf8" /* Sky Blue particles */
+                    size={0.07}
                     sizeAttenuation={true}
                     depthWrite={false}
-                    opacity={0.8}
+                    opacity={0.9}
                 />
             </Points>
             {/* The Tech Network Lines */}
