@@ -4,59 +4,49 @@ import gsap from 'gsap';
 const CustomCursor = () => {
     const cursorRef = useRef(null);
     const dotRef = useRef(null);
-    const [isHovering, setIsHovering] = useState(false);
 
     useEffect(() => {
         const cursor = cursorRef.current;
         const dot = dotRef.current;
 
-        // Move cursor using GSAP for buttery smooth interpolation
+        // Use highly optimized quickTo for cursor tracking (no continuous tween garbage)
+        const xToCursor = gsap.quickTo(cursor, "x", { duration: 0.8, ease: "power3.out" });
+        const yToCursor = gsap.quickTo(cursor, "y", { duration: 0.8, ease: "power3.out" });
+        const xToDot = gsap.quickTo(dot, "x", { duration: 0.1, ease: "power3.out" });
+        const yToDot = gsap.quickTo(dot, "y", { duration: 0.1, ease: "power3.out" });
+
         const onMouseMove = (e) => {
-            gsap.to(cursor, {
-                x: e.clientX,
-                y: e.clientY,
-                duration: 0.8,
-                ease: 'power3.out'
-            });
-            gsap.to(dot, {
-                x: e.clientX,
-                y: e.clientY,
-                duration: 0.1,
-                ease: 'power3.out'
-            });
+            xToCursor(e.clientX);
+            yToCursor(e.clientY);
+            xToDot(e.clientX);
+            yToDot(e.clientY);
         };
 
-        const onMouseEnter = () => setIsHovering(true);
-        const onMouseLeave = () => setIsHovering(false);
+        // Delegate hover events instead of state to prevent React re-renders on every interaction
+        const onMouseOver = (e) => {
+            if (e.target.closest('a, button, input, textarea, .custom-hover')) {
+                gsap.to(cursor, { scale: 1.5, opacity: 0.5, duration: 0.3, ease: 'expo.out', overwrite: 'auto' });
+                gsap.to(dot, { scale: 0, opacity: 0, duration: 0.3, ease: 'expo.out', overwrite: 'auto' });
+            }
+        };
+
+        const onMouseOut = (e) => {
+            if (e.target.closest('a, button, input, textarea, .custom-hover')) {
+                gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.3, ease: 'expo.out', overwrite: 'auto' });
+                gsap.to(dot, { scale: 1, opacity: 1, duration: 0.3, ease: 'expo.out', overwrite: 'auto' });
+            }
+        };
 
         window.addEventListener('mousemove', onMouseMove);
-
-        // Track hover state for links and buttons to expand cursor
-        const interactables = document.querySelectorAll('a, button, input, textarea, .custom-hover');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', onMouseEnter);
-            el.addEventListener('mouseleave', onMouseLeave);
-        });
+        window.addEventListener('mouseover', onMouseOver);
+        window.addEventListener('mouseout', onMouseOut);
 
         return () => {
             window.removeEventListener('mousemove', onMouseMove);
-            interactables.forEach(el => {
-                el.removeEventListener('mouseenter', onMouseEnter);
-                el.removeEventListener('mouseleave', onMouseLeave);
-            });
+            window.removeEventListener('mouseover', onMouseOver);
+            window.removeEventListener('mouseout', onMouseOut);
         };
     }, []);
-
-    // Animate scale/opacity based on hover state
-    useEffect(() => {
-        if (isHovering) {
-            gsap.to(cursorRef.current, { scale: 1.5, opacity: 0.5, duration: 0.3, ease: 'expo.out' });
-            gsap.to(dotRef.current, { scale: 0, opacity: 0, duration: 0.3, ease: 'expo.out' });
-        } else {
-            gsap.to(cursorRef.current, { scale: 1, opacity: 1, duration: 0.3, ease: 'expo.out' });
-            gsap.to(dotRef.current, { scale: 1, opacity: 1, duration: 0.3, ease: 'expo.out' });
-        }
-    }, [isHovering]);
 
     return (
         <>
