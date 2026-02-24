@@ -76,7 +76,7 @@ const Portfolio = () => {
             <div className="glow-orb" style={{ top: '10%', left: '20%' }} />
             <div className="container">
                 <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '5rem', letterSpacing: '-0.04em' }}>Selected Work.</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem 3rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '4rem' }}>
                     {projects.map((project, index) => {
                         const imgRef = useRef();
 
@@ -88,8 +88,7 @@ const Portfolio = () => {
                                 key={project.id}
                                 className="portfolio-item group"
                                 style={{
-                                    cursor: 'pointer', perspective: '1000px', display: 'block',
-                                    marginTop: index % 2 !== 0 ? '6rem' : '0' // Masonry stagger effect
+                                    cursor: 'pointer', perspective: '1000px', display: 'block'
                                 }}
                                 onMouseMove={(e) => handleMouseMove(e, imgRef)}
                                 onMouseLeave={() => handleMouseLeave(imgRef)}
