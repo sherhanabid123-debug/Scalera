@@ -1,16 +1,17 @@
 :root {
-  --bg-primary: #f5f5f7;
-  /* Soft Apple silver/grey */
-  --bg-secondary: #ffffff;
-  /* Pure white for elevated elements */
-  --text-primary: #1d1d1f;
-  /* Deep slate, excellent legibility */
-  --text-secondary: #86868b;
-  /* Soft muted grey */
-  --accent-color: #1d1d1f;
-  --accent-glow: rgba(0, 0, 0, 0.03);
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  /* Sophisticated subtle border */
+  --bg-primary: #0f172a;
+  /* Deep Corporate Slate / Navy */
+  --bg-secondary: #1e293b;
+  /* Elevated Slate */
+  --text-primary: #f8fafc;
+  /* Crisp clean white */
+  --text-secondary: #94a3b8;
+  /* Professional muted grey/blue */
+  --accent-color: #3b82f6;
+  /* Trustworthy B2B Blue */
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --border-subtle: rgba(248, 250, 252, 0.08);
+  /* Faint structural borders */
   /* Architectural thin borders */
   /* Typography */
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -64,14 +65,14 @@ p {
 
 /* Premium gradient text utility */
 .text-gradient {
-  background: linear-gradient(135deg, #1d1d1f 0%, #434346 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, #1c1c1c 0%, #444444 100%);
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -144,7 +145,7 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
@@ -188,24 +189,26 @@ img {
 
 /* Glassmorphism helpers for Layered Theme */
 .glass {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(30, 41, 59, 0.5);
+  /* Semi-transparent slate */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  background: rgba(15, 23, 42, 0.85);
+  /* Deep slate nav */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 /* Base selection color for professional look */
 ::selection {
-  background-color: var(--text-primary);
-  color: var(--bg-primary);
+  background-color: var(--accent-color);
+  color: #fff;
 }
 
 /* Lenis smooth scrolling resets (Forced universally for production) */

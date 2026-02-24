@@ -110,7 +110,7 @@ function App() {
           className="preloader"
           style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundColor: '#fcfcfc', zIndex: 10000,
+            backgroundColor: '#0f172a', zIndex: 10000,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexDirection: 'column'
           }}
@@ -119,13 +119,12 @@ function App() {
             {"SCALERA".split('').map((char, index) => (
               <span
                 key={index}
-                className="preloader-char"
+                className="preloader-char text-gradient-accent"
                 style={{
                   display: 'inline-block',
                   fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                   fontWeight: 800,
                   letterSpacing: '0.2em',
-                  color: '#1c1c1c',
                   marginRight: index === "SCALERA".length - 1 ? '0' : '0.1em'
                 }}
               >
