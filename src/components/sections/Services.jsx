@@ -32,7 +32,7 @@ const Services = () => {
         <section id="services" ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
             <div className="glow-orb" style={{ top: '60%', left: '80%', opacity: 0.5 }} />
             <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '5rem', letterSpacing: '-0.04em' }}>Our Expertise.</h2>
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '1rem', letterSpacing: '-0.04em' }}>Our Expertise.</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
                     {services.map((service, i) => (
                         <div
