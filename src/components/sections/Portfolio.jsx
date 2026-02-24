@@ -75,7 +75,7 @@ const Portfolio = () => {
         <section id="work" ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
             <div className="glow-orb" style={{ top: '10%', left: '20%' }} />
             <div className="container">
-                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '2.5rem', letterSpacing: '-0.04em' }}>Selected Work.</h2>
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '1rem', letterSpacing: '-0.04em' }}>Selected Work.</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '4rem' }}>
                     {projects.map((project, index) => {
                         const imgRef = useRef();
