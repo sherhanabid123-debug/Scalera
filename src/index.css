@@ -34,7 +34,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
-  width: 100vw;
+  width: 100%;
   min-height: 100%;
 }
 
@@ -179,9 +179,9 @@ img {
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* Lenis smooth scrolling resets */
-html.lenis,
-html.lenis body {
+/* Lenis smooth scrolling resets (Forced universally for production) */
+html,
+body {
   height: auto;
 }
 
