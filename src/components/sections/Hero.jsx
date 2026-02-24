@@ -78,8 +78,8 @@ const Hero = () => {
                         color: 'var(--text-primary)', padding: '1.25rem 3rem',
                         borderRadius: '40px', fontWeight: 500, fontSize: '1.05rem',
                         transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-block'
-                    }} onMouseEnter={(e) => { e.target.style.background = 'rgba(255,255,255,0.08)'; e.target.style.transform = 'translateY(-4px)'; e.target.style.boxShadow = '0 15px 40px rgba(0,0,0,0.8)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-                        onMouseLeave={(e) => { e.target.style.background = 'rgba(10,10,10,0.4)'; e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.5)'; e.target.style.borderColor = 'var(--border-subtle)'; }}>
+                    }} onMouseEnter={(e) => { e.target.style.background = 'rgba(252,252,252,1)'; e.target.style.transform = 'translateY(-4px)'; e.target.style.boxShadow = '0 15px 40px rgba(28,28,28,0.08)'; e.target.style.borderColor = 'rgba(28,28,28,0.2)'; }}
+                        onMouseLeave={(e) => { e.target.style.background = 'rgba(252,252,252,0.75)'; e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 10px 40px 0 rgba(28,28,28,0.04)'; e.target.style.borderColor = 'var(--border-subtle)'; }}>
                         Start a Project
                     </a>
                 </div>
@@ -95,7 +95,7 @@ const Hero = () => {
                     marginBottom: '1rem', color: 'var(--text-secondary)'
                 }}>Scroll</span>
                 <div style={{
-                    width: '1px', height: '60px', background: 'rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden'
+                    width: '1px', height: '60px', background: 'rgba(28,28,28,0.1)', position: 'relative', overflow: 'hidden'
                 }}>
                     <div style={{
                         position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
