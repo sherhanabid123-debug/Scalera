@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MessageCircle } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 import Background3D from './components/canvas/Background3D';
 import CustomCursor from './components/ui/CustomCursor';
@@ -32,17 +35,12 @@ function App() {
       touchMultiplier: 2,
     });
 
-    lenis.on('scroll', gsap.ticker.update);
+    // Sync Lenis with GSAP ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
     gsap.ticker.lagSmoothing(0);
-
-    const raf = (time) => {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    };
-    requestAnimationFrame(raf);
 
     const tl = gsap.timeline();
 

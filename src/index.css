@@ -22,20 +22,16 @@
   box-sizing: border-box;
 }
 
-html {
+body {
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   /* Webkit font smoothing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  overflow-x: hidden;
   line-height: 1.6;
   width: 100vw;
-  background-color: var(--bg-primary);
+  /* removed overflow-x and min-height which break lenis scroll virtualization */
 }
 
 /* Base Typography Refinements */
