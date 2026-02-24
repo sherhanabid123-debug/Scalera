@@ -1,11 +1,13 @@
 :root {
-  --bg-primary: #000000;
-  --bg-secondary: #050505;
-  --text-primary: #f5f5f5;
-  --text-secondary: #a3a3a3;
-  --accent-color: #ffffff;
-  --accent-glow: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.04);
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-color: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.08);
+  /* Soft blue glow */
+  --border-subtle: rgba(15, 23, 42, 0.06);
+  /* Very subtle dark border */
   /* Typography */
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -57,14 +59,14 @@ p {
 
 /* Premium gradient text utility */
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #777777 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -137,7 +139,7 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
@@ -179,20 +181,26 @@ img {
   position: relative;
 }
 
-/* Glassmorphism helpers */
+/* Glassmorphism helpers for Light Theme */
 .glass {
-  background: rgba(10, 10, 10, 0.4);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04);
 }
 
 .glass-nav {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Base selection color for professional look */
+::selection {
+  background-color: var(--accent-color);
+  color: #fff;
 }
 
 /* Lenis smooth scrolling resets (Forced universally for production) */

@@ -110,7 +110,7 @@ function App() {
           className="preloader"
           style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundColor: '#050505', zIndex: 10000,
+            backgroundColor: '#ffffff', zIndex: 10000,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexDirection: 'column'
           }}

@@ -35,10 +35,9 @@ const TechNetwork = () => {
     // Create line segment geometry and materials
     const linesGeo = useMemo(() => new THREE.BufferGeometry(), []);
     const linesMat = useMemo(() => new THREE.LineBasicMaterial({
-        color: '#3b82f6',
+        color: '#2563eb', /* Deep blue for structural lines */
         transparent: true,
-        opacity: 0.15,
-        blending: THREE.AdditiveBlending,
+        opacity: 0.25,
         depthWrite: false
     }), []);
 
@@ -116,12 +115,11 @@ const TechNetwork = () => {
             <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
                 <PointMaterial
                     transparent
-                    color="#ffffff"
-                    size={0.06}
+                    color="#0f172a" /* Dark slate particles */
+                    size={0.08}
                     sizeAttenuation={true}
                     depthWrite={false}
-                    opacity={0.8}
-                    blending={THREE.AdditiveBlending}
+                    opacity={0.6}
                 />
             </Points>
             {/* The Tech Network Lines */}
@@ -149,7 +147,7 @@ const Background3D = () => {
             {/* Vignette/Fade Overlay for depth processing */}
             <div style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'radial-gradient(circle at center, transparent 0%, rgba(5,5,5,0.8) 100%)',
+                background: 'radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.9) 100%)',
                 pointerEvents: 'none'
             }} />
         </div>
