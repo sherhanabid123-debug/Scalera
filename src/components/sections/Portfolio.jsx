@@ -39,28 +39,7 @@ const Portfolio = () => {
                 });
             });
 
-            // Scroll Velocity Skewing
-            let proxy = { skew: 0 },
-                skewSetter = gsap.quickSetter(".portfolio-item", "skewY", "deg"),
-                clamp = gsap.utils.clamp(-8, 8); // clamp the max skew to look elegant, not broken
 
-            gsap.registerPlugin(ScrollTrigger);
-            ScrollTrigger.create({
-                onUpdate: (self) => {
-                    let skew = clamp(self.getVelocity() / -150);
-                    // Only do the work if the skew has significantly changed
-                    if (Math.abs(skew) > Math.abs(proxy.skew)) {
-                        proxy.skew = skew;
-                        gsap.to(proxy, {
-                            skew: 0,
-                            duration: 0.8,
-                            ease: "power3",
-                            overwrite: true,
-                            onUpdate: () => skewSetter(proxy.skew)
-                        });
-                    }
-                }
-            });
 
         }, containerRef);
         return () => ctx.revert();
