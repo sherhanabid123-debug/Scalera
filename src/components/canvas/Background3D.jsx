@@ -142,7 +142,7 @@ const Background3D = () => {
             pointerEvents: 'none',
             background: 'var(--bg-primary)'
         }}>
-            <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+            <Canvas camera={{ position: [0, 0, 15], fov: 45 }} dpr={[1, 1.5]}>
                 <ambientLight intensity={0.5} />
                 <TechNetwork />
             </Canvas>

@@ -15,7 +15,7 @@ const Marquee = () => {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom top",
-                    scrub: 1
+                    scrub: true
                 }
             });
         }, containerRef);

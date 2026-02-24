@@ -34,7 +34,7 @@ const Portfolio = () => {
                         trigger: bg.parentElement,
                         start: "top bottom",
                         end: "bottom top",
-                        scrub: 1 // smooth scrubbing
+                        scrub: true // immediate scrub (Lenis handles smoothing)
                     }
                 });
             });
