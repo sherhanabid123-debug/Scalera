@@ -49,8 +49,8 @@ const Services = () => {
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
                                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
-                                e.currentTarget.style.borderColor = 'rgba(244, 63, 94, 0.4)'; /* Coral highlight on edge */
-                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.8), 0 0 80px rgba(56, 189, 248, 0.15), 0 0 40px rgba(249, 115, 22, 0.1)';
+                                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'; /* Frost highlight */
+                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.8), 0 0 40px rgba(255, 255, 255, 0.05)';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = 'translateY(0) scale(1)';

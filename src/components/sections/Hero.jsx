@@ -67,12 +67,12 @@ const Hero = () => {
                 </p>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                     <a href="#work" className="hero-btn" style={{
-                        background: 'linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-blend) 50%, var(--accent-sky) 100%)', color: '#ffffff',
+                        background: '#ffffff', color: '#050505',
                         padding: '1.25rem 3rem', borderRadius: '40px', fontWeight: 600, border: 'none',
                         fontSize: '1.05rem', transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-block',
-                        boxShadow: '0 8px 32px rgba(244, 63, 94, 0.3)'
-                    }} onMouseEnter={(e) => { e.target.style.transform = 'translateY(-4px)'; e.target.style.boxShadow = '0 12px 40px rgba(56, 189, 248, 0.4), 0 12px 40px rgba(249, 115, 22, 0.4)'; }}
-                        onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 8px 32px rgba(244, 63, 94, 0.3)'; }}>
+                        boxShadow: '0 8px 32px rgba(255, 255, 255, 0.05)'
+                    }} onMouseEnter={(e) => { e.target.style.transform = 'translateY(-4px)'; e.target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.1)'; }}
+                        onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.05)'; }}>
                         View Work
                     </a>
                     <a href="https://wa.me/917483537959" target="_blank" rel="noopener noreferrer" className="glass hero-btn" style={{

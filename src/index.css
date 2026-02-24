@@ -1,22 +1,16 @@
 :root {
-  --bg-primary: #0f172a;
-  /* Deep Corporate Slate / Navy */
-  --bg-secondary: #1e293b;
-  /* Elevated Slate */
-  --text-primary: #f8fafc;
-  /* Crisp clean white */
-  --text-secondary: #94a3b8;
-  /* Professional muted grey/blue */
-  --accent-sky: #38bdf8;
-  /* Sky Blue Accent */
-  --accent-blend: #f43f5e;
-  /* Coral/Pink transition color */
-  --accent-orange: #f97316;
-  /* Vibrant Orange Accent */
-  --accent-color: #38bdf8;
-  /* Default interactive accent */
-  --accent-glow: rgba(56, 189, 248, 0.15);
-  --border-subtle: rgba(248, 250, 252, 0.08);
+  --bg-primary: #050505;
+  /* Pitch Black Obsidian */
+  --bg-secondary: #0a0a0a;
+  /* Slightly elevated dark layer */
+  --text-primary: #ffffff;
+  /* Pure White */
+  --text-secondary: #888888;
+  /* Architectural Grey */
+  --accent-color: #ffffff;
+  /* White accent */
+  --accent-glow: rgba(255, 255, 255, 0.05);
+  --border-subtle: rgba(255, 255, 255, 0.08);
   /* Faint structural borders */
   /* Architectural thin borders */
   /* Typography */
@@ -71,14 +65,14 @@ p {
 
 /* Premium gradient text utility */
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #777777 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-blend) 50%, var(--accent-sky) 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #bbbbbb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -151,7 +145,7 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(244, 63, 94, 0.05) 35%, rgba(56, 189, 248, 0.03) 60%, transparent 80%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
