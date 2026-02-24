@@ -93,11 +93,12 @@ const Portfolio = () => {
     };
 
     return (
-        <section id="work" ref={containerRef} className="section" style={{ padding: '150px 5%', position: 'relative', zIndex: 2 }}>
+        <section id="work" ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="glow-orb" style={{ top: '10%', left: '20%' }} />
             <div className="container">
-                <h2 style={{ fontSize: '3rem', fontWeight: 600, marginBottom: '4rem', letterSpacing: '-0.02em' }}>Selected Work.</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '3rem' }}>
-                    {projects.map((project) => {
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '5rem', letterSpacing: '-0.04em' }}>Selected Work.</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem 3rem' }}>
+                    {projects.map((project, index) => {
                         const imgRef = useRef();
 
                         return (
@@ -107,7 +108,10 @@ const Portfolio = () => {
                                 rel={project.link ? 'noopener noreferrer' : ''}
                                 key={project.id}
                                 className="portfolio-item group"
-                                style={{ cursor: 'pointer', perspective: '1000px', display: 'block' }}
+                                style={{
+                                    cursor: 'pointer', perspective: '1000px', display: 'block',
+                                    marginTop: index % 2 !== 0 ? '6rem' : '0' // Masonry stagger effect
+                                }}
                                 onMouseMove={(e) => handleMouseMove(e, imgRef)}
                                 onMouseLeave={() => handleMouseLeave(imgRef)}
                             >
@@ -125,15 +129,15 @@ const Portfolio = () => {
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'top center',
                                             transition: 'filter 0.5s ease',
-                                            filter: 'grayscale(0.4) brightness(0.8)'
+                                            filter: 'grayscale(0.6) brightness(0.6)'
                                         }}
                                         onMouseEnter={(e) => { e.currentTarget.style.filter = 'grayscale(0) brightness(1)'; }}
-                                        onMouseLeave={(e) => { e.currentTarget.style.filter = 'grayscale(0.4) brightness(0.8)'; }}
+                                        onMouseLeave={(e) => { e.currentTarget.style.filter = 'grayscale(0.6) brightness(0.6)'; }}
                                     />
                                     {/* Subtle glass overlay inside image container on hover theoretically could go here */}
                                 </div>
-                                <h3 style={{ fontSize: '1.5rem', fontWeight: 500, letterSpacing: '-0.01em', marginBottom: '0.25rem' }}>{project.title}</h3>
-                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{project.category}</p>
+                                <h3 style={{ fontSize: '1.75rem', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>{project.title}</h3>
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>{project.category}</p>
                             </a>
                         );
                     })}

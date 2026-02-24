@@ -40,13 +40,13 @@ const WhyScalera = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="section" style={{ padding: '150px 5%', position: 'relative', zIndex: 2 }}>
+        <section ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
             <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem', alignItems: 'center' }}>
                 <div>
-                    <h2 className="why-title" style={{ fontSize: 'clamp(3.5rem, 5vw, 5rem)', fontWeight: 600, marginBottom: '2rem', lineHeight: 1.1, letterSpacing: '-0.03em' }}>
+                    <h2 className="why-title" style={{ fontSize: 'clamp(4.5rem, 8vw, 7.5rem)', fontWeight: 800, marginBottom: '2.5rem', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
                         Why <br />Scalera?
                     </h2>
-                    <p className="why-title" style={{ color: 'var(--text-secondary)', fontSize: '1.25rem', maxWidth: '400px' }}>
+                    <p className="why-title" style={{ color: 'var(--text-secondary)', fontSize: '1.5rem', maxWidth: '400px', lineHeight: 1.6 }}>
                         We're not just order-takers. We act as your technical growth partners to build platforms that perform.
                     </p>
                 </div>
@@ -61,8 +61,8 @@ const WhyScalera = () => {
                                         background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%)'
                                     }}
                                 />
-                                <span className="why-item-text" style={{ fontSize: '1.875rem', fontWeight: 500, letterSpacing: '-0.02em', display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                    <span style={{ color: 'var(--accent-color)', fontSize: '1rem', fontWeight: 400 }}>0{i + 1}</span>
+                                <span className="why-item-text" style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', display: 'flex', gap: '2rem', alignItems: 'center' }}>
+                                    <span style={{ color: 'var(--accent-color)', fontSize: '1.25rem', fontWeight: 400, opacity: 0.6 }}>0{i + 1}</span>
                                     {reason}
                                 </span>
                                 {/* Last item needs a bottom divider too */}

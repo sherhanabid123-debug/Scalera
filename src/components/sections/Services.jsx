@@ -29,9 +29,10 @@ const Services = () => {
     }, []);
 
     return (
-        <section id="services" ref={containerRef} className="section" style={{ padding: '150px 5%', position: 'relative', zIndex: 2 }}>
-            <div className="container">
-                <h2 style={{ fontSize: '3rem', fontWeight: 600, marginBottom: '4rem', letterSpacing: '-0.02em' }}>Our Expertise.</h2>
+        <section id="services" ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="glow-orb" style={{ top: '60%', left: '80%', opacity: 0.5 }} />
+            <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: '5rem', letterSpacing: '-0.04em' }}>Our Expertise.</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
                     {services.map((service, i) => (
                         <div
@@ -47,15 +48,15 @@ const Services = () => {
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
-                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.6), 0 0 60px var(--accent-glow)';
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.8), 0 0 60px rgba(255,255,255,0.05)';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                                e.currentTarget.style.background = 'rgba(10, 10, 10, 0.4)';
                                 e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                                e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.3)';
+                                e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.5)';
                             }}
                         >
                             <div style={{
@@ -64,8 +65,8 @@ const Services = () => {
                             }}>
                                 <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
                             </div>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '1rem', letterSpacing: '-0.01em' }}>{service.title}</h3>
-                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>{service.desc}</p>
+                            <h3 style={{ fontSize: '1.75rem', fontWeight: 600, marginBottom: '1rem', letterSpacing: '-0.02em' }}>{service.title}</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1.05rem' }}>{service.desc}</p>
                         </div>
                     ))}
                 </div>

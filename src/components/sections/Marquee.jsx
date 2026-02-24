@@ -32,17 +32,17 @@ const Marquee = () => {
         }}>
             <div className="marquee-inner" style={{ display: 'flex', width: '200vw' }}>
                 <h2 style={{
-                    fontSize: 'clamp(5rem, 15vw, 15rem)', fontWeight: 700,
+                    fontSize: 'clamp(6rem, 20vw, 20rem)', fontWeight: 900,
                     whiteSpace: 'nowrap', textTransform: 'uppercase',
-                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.08)',
+                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.04)',
                     paddingRight: '5vw', lineHeight: 1, letterSpacing: '-0.02em', margin: 0
                 }}>
                     SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY •
                 </h2>
                 <h2 style={{
-                    fontSize: 'clamp(5rem, 15vw, 15rem)', fontWeight: 700,
+                    fontSize: 'clamp(6rem, 20vw, 20rem)', fontWeight: 900,
                     whiteSpace: 'nowrap', textTransform: 'uppercase',
-                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.08)',
+                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.04)',
                     paddingRight: '5vw', lineHeight: 1, letterSpacing: '-0.02em', margin: 0
                 }}>
                     SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY •
