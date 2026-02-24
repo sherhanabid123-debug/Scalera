@@ -25,16 +25,14 @@ const Marquee = () => {
     return (
         <section ref={containerRef} style={{
             overflow: 'hidden', padding: '120px 0',
-            background: 'var(--bg-secondary)',
-            borderTop: '1px solid var(--border-subtle)',
-            borderBottom: '1px solid var(--border-subtle)',
+            background: '#1d1d1f', color: '#ffffff',
             position: 'relative', zIndex: 2
         }}>
             <div className="marquee-inner" style={{ display: 'flex', width: '200vw' }}>
                 <h2 style={{
                     fontSize: 'clamp(6rem, 20vw, 20rem)', fontWeight: 900,
                     whiteSpace: 'nowrap', textTransform: 'uppercase',
-                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.04)',
+                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.08)',
                     paddingRight: '5vw', lineHeight: 1, letterSpacing: '-0.02em', margin: 0
                 }}>
                     SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY •
@@ -42,7 +40,7 @@ const Marquee = () => {
                 <h2 style={{
                     fontSize: 'clamp(6rem, 20vw, 20rem)', fontWeight: 900,
                     whiteSpace: 'nowrap', textTransform: 'uppercase',
-                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.04)',
+                    color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.08)',
                     paddingRight: '5vw', lineHeight: 1, letterSpacing: '-0.02em', margin: 0
                 }}>
                     SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY •
