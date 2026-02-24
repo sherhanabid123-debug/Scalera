@@ -37,8 +37,9 @@ const TechNetwork = () => {
     const linesMat = useMemo(() => new THREE.LineBasicMaterial({
         color: '#f97316', /* Dynamic Orange structural lines */
         transparent: true,
-        opacity: 0.25,
-        depthWrite: false
+        opacity: 0.15, /* Softened opacity to blend better */
+        depthWrite: false,
+        blending: THREE.AdditiveBlending /* Adds a luminous glow when crossing */
     }), []);
 
 
@@ -119,7 +120,8 @@ const TechNetwork = () => {
                     size={0.07}
                     sizeAttenuation={true}
                     depthWrite={false}
-                    opacity={0.9}
+                    opacity={0.6}
+                    blending={THREE.AdditiveBlending}
                 />
             </Points>
             {/* The Tech Network Lines */}

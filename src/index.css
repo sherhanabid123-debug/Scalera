@@ -9,6 +9,8 @@
   /* Professional muted grey/blue */
   --accent-sky: #38bdf8;
   /* Sky Blue Accent */
+  --accent-blend: #f43f5e;
+  /* Coral/Pink transition color */
   --accent-orange: #f97316;
   /* Vibrant Orange Accent */
   --accent-color: #38bdf8;
@@ -76,7 +78,7 @@ p {
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-sky) 100%);
+  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-blend) 50%, var(--accent-sky) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -149,7 +151,7 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, rgba(56, 189, 248, 0.08) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(244, 63, 94, 0.05) 35%, rgba(56, 189, 248, 0.03) 60%, transparent 80%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
