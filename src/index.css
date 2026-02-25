@@ -199,9 +199,9 @@ img {
 
 .glass-nav {
   background: rgba(10, 10, 10, 0.45);
-  /* Matches var(--bg-primary) #0a0a0a but highly translucent */
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  /* Lower opacity for iOS liquid glass effect */
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
   border-bottom: 1px solid var(--border-subtle);
 }
 
