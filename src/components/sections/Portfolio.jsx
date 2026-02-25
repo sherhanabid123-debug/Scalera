@@ -57,70 +57,69 @@ const Portfolio = () => {
         }, containerRef);
         return () => ctx.revert();
     }, []);
-
     return (
-        <section id="work" ref={containerRef} className="section" style={{ padding: '8rem 5%', borderTop: '1px solid var(--border-subtle)' }}>
-            <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '2rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
-            <p className="portfolio-heading" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '6rem', lineHeight: 1.6 }}>
-                A selection of projects focused on clarity, structure, and measurable impact.
-            </p>
+        <section id="work" ref={containerRef} style={{ padding: '8rem 0', borderTop: '1px solid var(--border-subtle)' }}>
+            <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5%' }}>
+                <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '1.5rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
+                <p className="portfolio-heading" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '6rem', lineHeight: 1.6 }}>
+                    A selection of projects focused on clarity, structure, and measurable impact.
+                </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '4rem' : '4rem 8rem' }}>
-                {projects.map((project, index) => {
-                    const offsetClass = (!isMobile && index % 2 !== 0) ? 'portfolio-offset' : '';
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '4rem' : '6rem 4rem' }}>
+                    {projects.map((project, index) => {
+                        const offsetClass = (!isMobile && index % 2 !== 0) ? 'portfolio-offset' : '';
 
-                    return (
-                        <a
-                            href={project.link || '#'}
-                            target={project.link ? '_blank' : '_self'}
-                            rel={project.link ? 'noopener noreferrer' : ''}
-                            key={project.id}
-                            className={`portfolio-item group ${offsetClass}`}
-                            style={{
-                                display: 'block', cursor: 'pointer', textDecoration: 'none',
-                                marginTop: (!isMobile && index % 2 !== 0) ? '10rem' : '0',
-                                width: isMobile ? '100%' : (index % 2 === 0 ? '80%' : '100%'),
-                                marginLeft: (!isMobile && index % 2 !== 0) ? 'auto' : '0',
-                            }}
-                        >
-                            <div style={{
-                                aspectRatio: index % 2 === 0 ? '3/4' : '4/3', /* Mix portrait and landscape for editorial look */
-                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
-                            }}>
-                                <div
-                                    className="img-parallax"
-                                    style={{
-                                        position: 'absolute', top: '-10%', left: 0,
-                                        width: '100%', height: '120%',
-                                        backgroundImage: `url(${project.img})`,
-                                        backgroundSize: 'cover', backgroundPosition: 'center',
-                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
-                                        filter: 'grayscale(0.8) contrast(1.1) brightness(0.7)',
-                                        transformOrigin: 'center'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1.05)';
-                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1.1) brightness(0.9)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.filter = 'grayscale(0.8) contrast(1.1) brightness(0.7)';
-                                    }}
-                                />
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div style={{ flex: 1, paddingRight: '2rem' }}>
-                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
+                        return (
+                            <a
+                                href={project.link || '#'}
+                                target={project.link ? '_blank' : '_self'}
+                                rel={project.link ? 'noopener noreferrer' : ''}
+                                key={project.id}
+                                className={`portfolio-item group ${offsetClass}`}
+                                style={{
+                                    display: 'block', cursor: 'pointer', textDecoration: 'none',
+                                    marginTop: (!isMobile && index % 2 !== 0) ? '12rem' : '0'
+                                }}
+                            >
+                                <div style={{
+                                    aspectRatio: '4/3', /* Very stable, professional aspect ratio */
+                                    overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
+                                }}>
+                                    <div
+                                        className="img-parallax"
+                                        style={{
+                                            position: 'absolute', top: '-10%', left: 0,
+                                            width: '100%', height: '120%',
+                                            backgroundImage: `url(${project.img})`,
+                                            backgroundSize: 'cover', backgroundPosition: 'center',
+                                            transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
+                                            filter: 'grayscale(0.8) contrast(1.1) brightness(0.7)',
+                                            transformOrigin: 'center'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1.05)';
+                                            e.currentTarget.style.filter = 'grayscale(0) contrast(1.1) brightness(0.9)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1)';
+                                            e.currentTarget.style.filter = 'grayscale(0.8) contrast(1.1) brightness(0.7)';
+                                        }}
+                                    />
                                 </div>
-                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
-                                    [0{index + 1}]
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1, paddingRight: '2rem' }}>
+                                        <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
+                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
+                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
+                                    </div>
+                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
+                                        [0{index + 1}]
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    );
-                })}
+                            </a>
+                        );
+                    })}
+                </div>
             </div>
         </section>
     );
