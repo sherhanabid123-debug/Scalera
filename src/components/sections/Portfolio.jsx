@@ -3,10 +3,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const projects = [
-    { id: 1, title: 'Thar', category: 'Restaurant Experience', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
-    { id: 2, title: 'Kryptic', category: 'E-Commerce Platform', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
-    { id: 3, title: 'Nova', category: 'Corporate Identity', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200' },
-    { id: 4, title: 'Aura', category: 'Fintech Interface', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' }
+    { id: 1, title: 'Thar', category: 'Restaurant Experience', summary: 'An immersive digital experience bringing authentic culinary heritage online.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
+    { id: 2, title: 'Kryptic', category: 'E-Commerce Platform', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
+    { id: 3, title: 'Nova', category: 'Corporate Identity', summary: 'A sophisticated brand and web presence for a global corporate entity.', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200' },
+    { id: 4, title: 'Aura', category: 'Fintech Interface', summary: 'A streamlined, user-centric dashboard design for financial applications.', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' }
 ];
 
 const Portfolio = () => {
@@ -107,11 +107,12 @@ const Portfolio = () => {
                                 />
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div>
-                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.2rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>{project.category}</p>
+                                <div style={{ flex: 1, paddingRight: '2rem' }}>
+                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
                                 </div>
-                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0' }}>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
                                     [0{index + 1}]
                                 </div>
                             </div>
