@@ -42,8 +42,8 @@ const Background3D = () => {
                 ctx.lineTo(0, canvas.height);
                 ctx.closePath();
 
-                // Elegant white/silver tones for the waves, suitable for dark mode
-                ctx.fillStyle = `rgba(255, 255, 255, ${wave.opacity})`;
+                // Elegant accent color tones for the waves, matching the logo full stop
+                ctx.fillStyle = `rgba(220, 180, 128, ${wave.opacity})`;
                 ctx.fill();
             });
 
