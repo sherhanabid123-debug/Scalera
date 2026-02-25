@@ -30,8 +30,8 @@ const Testimonials = () => {
                     "They didn't just build a website, they <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>engineered a digital presence</span> that instantly elevated our brand authority."
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <p style={{ fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600, margin: 0 }}>James Chen</p>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Founder, Nova Logistics</p>
+                    <p style={{ fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600, margin: 0 }}>Ratan Singh</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Thar Restaurant</p>
                 </div>
             </div>
         </section>
