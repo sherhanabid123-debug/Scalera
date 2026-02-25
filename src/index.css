@@ -198,8 +198,8 @@ img {
 }
 
 .glass-nav {
-  background: rgba(10, 10, 10, 0.85);
-  /* Matches var(--bg-primary) #0a0a0a but translucent */
+  background: rgba(10, 10, 10, 0.45);
+  /* Matches var(--bg-primary) #0a0a0a but highly translucent */
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border-subtle);
