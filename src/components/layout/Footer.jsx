@@ -48,6 +48,16 @@ const Footer = () => {
                                 Email Us
                             </a>
                         </li>
+                        <li>
+                            <a href="https://linkedin.com/company/scalera" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.3s' }} onMouseEnter={e => e.target.style.color = 'var(--text-primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}>
+                                LinkedIn
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://instagram.com/scalera.inc" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.3s' }} onMouseEnter={e => e.target.style.color = 'var(--text-primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}>
+                                Instagram
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

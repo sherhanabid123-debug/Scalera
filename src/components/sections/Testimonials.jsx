@@ -18,7 +18,8 @@ const Testimonials = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="section" style={{ padding: '12rem 5%', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', borderTop: '1px solid var(--border-subtle)' }}>
+        <section ref={containerRef} className="section" style={{ padding: '12rem 5%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', borderTop: '1px solid var(--border-subtle)' }}>
+            <h2 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)', marginBottom: '6rem', alignSelf: 'center' }}>Client Feedback</h2>
             <div className="test-quote" style={{ maxWidth: '1200px', textAlign: 'center' }}>
                 <div style={{ marginBottom: '3rem', color: 'var(--accent-color)', opacity: 0.5, display: 'flex', justifyContent: 'center' }}>
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">

@@ -12,8 +12,8 @@ import Navbar from './components/layout/Navbar';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Services from './components/sections/Services';
+import Process from './components/sections/Process';
 import Portfolio from './components/sections/Portfolio';
-import Marquee from './components/sections/Marquee';
 import WhyScalera from './components/sections/WhyScalera';
 import Testimonials from './components/sections/Testimonials';
 import CTA from './components/sections/CTA';
@@ -81,8 +81,8 @@ function App() {
           <Hero />
           <About />
           <Services />
+          <Process />
           <Portfolio />
-          <Marquee />
           <WhyScalera />
           <Testimonials />
           <CTA />

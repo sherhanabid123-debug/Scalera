@@ -2,10 +2,11 @@ import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const reasons = [
-    'Built for growth',
-    'Designed for conversion',
-    'Structured for visibility',
-    'Fast and mobile-first'
+    'Clean, Modern Design',
+    'Mobile-First Approach',
+    'Structured SEO Foundation',
+    'Performance-Focused Builds',
+    'Direct & Clear Communication'
 ];
 
 const WhyScalera = () => {
@@ -43,12 +44,9 @@ const WhyScalera = () => {
         <section ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
             <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem', alignItems: 'center' }}>
                 <div>
-                    <h2 className="why-title" style={{ fontSize: 'clamp(4.5rem, 8vw, 7.5rem)', fontWeight: 800, marginBottom: '2.5rem', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
-                        Why <br />Scalera?
+                    <h2 className="why-title" style={{ fontSize: 'clamp(4rem, 7vw, 6.5rem)', fontWeight: 800, marginBottom: '2.5rem', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
+                        Why Work <br />With Us
                     </h2>
-                    <p className="why-title" style={{ color: 'var(--text-secondary)', fontSize: '1.5rem', maxWidth: '400px', lineHeight: 1.6 }}>
-                        We're not just order-takers. We act as your technical growth partners to build platforms that perform.
-                    </p>
                 </div>
                 <div>
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column' }}>
@@ -61,7 +59,7 @@ const WhyScalera = () => {
                                         background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%)'
                                     }}
                                 />
-                                <span className="why-item-text" style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', display: 'flex', gap: '2rem', alignItems: 'center' }}>
+                                <span className="why-item-text" style={{ fontSize: '2rem', fontWeight: 600, letterSpacing: '-0.03em', display: 'flex', gap: '2rem', alignItems: 'center' }}>
                                     <span style={{ color: 'var(--accent-color)', fontSize: '1.25rem', fontWeight: 400, opacity: 0.6 }}>0{i + 1}</span>
                                     {reason}
                                 </span>

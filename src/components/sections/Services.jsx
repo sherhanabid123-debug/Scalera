@@ -3,10 +3,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const services = [
-    { title: 'Digital Strategy', desc: 'Comprehensive roadmaps focused on market positioning, audience conversion, and long-term digital growth.' },
-    { title: 'Brand Identity', desc: 'Crafting cohesive visual languages and premium brand assets that command authority and trust.' },
-    { title: 'Web Experience', desc: 'Bespoke, high-performance websites engineered for both aesthetic impact and seamless user journeys.' },
-    { title: 'Creative Direction', desc: 'Guiding the overarching artistic vision and interactive feel across all digital touchpoints.' }
+    { title: 'Custom Website Design', desc: 'Premium, clean layouts tailored to your brand identity.' },
+    { title: 'Website Development', desc: 'Fast, responsive, mobile-first builds with modern structure.' },
+    { title: 'Basic SEO Setup', desc: 'On-page optimization and structured setup for better visibility.' },
+    { title: 'Performance Optimization', desc: 'Speed, responsiveness, and clean technical foundation.' },
+    { title: 'Ongoing Support', desc: 'Minor updates and assistance after launch.' }
 ];
 
 const Services = () => {
@@ -46,7 +47,7 @@ const Services = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', position: isMobile ? 'relative' : 'sticky', top: '120px' }}>
                     <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
                     <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)' }}>
-                        Capabilities
+                        What We Do
                     </span>
                 </div>
 

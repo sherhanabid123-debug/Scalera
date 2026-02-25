@@ -41,16 +41,18 @@ const About = () => {
                 <div className="about-line" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
                     <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)' }}>
-                        The Vision
+                        Brand Positioning
                     </span>
                 </div>
 
-                <div>
-                    <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 300, lineHeight: 1.3, letterSpacing: '-0.02em', margin: 0, color: 'var(--text-secondary)' }}>
-                        <span className="about-line" style={{ display: 'block' }}>We engineer digital presence for</span>
-                        <span className="about-line" style={{ display: 'block', color: 'var(--text-primary)' }}>ambitious brands that demand</span>
-                        <span className="about-line" style={{ display: 'block' }}>an <span style={{ fontStyle: 'italic', paddingRight: '0.2em' }}>unfair advantage</span> in scale.</span>
+                <div className="about-line">
+                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 300, lineHeight: 1.2, letterSpacing: '-0.02em', margin: '0 0 2rem 0', color: 'var(--text-primary)' }}>
+                        <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>Built for Brands</span><br />
+                        That Value Quality.
                     </h2>
+                    <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: '700px', margin: 0 }}>
+                        Your website isn’t just a page online — it’s your brand’s first impression. We create structured, mobile-first websites designed for clarity, trust, and performance.
+                    </p>
                 </div>
             </div>
         </section>

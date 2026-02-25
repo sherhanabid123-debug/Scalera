@@ -27,10 +27,9 @@ const CTA = () => {
                     Start a Conversation
                 </p>
 
-                <h2 style={{ fontSize: 'clamp(3.5rem, 8vw, 7rem)', fontWeight: 300, letterSpacing: '-0.04em', margin: '0 0 4rem 0', lineHeight: 0.95, color: 'var(--text-primary)' }}>
-                    Let's Build<br />
-                    <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>Something</span><br />
-                    Great.
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)', fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 4rem 0', lineHeight: 1.1, color: 'var(--text-primary)' }}>
+                    Let's Build Something<br />
+                    <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>Structured</span> & Impactful.
                 </h2>
 
                 <a
@@ -55,7 +54,7 @@ const CTA = () => {
                         e.currentTarget.style.transform = 'translateY(0)';
                     }}
                 >
-                    Chat on WhatsApp
+                    Start Your Project
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>

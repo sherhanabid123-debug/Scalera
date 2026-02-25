@@ -60,7 +60,10 @@ const Portfolio = () => {
 
     return (
         <section id="work" ref={containerRef} className="section" style={{ padding: '8rem 5%', borderTop: '1px solid var(--border-subtle)' }}>
-            <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '6rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
+            <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '2rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
+            <p className="portfolio-heading" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '6rem', lineHeight: 1.6 }}>
+                A selection of projects focused on clarity, structure, and measurable impact.
+            </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '4rem' : '4rem 8rem' }}>
                 {projects.map((project, index) => {
