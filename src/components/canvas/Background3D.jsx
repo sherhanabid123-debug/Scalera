@@ -1,6 +1,64 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const Background3D = () => {
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+        let time = 0;
+
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Wave parameters mapped for a deep, organic liquid feel
+        const waves = [
+            { amplitude: 120, frequency: 0.0015, speed: 0.005, opacity: 0.03, yOffset: 0.6 },
+            { amplitude: 160, frequency: 0.001, speed: 0.004, opacity: 0.02, yOffset: 0.65 },
+            { amplitude: 90, frequency: 0.0025, speed: 0.006, opacity: 0.04, yOffset: 0.55 },
+            { amplitude: 140, frequency: 0.002, speed: 0.003, opacity: 0.015, yOffset: 0.7 },
+        ];
+
+        const draw = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            waves.forEach((wave, index) => {
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height);
+
+                // Draw dynamic sine curves
+                for (let x = 0; x <= canvas.width + 10; x += 20) {
+                    const y = Math.sin(x * wave.frequency + time * wave.speed + (index * 10)) * wave.amplitude;
+                    ctx.lineTo(x, canvas.height * wave.yOffset + y);
+                }
+
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.lineTo(0, canvas.height);
+                ctx.closePath();
+
+                // Elegant white/silver tones for the waves, suitable for dark mode
+                ctx.fillStyle = `rgba(255, 255, 255, ${wave.opacity})`;
+                ctx.fill();
+            });
+
+            time += 1.5;
+            animationFrameId = requestAnimationFrame(draw);
+        };
+
+        draw();
+
+        return () => {
+            window.removeEventListener('resize', resize);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
     return (
         <div style={{
             position: 'fixed',
@@ -13,17 +71,19 @@ const Background3D = () => {
             background: 'var(--bg-primary)',
             overflow: 'hidden'
         }}>
-            {/* Elegant slow-moving mesh gradient / aura */}
-            <div style={{
-                position: 'absolute',
-                top: '-50%',
-                left: '-50%',
-                width: '200%',
-                height: '200%',
-                background: 'radial-gradient(circle at 30% 70%, rgba(220,180,128,0.02) 0%, transparent 40%), radial-gradient(circle at 70% 30%, rgba(255,255,255,0.015) 0%, transparent 50%)',
-                animation: 'drift 25s infinite alternate cubic-bezier(0.4, 0, 0.2, 1)',
-                opacity: 0.9
-            }} />
+            {/* Liquid Waveform Canvas */}
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    filter: 'blur(12px)', /* High blur creates the smooth liquid blending */
+                    transform: 'scale(1.1)' /* Prevent blurred edges from showing transparent gaps */
+                }}
+            />
 
             {/* High-end subtle film grain noise via SVG filter */}
             <svg style={{ display: 'none' }}>
@@ -35,16 +95,9 @@ const Background3D = () => {
                 position: 'absolute',
                 top: 0, left: 0, width: '100%', height: '100%',
                 filter: 'url(#noiseFilter)',
-                opacity: 0.035, /* Extremely subtle */
+                opacity: 0.035,
                 mixBlendMode: 'overlay'
             }} />
-
-            <style>{`
-                @keyframes drift {
-                    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-                    100% { transform: translate(-2%, -3%) rotate(2deg) scale(1.05); }
-                }
-            `}</style>
         </div>
     );
 };
