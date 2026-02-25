@@ -87,16 +87,16 @@ const Portfolio = () => {
                                         backgroundImage: `url(${project.img})`,
                                         backgroundSize: 'cover', backgroundPosition: 'center',
                                         transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
-                                        filter: 'grayscale(0.8) contrast(1.1) brightness(0.7)',
+                                        filter: 'grayscale(0) contrast(1) brightness(0.8)',
                                         transformOrigin: 'center'
                                     }}
                                     onMouseEnter={(e) => {
                                         e.currentTarget.style.transform = 'scale(1.05)';
-                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1.1) brightness(0.9)';
+                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(1)';
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.filter = 'grayscale(0.8) contrast(1.1) brightness(0.7)';
+                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(0.8)';
                                     }}
                                 />
                             </div>
