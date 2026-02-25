@@ -78,12 +78,14 @@ const Portfolio = () => {
                             className={`portfolio-item group ${offsetClass}`}
                             style={{
                                 display: 'block', cursor: 'pointer', textDecoration: 'none',
-                                marginTop: (!isMobile && index % 2 !== 0) ? '8rem' : '0'
+                                marginTop: (!isMobile && index % 2 !== 0) ? '10rem' : '0',
+                                width: isMobile ? '100%' : (index % 2 === 0 ? '80%' : '100%'),
+                                marginLeft: (!isMobile && index % 2 !== 0) ? 'auto' : '0',
                             }}
                         >
                             <div style={{
-                                aspectRatio: index % 2 === 0 ? '4/5' : '3/4', /* varying ratios for editorial look */
-                                overflow: 'hidden', position: 'relative', marginBottom: '1.5rem', background: '#111'
+                                aspectRatio: index % 2 === 0 ? '3/4' : '4/3', /* Mix portrait and landscape for editorial look */
+                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
                             }}>
                                 <div
                                     className="img-parallax"
