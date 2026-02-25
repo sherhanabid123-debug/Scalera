@@ -73,6 +73,7 @@ const Hero = () => {
                 <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <a href="#work" className="hero-btn" style={{
                         padding: '1.25rem 3rem', border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '50px',
                         fontWeight: 400, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em',
                         color: '#fff', transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-block',
                         background: 'transparent'
