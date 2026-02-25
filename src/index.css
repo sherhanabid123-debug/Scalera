@@ -1,16 +1,16 @@
 :root {
-  --bg-primary: #050505;
-  /* Pitch Black Obsidian */
-  --bg-secondary: #0a0a0a;
-  /* Slightly elevated dark layer */
-  --text-primary: #ffffff;
-  /* Pure White */
+  --bg-primary: #0a0a0a;
+  /* Rich Black */
+  --bg-secondary: #121212;
+  /* Elevated Deep Grey */
+  --text-primary: #fafafa;
+  /* Soft White */
   --text-secondary: #888888;
   /* Architectural Grey */
-  --accent-color: #ffffff;
-  /* White accent */
-  --accent-glow: rgba(255, 255, 255, 0.05);
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  --accent-color: #dcb480;
+  /* Elegant Champagne/Sand Accent */
+  --accent-glow: rgba(220, 180, 128, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
   /* Faint structural borders */
   /* Architectural thin borders */
   /* Typography */
@@ -65,14 +65,14 @@ p {
 
 /* Premium gradient text utility */
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #777777 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #a0a0a0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, #ffffff 0%, #bbbbbb 100%);
+  background: linear-gradient(135deg, #f2e3c6 0%, var(--accent-color) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -145,7 +145,7 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(220, 180, 128, 0.04) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
@@ -183,7 +183,7 @@ img {
 }
 
 .section {
-  padding: 240px 0;
+  padding: 12rem var(--pad-x);
   position: relative;
 }
 

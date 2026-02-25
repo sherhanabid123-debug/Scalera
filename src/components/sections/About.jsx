@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -6,17 +6,24 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
     const containerRef = useRef();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
-            gsap.fromTo('.about-text',
-                { y: 80, opacity: 0, rotationX: -15 },
+            gsap.fromTo('.about-line',
+                { opacity: 0, y: 40 },
                 {
-                    y: 0, opacity: 1, rotationX: 0, duration: 1.5, stagger: 0.2, ease: 'expo.out',
+                    opacity: 1, y: 0, duration: 1.5, stagger: 0.15, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
                         start: 'top 75%',
-                        toggleActions: 'play none none reverse'
                     }
                 }
             );
@@ -25,16 +32,25 @@ const About = () => {
     }, []);
 
     return (
-        <section id="about" ref={containerRef} className="section">
-            <div className="glow-orb" style={{ top: '50%', left: '50%' }} />
-            <div className="container" style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
-                <div style={{ maxWidth: '900px', textAlign: 'center' }}>
-                    <h2 className="about-text" style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 700, marginBottom: '2.5rem', lineHeight: 1.2, letterSpacing: '-0.04em' }}>
-                        We design modern business websites focusing on <span style={{ color: 'var(--accent-color)' }}>conversion</span>, presence, and positioning.
+        <section id="about" ref={containerRef} className="section" style={{ padding: '8rem 5%' }}>
+            <div style={{
+                display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', gap: isMobile ? '2rem' : '4rem',
+                borderTop: '1px solid var(--border-subtle)', paddingTop: '4rem',
+                alignItems: 'start'
+            }}>
+                <div className="about-line" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
+                    <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)' }}>
+                        The Vision
+                    </span>
+                </div>
+
+                <div>
+                    <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 300, lineHeight: 1.3, letterSpacing: '-0.02em', margin: 0, color: 'var(--text-secondary)' }}>
+                        <span className="about-line" style={{ display: 'block' }}>We engineer digital presence for</span>
+                        <span className="about-line" style={{ display: 'block', color: 'var(--text-primary)' }}>ambitious brands that demand</span>
+                        <span className="about-line" style={{ display: 'block' }}>an <span style={{ fontStyle: 'italic', paddingRight: '0.2em' }}>unfair advantage</span> in scale.</span>
                     </h2>
-                    <p className="about-text" style={{ fontSize: '1.5rem', color: 'var(--text-secondary)' }}>
-                        Design + Growth Strategy for ambitious brands.
-                    </p>
                 </div>
             </div>
         </section>

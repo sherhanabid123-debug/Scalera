@@ -15,6 +15,7 @@ import Services from './components/sections/Services';
 import Portfolio from './components/sections/Portfolio';
 import Marquee from './components/sections/Marquee';
 import WhyScalera from './components/sections/WhyScalera';
+import Testimonials from './components/sections/Testimonials';
 import CTA from './components/sections/CTA';
 import Footer from './components/layout/Footer';
 
@@ -83,6 +84,7 @@ function App() {
           <Portfolio />
           <Marquee />
           <WhyScalera />
+          <Testimonials />
           <CTA />
         </main>
 
@@ -110,7 +112,7 @@ function App() {
           className="preloader"
           style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundColor: '#0f172a', zIndex: 10000,
+            backgroundColor: '#0a0a0a', zIndex: 10000,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexDirection: 'column'
           }}

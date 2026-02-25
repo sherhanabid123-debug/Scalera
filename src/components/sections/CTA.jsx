@@ -7,71 +7,66 @@ const CTA = () => {
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
             gsap.fromTo('.cta-content',
-                { scale: 0.9, opacity: 0, y: 50 },
+                { opacity: 0, y: 50 },
                 {
-                    scale: 1, opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+                    opacity: 1, y: 0, duration: 1.5, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
                         start: 'top 80%',
                     }
                 }
             );
-
-            // Subtle background glow movement
-            gsap.to('.cta-glow', {
-                x: 'random(-50, 50)',
-                y: 'random(-50, 50)',
-                duration: 4,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut'
-            });
         }, containerRef);
         return () => ctx.revert();
     }, []);
 
     return (
-        <section ref={containerRef} className="section" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden', zIndex: 2 }}>
-            {/* Moving background glow specific to CTA */}
-            <div className="cta-glow" style={{
-                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                width: '60vw', height: '60vw', background: 'radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%)',
-                zIndex: -1, pointerEvents: 'none', borderRadius: '50%'
-            }} />
+        <section ref={containerRef} className="section" style={{ padding: '12rem 5%', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+            <div className="cta-content" style={{ width: '100%', maxWidth: '800px', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+                    Start a Conversation
+                </p>
 
-            <div className="container cta-content" style={{ position: 'relative', zIndex: 2 }}>
-                <h2 style={{ fontSize: 'clamp(4.5rem, 9vw, 8rem)', fontWeight: 800, letterSpacing: '-0.05em', marginBottom: '2.5rem', lineHeight: 1 }}>
-                    Ready to Scale?
+                <h2 style={{ fontSize: 'clamp(3.5rem, 8vw, 7rem)', fontWeight: 300, letterSpacing: '-0.04em', margin: '0 0 4rem 0', lineHeight: 0.95, color: 'var(--text-primary)' }}>
+                    Let's Build<br />
+                    <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>Something</span><br />
+                    Great.
                 </h2>
+
                 <a
                     href="https://wa.me/917483537959"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="glass"
+                    className="cta-btn"
                     style={{
-                        color: 'var(--text-primary)', padding: '1.25rem 3.5rem', borderRadius: '40px',
-                        fontWeight: 600, fontSize: '1.125rem', cursor: 'pointer', transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                        display: 'inline-block', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)',
-                        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.5)'
+                        padding: '1.5rem 4rem', borderRadius: '50px',
+                        fontWeight: 400, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.15em',
+                        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-flex', alignItems: 'center', gap: '1rem',
+                        background: '#ffffff', color: '#050505', border: '1px solid #ffffff', textDecoration: 'none'
                     }}
-                    onMouseMove={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const x = e.clientX - rect.left - rect.width / 2;
-                        const y = e.clientY - rect.top - rect.height / 2;
-                        e.currentTarget.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                        e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-                        e.currentTarget.style.boxShadow = '0 15px 40px rgba(255, 255, 255, 0.05)';
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = '#ffffff';
+                        e.currentTarget.style.transform = 'translateY(-5px)';
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translate(0px, 0px) scale(1)';
-                        e.currentTarget.style.background = 'var(--bg-secondary)';
-                        e.currentTarget.style.border = '1px solid var(--border-subtle)';
-                        e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.5)';
+                        e.currentTarget.style.background = '#ffffff';
+                        e.currentTarget.style.color = '#050505';
+                        e.currentTarget.style.transform = 'translateY(0)';
                     }}
                 >
-                    Let's Build Your Presence
+                    Chat on WhatsApp
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
                 </a>
+
+                <div style={{ marginTop: '4rem', display: 'flex', justifyContent: 'center', gap: '2rem' }}>
+                    <a href="mailto:hello@scalera.inc" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.3s' }} onMouseEnter={e => e.target.style.color = '#fff'} onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}>hello@scalera.inc</a>
+                    <span style={{ color: 'var(--border-subtle)' }}>|</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Based in Bangalore, India</span>
+                </div>
             </div>
         </section>
     );
