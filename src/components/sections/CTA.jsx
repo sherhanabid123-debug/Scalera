@@ -60,12 +60,6 @@ const CTA = () => {
                         <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                 </a>
-
-                <div style={{ marginTop: '4rem', display: 'flex', justifyContent: 'center', gap: '2rem' }}>
-                    <a href="mailto:hello@scalera.inc" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.3s' }} onMouseEnter={e => e.target.style.color = '#fff'} onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}>hello@scalera.inc</a>
-                    <span style={{ color: 'var(--border-subtle)' }}>|</span>
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Based in Bangalore, India</span>
-                </div>
             </div>
         </section>
     );
