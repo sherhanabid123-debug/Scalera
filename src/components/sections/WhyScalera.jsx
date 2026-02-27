@@ -41,8 +41,8 @@ const WhyScalera = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2 }}>
-            <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+        <section ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2, overflow: 'hidden' }}>
+            <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '4rem', alignItems: 'center' }}>
                 <div>
                     <h2 className="why-title" style={{ fontSize: 'clamp(4rem, 7vw, 6.5rem)', fontWeight: 800, marginBottom: '2.5rem', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
                         Why Work <br />With Us

@@ -30,6 +30,7 @@
 
 html {
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -42,6 +43,8 @@ body {
   line-height: 1.6;
   width: 100%;
   min-height: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Base Typography Refinements */
