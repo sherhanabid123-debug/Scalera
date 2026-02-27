@@ -235,3 +235,31 @@ body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+  .desktop-menu {
+    display: none !important;
+  }
+
+  .mobile-toggle {
+    display: flex !important;
+  }
+}
+
+.mobile-toggle:hover span {
+  background: var(--accent-color) !important;
+}
+
+.mobile-nav-link {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.mobile-nav-link:active,
+.mobile-nav-link:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+  letter-spacing: 0.05em;
+}
