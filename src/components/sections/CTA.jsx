@@ -33,7 +33,7 @@ const CTA = () => {
                 </h2>
 
                 <a
-                    href="https://wa.me/917483537959"
+                    href="https://wa.me/917975242650"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="cta-btn"

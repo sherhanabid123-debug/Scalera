@@ -81,7 +81,7 @@ const Hero = () => {
                         onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#fff'; }}>
                         View Our Work
                     </a>
-                    <a href="https://wa.me/917483537959" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{
+                    <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{
                         color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em',
                         transition: 'color 0.4s ease', position: 'relative', display: 'inline-block', paddingBottom: '6px'
                     }} onMouseEnter={(e) => { e.target.style.color = '#fff'; e.currentTarget.querySelector('.underline').style.transform = 'scaleX(1)'; }}
