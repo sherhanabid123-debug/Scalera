@@ -4,10 +4,23 @@ import gsap from 'gsap';
 const CustomCursor = () => {
     const cursorRef = useRef(null);
     const dotRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        const checkMobile = () => {
+            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const isSmallScreen = window.innerWidth < 768;
+            setIsMobile(isTouch || isSmallScreen);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        if (isMobile) return () => window.removeEventListener('resize', checkMobile);
+
         const cursor = cursorRef.current;
         const dot = dotRef.current;
+        if (!cursor || !dot) return;
 
         // Use highly optimized quickTo for cursor tracking (no continuous tween garbage)
         const xToCursor = gsap.quickTo(cursor, "x", { duration: 0.8, ease: "power3.out" });
@@ -42,11 +55,14 @@ const CustomCursor = () => {
         window.addEventListener('mouseout', onMouseOut);
 
         return () => {
+            window.removeEventListener('resize', checkMobile);
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('mouseover', onMouseOver);
             window.removeEventListener('mouseout', onMouseOut);
         };
-    }, []);
+    }, [isMobile]);
+
+    if (isMobile) return null;
 
     return (
         <>
