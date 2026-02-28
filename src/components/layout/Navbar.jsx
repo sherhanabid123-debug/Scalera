@@ -109,7 +109,7 @@ const Navbar = () => {
                     background: 'rgba(10, 10, 10, 0.98)', backdropFilter: 'blur(20px)',
                     zIndex: 101, display: 'flex', flexDirection: 'column',
                     justifyContent: 'center', alignItems: 'center', gap: '3rem',
-                    transform: 'translateX(100%)'
+                    transform: 'translateX(100%)', pointerEvents: 'auto'
                 }}
             >
                 <a
