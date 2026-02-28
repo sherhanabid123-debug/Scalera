@@ -91,7 +91,7 @@ function App() {
         <Footer />
 
         {/* Floating WhatsApp Action */}
-        <a href="https://wa.me/917483537959" target="_blank" rel="noopener noreferrer" style={{
+        <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" style={{
           position: 'fixed', bottom: '30px', right: '30px',
           width: '60px', height: '60px', borderRadius: '50%',
           background: '#25D366', color: '#fff',
