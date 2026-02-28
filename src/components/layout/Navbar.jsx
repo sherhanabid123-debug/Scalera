@@ -53,7 +53,7 @@ const Navbar = () => {
             <nav className={scrolled ? 'glass-nav' : ''} style={{
                 position: 'fixed', top: 0, width: '100%', padding: scrolled ? '16px 5%' : '32px 5%',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                zIndex: 100, pointerEvents: 'auto',
+                zIndex: 110, pointerEvents: 'auto',
                 transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                 background: !scrolled ? 'transparent' : undefined,
             }}>
