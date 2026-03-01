@@ -192,19 +192,15 @@ img {
 
 /* Glassmorphism helpers for Layered Theme */
 .glass {
-  background: rgba(30, 41, 59, 0.5);
-  /* Semi-transparent slate */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(15, 20, 30, 0.85);
+  /* Darker, more solid background to compensate for lack of blur */
   border: 1px solid var(--border-subtle);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .glass-nav {
-  background: rgba(10, 10, 10, 0.35);
-  /* Lower opacity for clear glass */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(10, 10, 10, 0.85);
+  /* Solid dark background for performance */
   border-bottom: 1px solid var(--border-subtle);
 }
 
