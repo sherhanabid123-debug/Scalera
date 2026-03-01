@@ -27,7 +27,7 @@ const Testimonials = () => {
                     </svg>
                 </div>
                 <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4.5rem)', fontWeight: 300, lineHeight: 1.3, letterSpacing: '-0.02em', marginBottom: '3rem' }}>
-                    "They didn't just build a website, they <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>engineered a digital presence</span> that instantly elevated our brand authority."
+                    "They didn't just build a website, they <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>built a digital presence</span> that instantly elevated our brand authority."
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                     <p style={{ fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600, margin: 0 }}>Ratan Singh</p>
