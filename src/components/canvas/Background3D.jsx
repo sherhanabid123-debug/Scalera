@@ -28,6 +28,9 @@ const Background3D = () => {
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // Apply blur natively on the canvas context for better performance than CSS filters
+            ctx.filter = 'blur(12px)';
+
             waves.forEach((wave, index) => {
                 ctx.beginPath();
                 ctx.moveTo(0, canvas.height);
@@ -46,6 +49,9 @@ const Background3D = () => {
                 ctx.fillStyle = `rgba(220, 180, 128, ${wave.opacity})`;
                 ctx.fill();
             });
+
+            // Reset filter after drawing so clearRect isn't blurred
+            ctx.filter = 'none';
 
             time += 1.5;
             animationFrameId = requestAnimationFrame(draw);
@@ -80,8 +86,7 @@ const Background3D = () => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    filter: 'blur(12px)', /* High blur creates the smooth liquid blending */
-                    transform: 'scale(1.1)' /* Prevent blurred edges from showing transparent gaps */
+                    transform: 'scale(1.1)' /* Prevent edges from showing transparent gaps */
                 }}
             />
 
