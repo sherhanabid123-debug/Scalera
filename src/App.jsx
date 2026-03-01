@@ -7,7 +7,6 @@ import { MessageCircle } from 'lucide-react';
 gsap.registerPlugin(ScrollTrigger);
 
 import Background3D from './components/canvas/Background3D';
-import CustomCursor from './components/ui/CustomCursor';
 import Navbar from './components/layout/Navbar';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
@@ -70,7 +69,6 @@ function App() {
 
   return (
     <>
-      <CustomCursor />
       <Background3D />
       <div className="noise-bg" />
 
