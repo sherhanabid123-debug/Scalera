@@ -51,7 +51,7 @@ const About = () => {
                         That Value Quality.
                     </h2>
                     <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: '700px', margin: 0 }}>
-                        Your website isn’t just a page online — it’s your brand’s first impression. We create structured, mobile-first websites designed for clarity, trust, and performance.
+                        Your website isn’t just a page online it’s your brand’s first impression. We create structured, mobile-first websites designed for clarity, trust, and performance.
                     </p>
                 </div>
             </div>
