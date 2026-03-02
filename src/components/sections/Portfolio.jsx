@@ -6,7 +6,14 @@ const projects = [
     { id: 1, title: 'Thar', category: 'Restaurant Experience', summary: 'An immersive digital experience bringing authentic culinary heritage online.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
     { id: 2, title: 'Kryptic', category: 'E-Commerce Platform', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
     { id: 3, title: 'The Second House', category: 'Heritage Dining & Art', summary: 'A unique culinary journey blending Goan heritage and modern art in a 108-year-old Indo-Portuguese bungalow.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' },
-    { id: 4, title: 'Aura', category: 'Fintech Interface', summary: 'A streamlined, user-centric dashboard design for financial applications.', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' }
+    {
+        id: 4,
+        title: 'Fridah by Bohemians',
+        category: 'Immersive Restaurant / UI Design',
+        summary: 'An immersive digital journey through bohemian luxury and artisanal multicuisine.',
+        img: '/assets/fridah-preview.png',
+        link: 'https://fridah-by-bohemians.vercel.app/#'
+    }
 ];
 
 const Portfolio = () => {
