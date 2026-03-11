@@ -51,7 +51,13 @@ const Navbar = () => {
     return (
         <>
             <nav className={scrolled ? 'glass-nav' : ''} style={{
-                position: 'fixed', top: 0, width: '100%', padding: scrolled ? '16px 5%' : '32px 5%',
+                position: 'fixed', 
+                top: scrolled ? '20px' : 0, 
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: scrolled ? 'calc(100% - 40px)' : '100%',
+                maxWidth: scrolled ? '700px' : '100%',
+                padding: scrolled ? '10px 24px' : '32px 5%',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 zIndex: 110, pointerEvents: 'auto',
                 transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -68,10 +74,13 @@ const Navbar = () => {
                 </div>
 
                 {/* Desktop Menu */}
-                <div className="desktop-menu" style={{ display: 'flex', gap: '2.5rem', fontSize: '0.95rem', fontWeight: 500 }}>
-                    <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
-                    <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
+                <div className="desktop-menu" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', fontSize: '0.95rem', fontWeight: 500 }}>
                     <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>About</a>
+                    <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
+                    <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
+                    <a href="#contact" onClick={scrollTo('#contact')} className="nav-contact-btn">
+                        Let's Talk
+                    </a>
                 </div>
 
                 {/* Hamburger Toggle */}
@@ -114,12 +123,12 @@ const Navbar = () => {
             >
                 <a
                     ref={el => linksRef.current[0] = el}
-                    href="#work"
-                    onClick={scrollTo('#work')}
+                    href="#about"
+                    onClick={scrollTo('#about')}
                     className="mobile-nav-link"
                     style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
                 >
-                    Work
+                    About
                 </a>
                 <a
                     ref={el => linksRef.current[1] = el}
@@ -132,12 +141,21 @@ const Navbar = () => {
                 </a>
                 <a
                     ref={el => linksRef.current[2] = el}
-                    href="#about"
-                    onClick={scrollTo('#about')}
+                    href="#work"
+                    onClick={scrollTo('#work')}
                     className="mobile-nav-link"
                     style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
                 >
-                    About
+                    Work
+                </a>
+                <a
+                    ref={el => linksRef.current[3] = el}
+                    href="#contact"
+                    onClick={scrollTo('#contact')}
+                    className="nav-contact-btn"
+                    style={{ marginTop: '2rem', fontSize: '1.5rem', padding: '16px 40px' }}
+                >
+                    Let's Talk
                 </a>
             </div>
         </>
