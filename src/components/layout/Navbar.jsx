@@ -78,7 +78,7 @@ const Navbar = () => {
                     <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>About</a>
                     <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
                     <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
-                    <a href="#contact" onClick={scrollTo('#contact')} className="nav-contact-btn">
+                    <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn">
                         Let's Talk
                     </a>
                 </div>
@@ -150,8 +150,9 @@ const Navbar = () => {
                 </a>
                 <a
                     ref={el => linksRef.current[3] = el}
-                    href="#contact"
-                    onClick={scrollTo('#contact')}
+                    href="https://wa.me/917975242650"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="nav-contact-btn"
                     style={{ marginTop: '2rem', fontSize: '1.5rem', padding: '16px 40px' }}
                 >
