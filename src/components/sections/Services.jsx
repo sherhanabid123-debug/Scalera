@@ -51,34 +51,50 @@ const Services = () => {
                     </span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {services.map((service, i) => (
                         <div
                             key={i}
                             className="service-item"
                             style={{
-                                borderBottom: '1px solid var(--border-subtle)',
-                                padding: '3rem 0',
+                                background: 'rgba(255, 255, 255, 0.02)',
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255, 255, 255, 0.05)',
+                                borderRadius: '24px',
+                                padding: '3rem 2.5rem',
                                 display: 'grid',
                                 gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
                                 gap: '2rem',
-                                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                                transition: 'all 0.6s var(--ease-apple)',
                                 cursor: 'pointer',
-                                alignItems: 'start'
+                                alignItems: 'start',
+                                position: 'relative',
+                                overflow: 'hidden'
                             }}
                             onMouseEnter={(e) => {
-                                if (!isMobile) e.currentTarget.style.paddingLeft = '2rem';
-                                e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.3)';
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                                e.currentTarget.style.transform = 'translateY(-8px)';
+                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
                             }}
                             onMouseLeave={(e) => {
-                                if (!isMobile) e.currentTarget.style.paddingLeft = '0';
-                                e.currentTarget.style.borderBottomColor = 'var(--border-subtle)';
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
                             }}
                         >
-                            <h3 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontWeight: 300, margin: 0, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                            {/* Subtle Inner Glow */}
+                            <div style={{
+                                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                                background: 'radial-gradient(circle at top left, rgba(255,255,255,0.03) 0%, transparent 50%)',
+                                pointerEvents: 'none'
+                            }} />
+                            
+                            <h3 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontWeight: 300, margin: 0, color: 'var(--text-primary)', letterSpacing: '-0.02em', zIndex: 1 }}>
                                 {service.title}
                             </h3>
-                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1rem', margin: 0, paddingTop: isMobile ? '0' : '0.5rem', maxWidth: '400px' }}>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1rem', margin: 0, paddingTop: isMobile ? '0' : '0.5rem', maxWidth: '400px', zIndex: 1 }}>
                                 {service.desc}
                             </p>
                         </div>

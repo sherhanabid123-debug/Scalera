@@ -56,15 +56,25 @@ const Navbar = () => {
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: scrolled ? 'calc(100% - 40px)' : '100%',
-                maxWidth: scrolled ? '700px' : '100%',
-                padding: scrolled ? '10px 24px' : '32px 5%',
+                maxWidth: scrolled ? '800px' : '100%',
+                padding: scrolled ? '12px 32px' : '40px 6%',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 zIndex: 110, pointerEvents: 'auto',
-                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                transition: 'all 0.6s var(--ease-apple)',
                 background: !scrolled ? 'transparent' : undefined,
+                overflow: 'hidden'
             }}>
+                {/* Subtle Reflection Overlay for Scrolled State */}
+                {scrolled && (
+                    <div style={{
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '50%',
+                        background: 'linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, transparent 100%)',
+                        pointerEvents: 'none'
+                    }} />
+                )}
+                
                 <div
-                    style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102 }}
+                    style={{ fontWeight: 600, fontSize: '1.25rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102, color: 'var(--text-primary)' }}
                     onClick={() => {
                         if (isOpen) setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: 'smooth' });

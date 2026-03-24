@@ -1,25 +1,25 @@
 :root {
   --bg-primary: #0a0a0a;
-  /* Rich Black */
-  --bg-secondary: #121212;
-  /* Elevated Deep Grey */
-  --text-primary: #fafafa;
-  /* Soft White */
-  --text-secondary: #888888;
-  /* Architectural Grey */
+  --bg-secondary: #0f0f0f;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1a6; /* Apple-style muted text */
   --accent-color: #dcb480;
-  /* Elegant Champagne/Sand Accent */
-  --accent-glow: rgba(220, 180, 128, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.04);
-  /* Faint structural borders */
-  /* Architectural thin borders */
+  --accent-glow: rgba(220, 180, 128, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(20, 20, 20, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  
+  /* Apple Easing */
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Typography */
-  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Layout */
   --max-width: 1400px;
-  --pad-x: 5%;
+  --pad-x: 6%;
 }
 
 * {
@@ -190,24 +190,80 @@ img {
   position: relative;
 }
 
-/* Glassmorphism helpers for Layered Theme */
+/* Premium Glassmorphism */
 .glass {
-  background: rgba(30, 41, 59, 0.5);
-  /* Semi-transparent slate */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-subtle);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.5s var(--ease-apple);
 }
 
 .glass-nav {
-  background: rgba(10, 10, 10, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-subtle);
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 100px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 2.5rem;
+  transition: all 0.5s var(--ease-apple);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.btn-premium {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 3rem;
+  background: white;
+  color: #000;
+  border-radius: 100px;
+  font-weight: 500;
+  overflow: hidden;
+  transition: all 0.4s var(--ease-apple);
+}
+
+.btn-premium:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 40px var(--accent-glow);
+}
+
+.btn-premium-outline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 3rem;
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  font-weight: 500;
+  transition: all 0.4s var(--ease-apple);
+}
+
+.btn-premium-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 
 /* Base selection color for professional look */
 ::selection {

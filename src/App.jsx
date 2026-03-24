@@ -44,20 +44,18 @@ function App() {
 
     const tl = gsap.timeline();
 
-    // Stagger in the letters of "SCALERA"
+    // Cinematic Preloader Animation
     tl.fromTo('.preloader-char',
-      { y: 80, opacity: 0, rotationX: -50 },
-      { y: 0, opacity: 1, rotationX: 0, duration: 0.2, stagger: 0.015, ease: 'power2.out' }
+      { y: 100, opacity: 0, rotationX: -90 },
+      { y: 0, opacity: 1, rotationX: 0, duration: 1.2, stagger: 0.1, ease: 'expo.out' }
     )
-      // Stagger out the letters almost instantly after
       .to('.preloader-char', {
-        y: -50, opacity: 0, duration: 0.15, stagger: 0.01, ease: 'power3.in', delay: 0.02
+        opacity: 0, y: -20, duration: 0.8, stagger: 0.05, ease: 'expo.inOut', delay: 0.5
       })
-      // Simulate load time, then curtain raise the preloader fast
       .to('.preloader', {
         yPercent: -100,
-        duration: 0.4,
-        ease: 'expo.inOut'
+        duration: 1.2,
+        ease: 'power4.inOut'
       }).add(() => setLoading(false));
 
     return () => {
