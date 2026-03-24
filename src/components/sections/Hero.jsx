@@ -49,16 +49,8 @@ const Hero = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="section" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
-            {/* Liquid Background Effect */}
-            <div style={{
-                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'radial-gradient(circle at 50% 50%, rgba(220, 180, 128, 0.03) 0%, transparent 70%)',
-                zIndex: 0, pointerEvents: 'none'
-            }} />
-            
-            <div className="glow-orb" style={{ top: '20%', left: '30%', opacity: 0.05, filter: 'blur(120px)' }} />
-            <div className="glow-orb" style={{ top: '60%', left: '70%', width: '600px', height: '600px', opacity: 0.03, filter: 'blur(100px)' }} />
+        <section ref={containerRef} className="section" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
+            <div className="glow-orb" style={{ top: '30%', left: '40%' }} />
 
             <div className="hero-content" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', paddingLeft: '5%', maxWidth: '1400px' }}>
                 <h1 style={{ fontSize: 'clamp(3rem, 7vw, 9rem)', fontWeight: 300, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: '2.5rem', display: 'flex', flexDirection: 'column', textTransform: 'uppercase' }}>
@@ -79,7 +71,14 @@ const Hero = () => {
                 </p>
 
                 <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <a href="#work" className="hero-btn btn-premium" style={{ border: 'none' }}>
+                    <a href="#work" className="hero-btn" style={{
+                        padding: '1.25rem 3rem', border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '50px',
+                        fontWeight: 400, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em',
+                        color: '#fff', transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-block',
+                        background: 'transparent'
+                    }} onMouseEnter={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#0a0a0a'; }}
+                        onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#fff'; }}>
                         View Our Work
                     </a>
                     <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{

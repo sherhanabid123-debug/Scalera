@@ -52,30 +52,14 @@ const Process = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '4rem 2rem' }}>
                     {steps.map((step, i) => (
-                        <div 
-                            key={i} 
-                            className="process-step" 
-                            style={{ 
-                                borderTop: '1px solid rgba(255,255,255,0.1)', 
-                                paddingTop: '2.5rem',
-                                transition: 'all 0.6s var(--ease-apple)'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.paddingTop = '3rem';
-                                e.currentTarget.style.borderTopColor = 'rgba(255,255,255,0.2)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.paddingTop = '2.5rem';
-                                e.currentTarget.style.borderTopColor = 'rgba(255,255,255,0.1)';
-                            }}
-                        >
-                            <div style={{ fontSize: '0.8rem', color: 'var(--accent-color)', marginBottom: '1.5rem', fontWeight: 600, letterSpacing: '0.1em' }}>
-                                STEP {step.num}
+                        <div key={i} className="process-step" style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '2rem' }}>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontFamily: 'monospace' }}>
+                                [{step.num}]
                             </div>
-                            <h3 style={{ fontSize: '1.75rem', fontWeight: 500, margin: '0 0 1rem 0', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                            <h3 style={{ fontSize: '1.75rem', fontWeight: 400, margin: '0 0 1rem 0', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
                                 {step.title}
                             </h3>
-                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1rem', margin: 0, maxWidth: '350px' }}>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1rem', margin: 0 }}>
                                 {step.desc}
                             </p>
                         </div>

@@ -80,20 +80,11 @@ const Portfolio = () => {
                             rel={project.link ? 'noopener noreferrer' : ''}
                             key={project.id}
                             className="portfolio-item group"
-                            style={{ display: 'block', cursor: 'pointer', textDecoration: 'none', transition: 'transform 0.6s var(--ease-apple)' }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-10px)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                            }}
+                            style={{ display: 'block', cursor: 'pointer', textDecoration: 'none' }}
                         >
                             <div style={{
-                                aspectRatio: '16/10',
-                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', 
-                                background: '#111', borderRadius: '12px',
-                                border: '1px solid rgba(255,255,255,0.05)',
-                                boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                                aspectRatio: '4/3', /* Equal aspect ratios for perfect alignment */
+                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
                             }}>
                                 <div
                                     className="img-parallax"
@@ -102,8 +93,8 @@ const Portfolio = () => {
                                         width: '100%', height: '120%',
                                         backgroundImage: `url(${project.img})`,
                                         backgroundSize: 'cover', backgroundPosition: 'center',
-                                        transition: 'transform 0.8s var(--ease-apple), filter 0.8s ease',
-                                        filter: 'grayscale(0.2) contrast(1.1) brightness(0.7)',
+                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
+                                        filter: 'grayscale(0) contrast(1) brightness(0.8)',
                                         transformOrigin: 'center'
                                     }}
                                     onMouseEnter={(e) => {
@@ -112,24 +103,18 @@ const Portfolio = () => {
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.filter = 'grayscale(0.2) contrast(1.1) brightness(0.7)';
+                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(0.8)';
                                     }}
                                 />
-                                {/* Bottom Glass Overlay for Project Info (Subtle) */}
-                                <div style={{
-                                    position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '1.5rem',
-                                    background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)',
-                                    pointerEvents: 'none'
-                                }} />
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <div style={{ flex: 1, paddingRight: '2rem' }}>
-                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 500, letterSpacing: '-0.02em', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{project.title}</h3>
-                                    <p style={{ color: 'var(--accent-color)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600, margin: '0 0 1rem 0' }}>{project.category}</p>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal', maxWidth: '400px' }}>{project.summary}</p>
+                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
                                 </div>
-                                <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', opacity: 0.5, padding: '0.3rem 0', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
-                                    / 0{index + 1}
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
+                                    [0{index + 1}]
                                 </div>
                             </div>
                         </a>

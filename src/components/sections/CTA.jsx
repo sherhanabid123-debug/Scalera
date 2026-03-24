@@ -27,25 +27,35 @@ const CTA = () => {
                     Start a Conversation
                 </p>
 
-                <h2 style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 300, letterSpacing: '-0.04em', margin: '0 0 4rem 0', lineHeight: 1.1, color: 'var(--text-primary)' }}>
+                <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)', fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 4rem 0', lineHeight: 1.1, color: 'var(--text-primary)' }}>
                     Let's Build Something<br />
-                    <span style={{ color: 'var(--text-secondary)', opacity: 0.6 }}>Structured</span> & Impactful.
+                    <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>Structured</span> & Impactful.
                 </h2>
 
                 <a
                     href="https://wa.me/917975242650"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-premium"
+                    className="cta-btn"
                     style={{
-                        padding: '1.5rem 4rem',
-                        fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.15em',
-                        display: 'inline-flex', alignItems: 'center', gap: '1.25rem',
-                        textDecoration: 'none'
+                        padding: '1.5rem 4rem', borderRadius: '50px',
+                        fontWeight: 400, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.15em',
+                        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-flex', alignItems: 'center', gap: '1rem',
+                        background: '#ffffff', color: '#050505', border: '1px solid #ffffff', textDecoration: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = '#ffffff';
+                        e.currentTarget.style.transform = 'translateY(-5px)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#ffffff';
+                        e.currentTarget.style.color = '#050505';
+                        e.currentTarget.style.transform = 'translateY(0)';
                     }}
                 >
                     Start Your Project
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
