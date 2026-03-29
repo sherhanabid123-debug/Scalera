@@ -101,7 +101,7 @@ const Hero = () => {
                     margin: '0 auto 3.5rem',
                     lineHeight: 1.6
                 }}>
-                    Mafe for high performance. Designed for impact. We transform ambitious brands into market leaders through best design and AI integrated software solutions.
+                    Made for high performance. Designed for impact. We transform ambitious brands into market leaders through best design and AI integrated software solutions.
                 </p>
 
                 <div className="hero-btn-group" style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '5rem' }}>
