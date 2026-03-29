@@ -3,9 +3,9 @@ import gsap from 'gsap';
 
 const reasons = [
     'Clean, Modern Design',
-    'Mobile-First Approach',
+    'Mobile First Approach',
     'Structured SEO Foundation',
-    'Performance-Focused Builds',
+    'Performance Focused Builds',
     'Direct & Clear Communication'
 ];
 
