@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const projects = [
     { id: 1, title: 'Thar', category: 'Restaurant Experience', summary: 'An immersive digital experience bringing authentic culinary heritage online.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
@@ -18,25 +17,17 @@ const projects = [
 
 const Portfolio = () => {
     const containerRef = useRef();
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
-            gsap.fromTo('.portfolio-heading',
+            gsap.fromTo('.portfolio-heading-anim',
                 { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: '.portfolio-heading', start: 'top 80%' } }
+                { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: containerRef.current, start: 'top 80%' } }
             );
 
             gsap.utils.toArray('.portfolio-item').forEach((item) => {
                 gsap.fromTo(item,
-                    { opacity: 0, y: 100 },
+                    { opacity: 0, y: 80 },
                     {
                         opacity: 1, y: 0, duration: 1.5, ease: 'expo.out',
                         scrollTrigger: {
@@ -46,33 +37,36 @@ const Portfolio = () => {
                     }
                 );
             });
-
-            // Parallax image wrapper
-            gsap.utils.toArray('.img-parallax').forEach((img) => {
-                gsap.to(img, {
-                    yPercent: 15,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: img.parentElement,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
-            });
-
         }, containerRef);
         return () => ctx.revert();
     }, []);
-    return (
-        <section id="work" ref={containerRef} style={{ padding: '8rem 0', borderTop: '1px solid var(--border-subtle)' }}>
-            <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5%' }}>
-                <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '1.5rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
-                <p className="portfolio-heading" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '6rem', lineHeight: 1.6 }}>
-                    A selection of projects focused on clarity, structure, and measurable impact.
-                </p>
 
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '4rem' : '4rem', alignItems: 'flex-start' }}>
+    return (
+        <section id="work" ref={containerRef} style={{ padding: '10rem 0', position: 'relative' }}>
+            <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%' }}>
+                <div style={{ marginBottom: '6rem' }}>
+                    <div className="hero-badge" style={{ marginBottom: '1.5rem' }}>Portfolio</div>
+                    <h2 className="portfolio-heading-anim" style={{ 
+                        fontSize: 'clamp(3rem, 7vw, 6rem)', 
+                        fontWeight: 800, 
+                        marginBottom: '1.5rem', 
+                        letterSpacing: '-0.04em', 
+                        lineHeight: 1,
+                        color: '#fff'
+                    }}>
+                        Selected <span className="text-gradient-accent">Work.</span>
+                    </h2>
+                    <p className="portfolio-heading-anim" style={{ 
+                        color: 'var(--text-secondary)', 
+                        fontSize: 'clamp(1rem, 1.5vw, 1.25rem)', 
+                        maxWidth: '600px', 
+                        lineHeight: 1.6 
+                    }}>
+                        A collection of high-impact digital solutions engineered for growth and built on precision.
+                    </p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem' }}>
                     {projects.map((project, index) => (
                         <a
                             href={project.link || '#'}
@@ -80,42 +74,70 @@ const Portfolio = () => {
                             rel={project.link ? 'noopener noreferrer' : ''}
                             key={project.id}
                             className="portfolio-item group"
-                            style={{ display: 'block', cursor: 'pointer', textDecoration: 'none' }}
+                            style={{ display: 'block', textDecoration: 'none', position: 'relative' }}
                         >
-                            <div style={{
-                                aspectRatio: '4/3', /* Equal aspect ratios for perfect alignment */
-                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
+                            <div className="glow-border" style={{
+                                aspectRatio: '16/10',
+                                overflow: 'hidden', 
+                                position: 'relative', 
+                                marginBottom: '2rem', 
+                                background: '#0f172a',
+                                borderRadius: '24px'
                             }}>
                                 <div
-                                    className="img-parallax"
                                     style={{
-                                        position: 'absolute', top: '-10%', left: 0,
-                                        width: '100%', height: '120%',
+                                        position: 'absolute', top: 0, left: 0,
+                                        width: '100%', height: '100%',
                                         backgroundImage: `url(${project.img})`,
                                         backgroundSize: 'cover', backgroundPosition: 'center',
-                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
-                                        filter: 'grayscale(0) contrast(1) brightness(0.8)',
-                                        transformOrigin: 'center'
+                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        filter: 'brightness(0.9)'
                                     }}
                                     onMouseEnter={(e) => {
                                         e.currentTarget.style.transform = 'scale(1.05)';
-                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(1)';
+                                        e.currentTarget.style.filter = 'brightness(1)';
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(0.8)';
+                                        e.currentTarget.style.filter = 'brightness(0.9)';
                                     }}
                                 />
+                                {/* Overlay Gradient */}
+                                <div style={{ 
+                                    position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%',
+                                    background: 'linear-gradient(to top, rgba(2,6,23,0.8), transparent)',
+                                    pointerEvents: 'none'
+                                }} />
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div style={{ flex: 1, paddingRight: '2rem' }}>
-                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
+
+                            <div style={{ padding: '0 0.5rem' }}>
+                                <div style={{ 
+                                    fontSize: '0.75rem', 
+                                    fontWeight: 700, 
+                                    color: 'var(--accent-color)', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.15em',
+                                    marginBottom: '0.75rem'
+                                }}>
+                                    {project.category}
                                 </div>
-                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
-                                    [0{index + 1}]
-                                </div>
+                                <h3 style={{ 
+                                    fontSize: '1.75rem', 
+                                    fontWeight: 700, 
+                                    color: '#fff', 
+                                    marginBottom: '1rem',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    {project.title}
+                                </h3>
+                                <p style={{ 
+                                    color: 'var(--text-secondary)', 
+                                    fontSize: '1rem', 
+                                    lineHeight: 1.6,
+                                    maxWidth: '90%'
+                                }}>
+                                    {project.summary}
+                                </p>
                             </div>
                         </a>
                     ))}
