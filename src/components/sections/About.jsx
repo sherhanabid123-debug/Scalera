@@ -26,29 +26,20 @@ const About = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '6rem', alignItems: 'center' }}>
                     
                     <div className="about-content-fade">
-                        <div className="hero-badge" style={{ marginBottom: '2rem' }}>Brand Strategy</div>
+                        <div className="hero-badge" style={{ marginBottom: '2rem' }}>Our Focus</div>
                         <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 2.5rem 0', color: '#fff' }}>
-                            Engineered for <br />
-                            <span className="text-gradient-accent">Quality & Speed.</span>
+                            We Build Websites <br />
+                            <span className="text-gradient-accent">That Drive Results.</span>
                         </h2>
                     </div>
 
                     <div className="about-content-fade">
-                        <p style={{ fontSize: 'clamp(1.1rem, 1.5vw, 1.35rem)', lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
-                            We don't just build websites; we engineer digital identity that grab attention. Our approach merges modern design with robust technical foundations.
+                        <p style={{ fontSize: 'clamp(1.2rem, 1.8vw, 1.5rem)', lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: '2.5rem', fontWeight: 500 }}>
+                            We specialize in helping <span style={{ color: '#fff' }}>restaurants and small businesses</span> improve their online presence and attract more customers.
                         </p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            {[
-                                { label: 'Performance-First Architecture', value: '100/100 Lighthouse Score' },
-                                { label: 'Conversion-Led Design', value: 'Strategy Driven' },
-                                { label: 'Scalable Infrastructure', value: 'Future Proof' }
-                            ].map((item, i) => (
-                                <div key={i} style={{ padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(34, 211, 238, 0.1)', background: 'rgba(34, 211, 238, 0.03)' }}>
-                                    <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-color)', fontWeight: 700, marginBottom: '0.5rem' }}>PERFORMANCE FIRST ARCHITECTURE AND MOBILE FRIENDLY</div>
-                                    <div style={{ fontSize: '1rem', color: '#fff', fontWeight: 600 }}>{item.value}</div>
-                                </div>
-                            ))}
-                        </div>
+                        <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+                            Your website shouldn't just be a digital business card. It should be your most effective sales tool, working 24/7 to turn visitors into loyal clients.
+                        </p>
                     </div>
 
                 </div>

@@ -4,28 +4,22 @@ import { Layout, Code, Search, Zap, Clock, ArrowUpRight } from 'lucide-react';
 
 const services = [
     { 
-        title: 'High Performance Landing Pages', 
-        desc: 'Custom built landing pages designed for high conversion and fast load speeds.', 
+        title: 'Web Development', 
+        desc: 'Custom-built websites designed to convert visitors into customers.', 
         time: '1-2 Weeks',
         icon: <Zap size={24} />
     },
     { 
-        title: 'Custom Web & SaaS Development', 
-        desc: 'End to end fullstack development using React/Next.js for complex digital products.', 
-        time: '4-12 Weeks',
-        icon: <Code size={24} />
-    },
-    { 
-        title: 'Brand Identity & UI/UX Design', 
-        desc: 'Comprehensive visual direction and user experience design that resonates with your users.', 
-        time: '2-4 Weeks',
-        icon: <Layout size={24} />
-    },
-    { 
-        title: 'SEO & Growth Acceleration', 
-        desc: 'Strategies designed to boost organic rankings and accelerate your user acquisition.', 
+        title: 'SEO & Visibility', 
+        desc: 'Improving your visibility on search engines to bring consistent traffic and leads.', 
         time: 'Ongoing',
         icon: <Search size={24} />
+    },
+    { 
+        title: 'Digital Growth', 
+        desc: 'Helping businesses scale their online presence with the right strategy and execution.', 
+        time: '4-8 Weeks',
+        icon: <ArrowUpRight size={24} />
     }
 ];
 

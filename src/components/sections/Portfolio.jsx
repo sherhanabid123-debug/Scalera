@@ -2,17 +2,17 @@ import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 
 const projects = [
-    { id: 1, title: 'Thar', category: 'Restaurant Experience', summary: 'An immersive digital experience bringing authentic culinary heritage online.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
-    { id: 2, title: 'Kryptic', category: 'E-Commerce Platform', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
-    { id: 3, title: 'The Second House', category: 'Heritage Dining & Art', summary: 'A unique culinary journey blending Goan heritage and modern art in a 108-year-old Indo-Portuguese bungalow.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' },
     {
-        id: 4,
+        id: 1,
         title: 'Fridah by Bohemians',
-        category: 'Immersive Restaurant / UI Design',
-        summary: 'An immersive digital journey through bohemian luxury and artisanal multicuisine.',
+        category: 'Restaurant Experience',
+        summary: 'A premium restaurant website designed to showcase experience, ambience, and drive bookings.',
         img: '/assets/fridah-preview.png',
         link: 'https://fridah-by-bohemians.vercel.app/#'
-    }
+    },
+    { id: 2, title: 'Thar', category: 'Heritage Dining', summary: 'An immersive digital journey bringing authentic culinary heritage online and driving local traffic.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
+    { id: 3, title: 'Kryptic', category: 'E-Commerce', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
+    { id: 4, title: 'The Second House', category: 'Fine Dining & Art', summary: 'A unique culinary journey blending heritage and modern art to attract high-end clientele.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' }
 ];
 
 const Portfolio = () => {
@@ -47,22 +47,22 @@ const Portfolio = () => {
                 <div style={{ marginBottom: '6rem' }}>
                     <div className="hero-badge" style={{ marginBottom: '1.5rem' }}>Portfolio</div>
                     <h2 className="portfolio-heading-anim" style={{ 
-                        fontSize: 'clamp(3rem, 7vw, 6rem)', 
+                        fontSize: 'clamp(3rem, 7vw, 6.5rem)', 
                         fontWeight: 800, 
                         marginBottom: '1.5rem', 
                         letterSpacing: '-0.04em', 
                         lineHeight: 1,
                         color: '#fff'
                     }}>
-                        Selected <span className="text-gradient-accent">Work.</span>
+                        Recent <span className="text-gradient-accent">Work.</span>
                     </h2>
                     <p className="portfolio-heading-anim" style={{ 
                         color: 'var(--text-secondary)', 
-                        fontSize: 'clamp(1rem, 1.5vw, 1.25rem)', 
-                        maxWidth: '600px', 
+                        fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)', 
+                        maxWidth: '700px', 
                         lineHeight: 1.6 
                     }}>
-                        A collection of high impact digital solutions engineered for growth and built on precision.
+                        A collection of high-impact digital solutions specifically built to <span style={{ color: '#fff' }}>convert visitors into customers.</span>
                     </p>
                 </div>
 

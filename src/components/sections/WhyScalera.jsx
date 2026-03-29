@@ -2,11 +2,10 @@ import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const reasons = [
-    'Clean, Modern Design',
-    'Mobile First Approach',
-    'Structured SEO Foundation',
-    'Performance Focused Builds',
-    'Direct & Clear Communication'
+    'Clean, modern design',
+    'Focus on conversions',
+    'Fast execution',
+    'Tailored approach'
 ];
 
 const WhyScalera = () => {
@@ -44,8 +43,8 @@ const WhyScalera = () => {
         <section ref={containerRef} className="section" style={{ position: 'relative', zIndex: 2, overflow: 'hidden' }}>
             <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '4rem', alignItems: 'center' }}>
                 <div>
-                    <h2 className="why-title" style={{ fontSize: 'clamp(4rem, 7vw, 6.5rem)', fontWeight: 800, marginBottom: '2.5rem', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
-                        Why Work <br />With Us
+                    <h2 className="why-title" style={{ fontSize: 'clamp(3.5rem, 6vw, 6.5rem)', fontWeight: 800, marginBottom: '2.5rem', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
+                        Why Businesses <br />Work With Us
                     </h2>
                 </div>
                 <div>

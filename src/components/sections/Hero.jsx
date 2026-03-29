@@ -83,44 +83,36 @@ const Hero = () => {
                 </div>
 
                 <h1 style={{ 
-                    fontSize: 'clamp(3.5rem, 8vw, 7.5rem)', 
+                    fontSize: 'clamp(3rem, 6vw, 6rem)', 
                     fontWeight: 800, 
-                    lineHeight: 1, 
+                    lineHeight: 1.1, 
                     letterSpacing: '-0.04em', 
                     marginBottom: '2rem',
                     color: '#fff'
                 }}>
-                    <div className="hero-title-line" style={{ display: 'block' }}>We Build Digital</div>
-                    <div className="hero-title-line text-gradient-accent" style={{ display: 'block' }}>Masterpieces<span style={{ color: '#fff' }}>.</span></div>
+                    <div className="hero-title-line" style={{ display: 'block' }}>We build high-conversion websites</div>
+                    <div className="hero-title-line text-gradient-accent" style={{ display: 'block' }}>for businesses that want to grow<span style={{ color: '#fff' }}>.</span></div>
                 </h1>
 
                 <p className="hero-sub" style={{ 
-                    fontSize: 'clamp(1rem, 1.5vw, 1.25rem)', 
+                    fontSize: 'clamp(1.1rem, 2vw, 1.4rem)', 
                     color: 'var(--text-secondary)', 
-                    maxWidth: '800px', 
+                    maxWidth: '850px', 
                     margin: '0 auto 3.5rem',
-                    lineHeight: 1.6
+                    lineHeight: 1.5,
+                    fontWeight: 400
                 }}>
-                    Made for high performance. Designed for impact. We transform ambitious brands into market leaders through best design and AI integrated software solutions.
+                    From design to development, we create websites that don’t just look good — <span style={{ color: '#fff', fontWeight: 600 }}>they bring in real customers.</span>
                 </p>
 
                 <div className="hero-btn-group" style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '5rem' }}>
-                    <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn" style={{ padding: '18px 48px', fontSize: '1rem' }}>
-                        Transform My Brand
+                    <a href="#work" className="nav-contact-btn" style={{ padding: '20px 48px', fontSize: '1.1rem', background: 'transparent', border: '1px solid var(--accent-color)', color: 'var(--accent-color)' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(34, 211, 238, 0.1)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}>
+                        Get a Website Demo
                     </a>
-                    <a href="#work" style={{
-                        padding: '18px 48px', 
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '50px',
-                        fontWeight: 600, 
-                        fontSize: '1rem',
-                        color: '#fff', 
-                        transition: 'all 0.3s ease',
-                        background: 'rgba(255,255,255,0.03)',
-                        backdropFilter: 'blur(10px)'
-                    }} onMouseEnter={(e) => { e.target.style.background = 'rgba(255,255,255,0.08)'; e.target.style.borderColor = 'rgba(255,255,255,0.2)'; }}
-                        onMouseLeave={(e) => { e.target.style.background = 'rgba(255,255,255,0.03)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)'; }}>
-                        View Our Projects
+                    <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn" style={{ padding: '20px 48px', fontSize: '1.1rem' }}>
+                        Book a Call
                     </a>
                 </div>
 
