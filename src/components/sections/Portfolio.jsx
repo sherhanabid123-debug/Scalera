@@ -62,7 +62,7 @@ const Portfolio = () => {
                         maxWidth: '600px', 
                         lineHeight: 1.6 
                     }}>
-                        A collection of high-impact digital solutions engineered for growth and built on precision.
+                        A collection of high impact digital solutions engineered for growth and built on precision.
                     </p>
                 </div>
 

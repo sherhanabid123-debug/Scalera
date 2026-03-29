@@ -101,7 +101,7 @@ const Hero = () => {
                     margin: '0 auto 3.5rem',
                     lineHeight: 1.6
                 }}>
-                    Engineered for high performance. Designed for pure impact. We transform ambitious brands into market leaders through cutting-edge design and AI-integrated software solutions.
+                    Mafe for high performance. Designed for impact. We transform ambitious brands into market leaders through best design and AI integrated software solutions.
                 </p>
 
                 <div className="hero-btn-group" style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '5rem' }}>

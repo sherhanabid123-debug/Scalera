@@ -4,14 +4,14 @@ import { Layout, Code, Search, Zap, Clock, ArrowUpRight } from 'lucide-react';
 
 const services = [
     { 
-        title: 'High-Performance Landing Pages', 
-        desc: 'Custom-built landing pages designed for high conversion and blazingly fast load speeds.', 
+        title: 'High Performance Landing Pages', 
+        desc: 'Custom built landing pages designed for high conversion and fast load speeds.', 
         time: '1-2 Weeks',
         icon: <Zap size={24} />
     },
     { 
         title: 'Custom Web & SaaS Development', 
-        desc: 'End-to-end fullstack development using React/Next.js for complex digital products.', 
+        desc: 'End to end fullstack development using React/Next.js for complex digital products.', 
         time: '4-12 Weeks',
         icon: <Code size={24} />
     },
