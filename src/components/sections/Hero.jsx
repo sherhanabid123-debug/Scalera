@@ -79,7 +79,7 @@ const Hero = () => {
                     marginBottom: '2rem'
                 }}>
                     <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-color)', boxShadow: '0 0 10px var(--accent-color)' }} />
-                    Leading Tech-Creative Agency
+                    Leading Creative Agency
                 </div>
 
                 <h1 style={{ 
@@ -102,7 +102,7 @@ const Hero = () => {
                     lineHeight: 1.5,
                     fontWeight: 400
                 }}>
-                    From design to development, we create websites that don’t just look good — <span style={{ color: '#fff', fontWeight: 600 }}>they bring in real customers.</span>
+                    From design to development, we create websites that do more than just look good. <span style={{ color: '#fff', fontWeight: 600 }}>They bring in real customers.</span>
                 </p>
 
                 <div className="hero-btn-group" style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '5rem' }}>

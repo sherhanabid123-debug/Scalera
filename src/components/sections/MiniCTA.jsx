@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
-const MiniCTA = ({ title = "Ready to build your high-conversion website?", btnText = "Book a Call", link = "https://wa.me/917975242650" }) => {
+const MiniCTA = ({ title = "Ready to build a website that gets results?", btnText = "Book a Call", link = "https://wa.me/917975242650" }) => {
     return (
         <div style={{ 
             padding: '4rem 5%', 

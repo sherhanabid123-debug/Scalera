@@ -16,7 +16,7 @@ const Footer = () => {
                         SCALERA
                     </h2>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '280px' }}>
-                        A digital creative studio engineering high-performance presence for ambitious brands.
+                        A digital creative studio building online presence for ambitious brands.
                     </p>
                 </div>
 

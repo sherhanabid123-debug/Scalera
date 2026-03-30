@@ -10,9 +10,9 @@ const projects = [
         img: '/assets/fridah-preview.png',
         link: 'https://fridah-by-bohemians.vercel.app/#'
     },
-    { id: 2, title: 'Thar', category: 'Heritage Dining', summary: 'An immersive digital journey bringing authentic culinary heritage online and driving local traffic.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
-    { id: 3, title: 'Kryptic', category: 'E-Commerce', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
-    { id: 4, title: 'The Second House', category: 'Fine Dining & Art', summary: 'A unique culinary journey blending heritage and modern art to attract high-end clientele.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' }
+    { id: 2, title: 'Thar', category: 'Heritage Dining', summary: 'A digital journey that brings authentic culinary heritage online and drives local traffic.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
+    { id: 3, title: 'Kryptic', category: 'E-Commerce', summary: 'A fast and optimized storefront designed to maximize sales.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
+    { id: 4, title: 'The Second House', category: 'Fine Dining & Art', summary: 'A unique dining website blending heritage and modern art to attract high-end clientele.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' }
 ];
 
 const Portfolio = () => {
@@ -62,7 +62,7 @@ const Portfolio = () => {
                         maxWidth: '700px', 
                         lineHeight: 1.6 
                     }}>
-                        A collection of high-impact digital solutions specifically built to <span style={{ color: '#fff' }}>convert visitors into customers.</span>
+                        A collection of websites specifically built to <span style={{ color: '#fff' }}>convert visitors into customers.</span>
                     </p>
                 </div>
 

@@ -5,7 +5,7 @@ import { Layout, Code, Search, Zap, Clock, ArrowUpRight } from 'lucide-react';
 const services = [
     { 
         title: 'Web Development', 
-        desc: 'Custom-built websites designed to convert visitors into customers.', 
+        desc: 'Custom websites designed to convert visitors into customers.', 
         time: '1-2 Weeks',
         icon: <Zap size={24} />
     },
