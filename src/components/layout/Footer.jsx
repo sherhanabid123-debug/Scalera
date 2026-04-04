@@ -24,7 +24,7 @@ const Footer = () => {
                 <div>
                     <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-primary)', marginBottom: '2rem' }}>Navigation</h3>
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {['Work', 'Services', 'Approach', 'Contact'].map((item) => (
+                        {['Work', 'Services', 'Products', 'Approach', 'Contact'].map((item) => (
                             <li key={item}>
                                 <a href={`#${item.toLowerCase()}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.3s' }} onMouseEnter={e => e.target.style.color = 'var(--text-primary)'} onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}>
                                     {item}

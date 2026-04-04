@@ -12,6 +12,7 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Services from './components/sections/Services';
 import Portfolio from './components/sections/Portfolio';
+import Products from './components/sections/Products';
 import WhyScalera from './components/sections/WhyScalera';
 import CTA from './components/sections/CTA';
 import MiniCTA from './components/sections/MiniCTA';
@@ -81,6 +82,7 @@ function App() {
           <Services />
           <MiniCTA title="Ready to turn your visitors into customers?" btnText="Get a Demo" />
           <Portfolio />
+          <Products />
           <WhyScalera />
           <CTA />
         </main>
