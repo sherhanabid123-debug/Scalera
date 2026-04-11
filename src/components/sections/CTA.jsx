@@ -27,48 +27,29 @@ const CTA = () => {
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center', 
-            position: 'relative', 
-            zIndex: 2,
-            overflow: 'hidden' 
+            textAlign: 'center',
+            background: 'var(--bg-primary)'
         }}>
-            {/* Background Glow */}
-            <div style={{ 
-                position: 'absolute', top: '50%', left: '50%', 
-                width: '600px', height: '600px', 
-                background: 'radial-gradient(circle, rgba(34, 211, 238, 0.1) 0%, transparent 70%)',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 1,
-                pointerEvents: 'none'
-            }} />
-
-            <div className="cta-content" style={{ 
-                width: '100%', 
-                maxWidth: '1000px', 
-                textAlign: 'center',
-                position: 'relative',
-                zIndex: 2,
-                background: 'rgba(15, 23, 42, 0.3)',
-                backdropFilter: 'blur(20px)',
-                padding: '6rem 4rem',
-                borderRadius: '40px',
-                border: '1px solid rgba(255,255,255,0.05)',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
-            }}>
-                <div className="hero-badge" style={{ marginBottom: '2rem' }}>Ready to Scale?</div>
+            <div className="cta-content" style={{ maxWidth: '1000px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '3rem' }}>
+                    <div style={{ width: '40px', height: '1px', background: 'var(--accent-color)' }} />
+                    <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--accent-color)' }}>Ready to Scale?</span>
+                    <div style={{ width: '40px', height: '1px', background: 'var(--accent-color)' }} />
+                </div>
 
                 <h2 style={{ 
-                    fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', 
-                    fontWeight: 800, 
+                    fontSize: 'clamp(2.5rem, 5vw, 6rem)', 
+                    fontWeight: 300, 
                     letterSpacing: '-0.04em', 
-                    margin: '0 0 3.5rem 0', 
+                    marginBottom: '4rem', 
                     lineHeight: 1.1, 
                     color: '#fff' 
                 }}>
                     Let's Build Your Digital<br />
-                    <span className="text-gradient-accent">Competitive Advantage.</span>
+                    <span style={{ fontWeight: 600 }}>Competitive Advantage.</span>
                 </h2>
 
-                <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <a
                         href="https://wa.me/917975242650"
                         target="_blank"
@@ -77,14 +58,14 @@ const CTA = () => {
                         style={{
                             padding: '1.5rem 4rem', 
                             fontSize: '1.1rem',
-                            fontWeight: 700
+                            letterSpacing: '0.1em'
                         }}
                     >
-                        Start Your Free Consultation <ArrowRight size={20} style={{ marginLeft: '1rem' }} />
+                        Start Your Consultation <ArrowRight size={20} style={{ marginLeft: '1rem' }} />
                     </a>
                 </div>
                 
-                <p style={{ marginTop: '2.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                <p style={{ marginTop: '3rem', color: 'var(--text-secondary)', fontSize: '0.9rem', opacity: 0.6 }}>
                     *No commitment required. We'll audit your goals and propose a strategy.
                 </p>
             </div>

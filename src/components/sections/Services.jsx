@@ -1,40 +1,44 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
-import { Layout, Code, Search, Zap, Clock, ArrowUpRight } from 'lucide-react';
 
 const services = [
     { 
         title: 'Web Development', 
         desc: 'Custom websites designed to convert visitors into customers.', 
-        time: '1-2 Weeks',
-        icon: <Zap size={24} />
+        time: '1-2 Weeks'
     },
     { 
         title: 'SEO & Visibility', 
         desc: 'Improving your visibility on search engines to bring consistent traffic and leads.', 
-        time: 'Ongoing',
-        icon: <Search size={24} />
+        time: 'Ongoing'
     },
     { 
         title: 'Digital Growth', 
         desc: 'Helping businesses scale their online presence with the right strategy and execution.', 
-        time: '4-8 Weeks',
-        icon: <ArrowUpRight size={24} />
+        time: '4-8 Weeks'
     }
 ];
 
 const Services = () => {
     const containerRef = useRef();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
-            gsap.fromTo('.service-card',
+            gsap.fromTo('.service-item',
                 { opacity: 0, y: 40 },
                 {
-                    opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power3.out',
+                    opacity: 1, y: 0, duration: 1.2, stagger: 0.15, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: 'top 80%',
+                        start: 'top 75%',
                     }
                 }
             );
@@ -43,87 +47,53 @@ const Services = () => {
     }, []);
 
     return (
-        <section id="services" ref={containerRef} className="section" style={{ padding: '10rem 5%', position: 'relative' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ textAlign: 'center', marginBottom: '6rem' }}>
-                    <div className="hero-badge" style={{ marginBottom: '1.5rem' }}>Our Capabilities</div>
-                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, color: '#fff' }}>Expertise That Scales.</h2>
+        <section id="services" ref={containerRef} className="section" style={{ padding: '10rem 5%', background: 'var(--bg-primary)' }}>
+            <div style={{
+                display: 'grid', 
+                gridTemplateColumns: isMobile ? '1fr' : '1fr 1.5fr', 
+                gap: isMobile ? '4rem' : '8rem',
+                borderTop: '1px solid var(--border-subtle)', 
+                paddingTop: '6rem',
+                alignItems: 'start'
+            }}>
+                <div style={{ position: isMobile ? 'relative' : 'sticky', top: '120px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                        <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
+                        <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)' }}>
+                            Expertise That Scales
+                        </span>
+                    </div>
+                    <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 4rem)', fontWeight: 300, lineHeight: 1.1, color: '#fff' }}>
+                        Premium Solutions for <span style={{ fontWeight: 600 }}>Modern Brands.</span>
+                    </h2>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '2rem' }}>
-                    {services.map((service, i) => (
-                        <div
-                            key={i}
-                            className="service-card glow-border"
-                            style={{
-                                background: 'rgba(15, 23, 42, 0.5)',
-                                backdropFilter: 'blur(10px)',
-                                padding: '3rem',
-                                borderRadius: '24px',
-                                textAlign: 'left',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                minHeight: '320px',
-                                position: 'relative',
-                                overflow: 'hidden'
-                            }}
-                        >
-                            <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+                    {services.map((service, index) => (
+                        <div key={index} className="service-item" style={{ 
+                            paddingBottom: '4rem', 
+                            borderBottom: '1px solid var(--border-subtle)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1.5rem'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h3 style={{ fontSize: '2rem', fontWeight: 500, color: '#fff' }}>{service.title}</h3>
                                 <div style={{ 
-                                    width: '56px', height: '56px', borderRadius: '16px', 
-                                    background: 'rgba(34, 211, 238, 0.1)', 
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: 'var(--accent-color)', marginBottom: '2rem'
-                                }}>
-                                    {service.icon}
-                                </div>
-
-                                <div style={{ 
-                                    display: 'inline-flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.5rem', 
-                                    fontSize: '0.7rem', 
-                                    fontWeight: 700, 
+                                    fontSize: '0.75rem', 
+                                    padding: '6px 16px', 
+                                    borderRadius: '50px', 
+                                    border: '1px solid var(--border-subtle)',
                                     color: 'var(--text-secondary)',
-                                    marginBottom: '1rem',
-                                    padding: '6px 14px',
-                                    background: 'rgba(255,255,255,0.05)',
-                                    borderRadius: '50px'
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.1em'
                                 }}>
-                                    <Clock size={12} />
                                     {service.time}
                                 </div>
-
-                                <h3 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff', marginBottom: '1rem', letterSpacing: '-0.02em' }}>
-                                    {service.title}
-                                </h3>
-                                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                                    {service.desc}
-                                </p>
                             </div>
-
-                            <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '0.5rem', 
-                                color: '#fff', 
-                                fontWeight: 600, 
-                                fontSize: '0.85rem',
-                                textDecoration: 'none',
-                                opacity: 0.8,
-                                transition: 'opacity 0.3s'
-                            }} onMouseEnter={(e) => e.target.style.opacity = 1} onMouseLeave={(e) => e.target.style.opacity = 0.8}>
-                                Start Project <ArrowUpRight size={16} />
-                            </a>
-
-                            {/* Background Subtle Gradient */}
-                            <div style={{ 
-                                position: 'absolute', top: '-10%', right: '-10%', 
-                                width: '200px', height: '200px', 
-                                background: 'radial-gradient(circle, rgba(34, 211, 238, 0.05) 0%, transparent 70%)',
-                                zIndex: 1
-                            }} />
+                            <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: '600px' }}>
+                                {service.desc}
+                            </p>
                         </div>
                     ))}
                 </div>

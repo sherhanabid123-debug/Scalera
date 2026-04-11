@@ -22,54 +22,66 @@ const Products = () => {
     }, []);
 
     return (
-        <section id="products" ref={containerRef} className="section" style={{ padding: '10rem 5%', position: 'relative' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ textAlign: 'center', marginBottom: '6rem' }}>
-                    <div className="hero-badge" style={{ marginBottom: '1.5rem' }}>Our Own Tech</div>
-                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em' }}>Products<span className="text-gradient-accent">.</span></h2>
+        <section id="products" ref={containerRef} className="section" style={{ padding: '10rem 5%', background: 'var(--bg-primary)', position: 'relative' }}>
+            <div className="container">
+                <div className="product-heading" style={{ marginBottom: '6rem', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                        <div style={{ width: '12px', height: '1px', background: 'var(--accent-color)' }} />
+                        <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--accent-color)' }}>Our Own Tech</span>
+                    </div>
+                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 300, color: '#fff', letterSpacing: '-0.04em' }}>Products<span style={{ fontWeight: 600 }}>.</span></h2>
                 </div>
 
-                <div className="product-card glow-border" style={{
-                    background: 'rgba(15, 23, 42, 0.4)',
-                    backdropFilter: 'blur(20px)',
-                    borderRadius: '32px',
+                <div className="product-card" style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '24px',
                     padding: '4rem',
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                    gap: '4rem',
+                    gap: '6rem',
                     alignItems: 'center',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border-subtle)',
                     position: 'relative',
                     overflow: 'hidden'
                 }}>
                     <div>
                         <div style={{ 
-                            fontSize: '0.8rem', 
+                            fontSize: '0.75rem', 
                             textTransform: 'uppercase', 
                             letterSpacing: '0.2em', 
-                            color: 'var(--accent-color)', 
-                            fontWeight: 700, 
-                            marginBottom: '1rem',
-                            opacity: 0.8
+                            color: 'var(--text-secondary)', 
+                            fontWeight: 500, 
+                            marginBottom: '1.5rem'
                         }}>
                             Flowlance by Scalera
                         </div>
-                        <h3 style={{ fontSize: '3rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem', letterSpacing: '-0.03em' }}>Flowlance</h3>
-                        <p style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1.5rem', opacity: 0.9 }}>
+                        <h3 style={{ fontSize: '3rem', fontWeight: 600, color: '#fff', marginBottom: '1rem', letterSpacing: '-0.03em' }}>Flowlance</h3>
+                        <p style={{ fontSize: '1.25rem', fontWeight: 300, color: 'var(--text-primary)', marginBottom: '2rem', lineHeight: 1.4 }}>
                             Client management for freelancers & teams
                         </p>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '2.5rem', maxWidth: '450px' }}>
-                            Track clients, manage follow ups, and never miss opportunities. A powerful tool designed for modern professionals to scale their business.
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '3rem', maxWidth: '450px' }}>
+                            Track clients, manage follow ups, and never miss opportunities. A powerful tool designed for modern professionals to scale their business with precision.
                         </p>
                         
                         <a 
                             href="https://flowlance-one.vercel.app" 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            className="nav-contact-btn"
-                            style={{ padding: '16px 40px', fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.75rem' }}
+                            style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                gap: '0.75rem',
+                                color: 'var(--accent-color)',
+                                fontSize: '0.9rem',
+                                fontWeight: 500,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.15em',
+                                textDecoration: 'none',
+                                paddingBottom: '4px',
+                                borderBottom: '1px solid var(--accent-color)'
+                            }}
                         >
-                            Open Flowlance <ExternalLink size={18} />
+                            Open Flowlance <ExternalLink size={16} />
                         </a>
                     </div>
 
@@ -81,7 +93,7 @@ const Products = () => {
                             transform: 'translate(-50%, -50%)',
                             width: '120%',
                             height: '120%',
-                            background: 'radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%)',
+                            background: 'radial-gradient(circle, rgba(220, 180, 128, 0.05) 0%, transparent 70%)',
                             zIndex: 0,
                             pointerEvents: 'none'
                         }} />
@@ -91,11 +103,11 @@ const Products = () => {
                             style={{ 
                                 width: '100%', 
                                 height: 'auto', 
-                                borderRadius: '16px', 
+                                borderRadius: '12px', 
                                 position: 'relative', 
                                 zIndex: 1,
-                                boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                                border: '1px solid rgba(255,255,255,0.1)'
+                                boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+                                border: '1px solid rgba(255,255,255,0.05)'
                             }} 
                         />
                     </div>

@@ -17,17 +17,25 @@ const projects = [
 
 const Portfolio = () => {
     const containerRef = useRef();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
-            gsap.fromTo('.portfolio-heading-anim',
+            gsap.fromTo('.portfolio-heading',
                 { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: containerRef.current, start: 'top 80%' } }
+                { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: '.portfolio-heading', start: 'top 80%' } }
             );
 
             gsap.utils.toArray('.portfolio-item').forEach((item) => {
                 gsap.fromTo(item,
-                    { opacity: 0, y: 80 },
+                    { opacity: 0, y: 100 },
                     {
                         opacity: 1, y: 0, duration: 1.5, ease: 'expo.out',
                         scrollTrigger: {
@@ -42,104 +50,99 @@ const Portfolio = () => {
     }, []);
 
     return (
-        <section id="work" ref={containerRef} style={{ padding: '10rem 0', position: 'relative' }}>
-            <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%' }}>
-                <div style={{ marginBottom: '6rem' }}>
-                    <div className="hero-badge" style={{ marginBottom: '1.5rem' }}>Portfolio</div>
-                    <h2 className="portfolio-heading-anim" style={{ 
-                        fontSize: 'clamp(3rem, 7vw, 6.5rem)', 
-                        fontWeight: 800, 
-                        marginBottom: '1.5rem', 
-                        letterSpacing: '-0.04em', 
-                        lineHeight: 1,
-                        color: '#fff'
-                    }}>
-                        Recent <span className="text-gradient-accent">Work.</span>
+        <section id="work" ref={containerRef} style={{ padding: '10rem 0', background: 'var(--bg-primary)' }}>
+            <div className="container">
+                <div className="portfolio-heading" style={{ marginBottom: '8rem', maxWidth: '800px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                        <div style={{ width: '12px', height: '1px', background: 'var(--accent-color)' }} />
+                        <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--accent-color)' }}>Portfolio</span>
+                    </div>
+                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)', fontWeight: 300, lineHeight: 1.1, marginBottom: '2.5rem' }}>
+                        Websites built to <span style={{ fontWeight: 600 }}>Convert.</span>
                     </h2>
-                    <p className="portfolio-heading-anim" style={{ 
-                        color: 'var(--text-secondary)', 
-                        fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)', 
-                        maxWidth: '700px', 
-                        lineHeight: 1.6 
-                    }}>
-                        A collection of websites specifically built to <span style={{ color: '#fff' }}>convert visitors into customers.</span>
+                    <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                        A collection of high-impact digital solutions specifically built to turn visitors into customers.
                     </p>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem' }}>
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', 
+                    gap: isMobile ? '4rem' : '10rem',
+                    paddingBottom: '5rem'
+                }}>
                     {projects.map((project, index) => (
-                        <a
-                            href={project.link || '#'}
-                            target={project.link ? '_blank' : '_self'}
-                            rel={project.link ? 'noopener noreferrer' : ''}
-                            key={project.id}
-                            className="portfolio-item group"
-                            style={{ display: 'block', textDecoration: 'none', position: 'relative' }}
+                        <div 
+                            key={project.id} 
+                            className="portfolio-item"
+                            style={{ 
+                                marginTop: (!isMobile && index % 2 !== 0) ? '12rem' : '0',
+                                position: 'relative'
+                            }}
                         >
-                            <div className="glow-border" style={{
-                                aspectRatio: '16/10',
-                                overflow: 'hidden', 
-                                position: 'relative', 
-                                marginBottom: '2rem', 
-                                background: '#0f172a',
-                                borderRadius: '24px'
-                            }}>
-                                <div
-                                    style={{
-                                        position: 'absolute', top: 0, left: 0,
-                                        width: '100%', height: '100%',
-                                        backgroundImage: `url(${project.img})`,
-                                        backgroundSize: 'cover', backgroundPosition: 'center',
-                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                                        filter: 'brightness(0.9)'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1.05)';
-                                        e.currentTarget.style.filter = 'brightness(1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.filter = 'brightness(0.9)';
-                                    }}
-                                />
-                                {/* Overlay Gradient */}
+                            <a 
+                                href={project.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                style={{ display: 'block', textDecoration: 'none' }}
+                                onMouseEnter={(e) => {
+                                    const img = e.currentTarget.querySelector('.project-img');
+                                    if (img) img.style.transform = 'scale(1.05)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    const img = e.currentTarget.querySelector('.project-img');
+                                    if (img) img.style.transform = 'scale(1)';
+                                }}
+                            >
                                 <div style={{ 
-                                    position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%',
-                                    background: 'linear-gradient(to top, rgba(2,6,23,0.8), transparent)',
-                                    pointerEvents: 'none'
-                                }} />
-                            </div>
-
-                            <div style={{ padding: '0 0.5rem' }}>
-                                <div style={{ 
-                                    fontSize: '0.75rem', 
-                                    fontWeight: 700, 
-                                    color: 'var(--accent-color)', 
-                                    textTransform: 'uppercase', 
-                                    letterSpacing: '0.15em',
-                                    marginBottom: '0.75rem'
+                                    aspectRatio: '4/5', 
+                                    overflow: 'hidden', 
+                                    background: '#1a1a1a',
+                                    marginBottom: '2.5rem',
+                                    position: 'relative'
                                 }}>
-                                    {project.category}
+                                    <img 
+                                        src={project.img} 
+                                        alt={project.title} 
+                                        className="project-img"
+                                        style={{ 
+                                            width: '100%', 
+                                            height: '100%', 
+                                            objectFit: 'cover',
+                                            transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                                            filter: 'grayscale(0.2)'
+                                        }} 
+                                    />
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.4))',
+                                        pointerEvents: 'none'
+                                    }} />
                                 </div>
-                                <h3 style={{ 
-                                    fontSize: '1.75rem', 
-                                    fontWeight: 700, 
-                                    color: '#fff', 
-                                    marginBottom: '1rem',
-                                    letterSpacing: '-0.02em'
-                                }}>
-                                    {project.title}
-                                </h3>
-                                <p style={{ 
-                                    color: 'var(--text-secondary)', 
-                                    fontSize: '1rem', 
-                                    lineHeight: 1.6,
-                                    maxWidth: '90%'
-                                }}>
-                                    {project.summary}
-                                </p>
-                            </div>
-                        </a>
+                                <div style={{ padding: '0 0.5rem' }}>
+                                    <span style={{ 
+                                        fontSize: '0.7rem', 
+                                        textTransform: 'uppercase', 
+                                        letterSpacing: '0.15em', 
+                                        color: 'var(--accent-color)',
+                                        display: 'block',
+                                        marginBottom: '0.75rem'
+                                    }}>
+                                        {project.category}
+                                    </span>
+                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 500, marginBottom: '1rem', color: '#fff' }}>
+                                        {project.title}
+                                    </h3>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '90%' }}>
+                                        {project.summary}
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
                     ))}
                 </div>
             </div>
