@@ -1,22 +1,13 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const services = [
-    { 
-        title: 'Web Development', 
-        desc: 'Custom websites designed to convert visitors into customers.', 
-        time: '1-2 Weeks'
-    },
-    { 
-        title: 'SEO & Visibility', 
-        desc: 'Improving your visibility on search engines to bring consistent traffic and leads.', 
-        time: 'Ongoing'
-    },
-    { 
-        title: 'Digital Growth', 
-        desc: 'Helping businesses scale their online presence with the right strategy and execution.', 
-        time: '4-8 Weeks'
-    }
+    { title: 'Custom Website Design', desc: 'Premium, clean layouts tailored to your brand identity.' },
+    { title: 'Website Development', desc: 'Fast, responsive, mobile-first builds with modern structure.' },
+    { title: 'Basic SEO Setup', desc: 'On-page optimization and structured setup for better visibility.' },
+    { title: 'Performance Optimization', desc: 'Speed, responsiveness, and clean technical foundation.' },
+    { title: 'Ongoing Support', desc: 'Minor updates and assistance after launch.' }
 ];
 
 const Services = () => {
@@ -47,51 +38,47 @@ const Services = () => {
     }, []);
 
     return (
-        <section id="services" ref={containerRef} className="section" style={{ padding: '10rem 5%', background: 'var(--bg-primary)' }}>
+        <section id="services" ref={containerRef} className="section" style={{ padding: '8rem 5%' }}>
             <div style={{
-                display: 'grid', 
-                gridTemplateColumns: isMobile ? '1fr' : '1fr 1.5fr', 
-                gap: isMobile ? '4rem' : '8rem',
-                borderTop: '1px solid var(--border-subtle)', 
-                paddingTop: '6rem',
+                display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', gap: isMobile ? '2rem' : '4rem',
+                borderTop: '1px solid var(--border-subtle)', paddingTop: '4rem',
                 alignItems: 'start'
             }}>
-                <div style={{ position: isMobile ? 'relative' : 'sticky', top: '120px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                        <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
-                        <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)' }}>
-                            Expertise That Scales
-                        </span>
-                    </div>
-                    <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 4rem)', fontWeight: 300, lineHeight: 1.1, color: '#fff' }}>
-                        Premium Solutions for <span style={{ fontWeight: 600 }}>Modern Brands.</span>
-                    </h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', position: isMobile ? 'relative' : 'sticky', top: '120px' }}>
+                    <div style={{ width: '8px', height: '8px', background: 'var(--accent-color)', borderRadius: '50%' }} />
+                    <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-secondary)' }}>
+                        What We Do
+                    </span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-                    {services.map((service, index) => (
-                        <div key={index} className="service-item" style={{ 
-                            paddingBottom: '4rem', 
-                            borderBottom: '1px solid var(--border-subtle)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '1.5rem'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h3 style={{ fontSize: '2rem', fontWeight: 500, color: '#fff' }}>{service.title}</h3>
-                                <div style={{ 
-                                    fontSize: '0.75rem', 
-                                    padding: '6px 16px', 
-                                    borderRadius: '50px', 
-                                    border: '1px solid var(--border-subtle)',
-                                    color: 'var(--text-secondary)',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.1em'
-                                }}>
-                                    {service.time}
-                                </div>
-                            </div>
-                            <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: '600px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {services.map((service, i) => (
+                        <div
+                            key={i}
+                            className="service-item"
+                            style={{
+                                borderBottom: '1px solid var(--border-subtle)',
+                                padding: '3rem 0',
+                                display: 'grid',
+                                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                                gap: '2rem',
+                                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                                cursor: 'pointer',
+                                alignItems: 'start'
+                            }}
+                            onMouseEnter={(e) => {
+                                if (!isMobile) e.currentTarget.style.paddingLeft = '2rem';
+                                e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.3)';
+                            }}
+                            onMouseLeave={(e) => {
+                                if (!isMobile) e.currentTarget.style.paddingLeft = '0';
+                                e.currentTarget.style.borderBottomColor = 'var(--border-subtle)';
+                            }}
+                        >
+                            <h3 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontWeight: 300, margin: 0, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                                {service.title}
+                            </h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1rem', margin: 0, paddingTop: isMobile ? '0' : '0.5rem', maxWidth: '400px' }}>
                                 {service.desc}
                             </p>
                         </div>

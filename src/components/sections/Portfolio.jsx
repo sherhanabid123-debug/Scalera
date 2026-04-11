@@ -1,18 +1,19 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const projects = [
+    { id: 1, title: 'Thar', category: 'Restaurant Experience', summary: 'An immersive digital experience bringing authentic culinary heritage online.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
+    { id: 2, title: 'Kryptic', category: 'E-Commerce Platform', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
+    { id: 3, title: 'The Second House', category: 'Heritage Dining & Art', summary: 'A unique culinary journey blending Goan heritage and modern art in a 108-year-old Indo-Portuguese bungalow.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' },
     {
-        id: 1,
+        id: 4,
         title: 'Fridah by Bohemians',
-        category: 'Restaurant Experience',
-        summary: 'A premium restaurant website designed to showcase experience, ambience, and drive bookings.',
+        category: 'Immersive Restaurant / UI Design',
+        summary: 'An immersive digital journey through bohemian luxury and artisanal multicuisine.',
         img: '/assets/fridah-preview.png',
         link: 'https://fridah-by-bohemians.vercel.app/#'
-    },
-    { id: 2, title: 'Thar', category: 'Heritage Dining', summary: 'A digital journey that brings authentic culinary heritage online and drives local traffic.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
-    { id: 3, title: 'Kryptic', category: 'E-Commerce', summary: 'A fast and optimized storefront designed to maximize sales.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
-    { id: 4, title: 'The Second House', category: 'Fine Dining & Art', summary: 'A unique dining website blending heritage and modern art to attract high-end clientele.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' }
+    }
 ];
 
 const Portfolio = () => {
@@ -45,104 +46,78 @@ const Portfolio = () => {
                     }
                 );
             });
+
+            // Parallax image wrapper
+            gsap.utils.toArray('.img-parallax').forEach((img) => {
+                gsap.to(img, {
+                    yPercent: 15,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: img.parentElement,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            });
+
         }, containerRef);
         return () => ctx.revert();
     }, []);
-
     return (
-        <section id="work" ref={containerRef} style={{ padding: '10rem 0', background: 'var(--bg-primary)' }}>
-            <div className="container">
-                <div className="portfolio-heading" style={{ marginBottom: '8rem', maxWidth: '800px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                        <div style={{ width: '12px', height: '1px', background: 'var(--accent-color)' }} />
-                        <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--accent-color)' }}>Portfolio</span>
-                    </div>
-                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)', fontWeight: 300, lineHeight: 1.1, marginBottom: '2.5rem' }}>
-                        Websites built to <span style={{ fontWeight: 600 }}>Convert.</span>
-                    </h2>
-                    <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                        A collection of high-impact digital solutions specifically built to turn visitors into customers.
-                    </p>
-                </div>
+        <section id="work" ref={containerRef} style={{ padding: '8rem 0', borderTop: '1px solid var(--border-subtle)' }}>
+            <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5%' }}>
+                <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '1.5rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
+                <p className="portfolio-heading" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '6rem', lineHeight: 1.6 }}>
+                    A selection of projects focused on clarity, structure, and measurable impact.
+                </p>
 
-                <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', 
-                    gap: isMobile ? '4rem' : '10rem',
-                    paddingBottom: '5rem'
-                }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '4rem' : '4rem', alignItems: 'flex-start' }}>
                     {projects.map((project, index) => (
-                        <div 
-                            key={project.id} 
-                            className="portfolio-item"
-                            style={{ 
-                                marginTop: (!isMobile && index % 2 !== 0) ? '12rem' : '0',
-                                position: 'relative'
-                            }}
+                        <a
+                            href={project.link || '#'}
+                            target={project.link ? '_blank' : '_self'}
+                            rel={project.link ? 'noopener noreferrer' : ''}
+                            key={project.id}
+                            className="portfolio-item group"
+                            style={{ display: 'block', cursor: 'pointer', textDecoration: 'none' }}
                         >
-                            <a 
-                                href={project.link} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                style={{ display: 'block', textDecoration: 'none' }}
-                                onMouseEnter={(e) => {
-                                    const img = e.currentTarget.querySelector('.project-img');
-                                    if (img) img.style.transform = 'scale(1.05)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    const img = e.currentTarget.querySelector('.project-img');
-                                    if (img) img.style.transform = 'scale(1)';
-                                }}
-                            >
-                                <div style={{ 
-                                    aspectRatio: '4/5', 
-                                    overflow: 'hidden', 
-                                    background: '#1a1a1a',
-                                    marginBottom: '2.5rem',
-                                    position: 'relative'
-                                }}>
-                                    <img 
-                                        src={project.img} 
-                                        alt={project.title} 
-                                        className="project-img"
-                                        style={{ 
-                                            width: '100%', 
-                                            height: '100%', 
-                                            objectFit: 'cover',
-                                            transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                                            filter: 'grayscale(0.2)'
-                                        }} 
-                                    />
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.4))',
-                                        pointerEvents: 'none'
-                                    }} />
+                            <div style={{
+                                aspectRatio: '4/3', /* Equal aspect ratios for perfect alignment */
+                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
+                            }}>
+                                <div
+                                    className="img-parallax"
+                                    style={{
+                                        position: 'absolute', top: '-10%', left: 0,
+                                        width: '100%', height: '120%',
+                                        backgroundImage: `url(${project.img})`,
+                                        backgroundSize: 'cover', backgroundPosition: 'center',
+                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
+                                        filter: 'grayscale(0) contrast(1) brightness(0.8)',
+                                        transformOrigin: 'center'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'scale(1.05)';
+                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(1)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'scale(1)';
+                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(0.8)';
+                                    }}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div style={{ flex: 1, paddingRight: '2rem' }}>
+                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
                                 </div>
-                                <div style={{ padding: '0 0.5rem' }}>
-                                    <span style={{ 
-                                        fontSize: '0.7rem', 
-                                        textTransform: 'uppercase', 
-                                        letterSpacing: '0.15em', 
-                                        color: 'var(--accent-color)',
-                                        display: 'block',
-                                        marginBottom: '0.75rem'
-                                    }}>
-                                        {project.category}
-                                    </span>
-                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 500, marginBottom: '1rem', color: '#fff' }}>
-                                        {project.title}
-                                    </h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '90%' }}>
-                                        {project.summary}
-                                    </p>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
+                                    [0{index + 1}]
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     ))}
                 </div>
             </div>

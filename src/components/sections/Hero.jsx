@@ -53,24 +53,24 @@ const Hero = () => {
             <div className="glow-orb" style={{ top: '30%', left: '40%' }} />
 
             <div className="hero-content" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', paddingLeft: '5%', maxWidth: '1400px' }}>
-                <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 7rem)', fontWeight: 300, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: '2.5rem', display: 'flex', flexDirection: 'column', textTransform: 'uppercase' }}>
+                <h1 style={{ fontSize: 'clamp(3rem, 7vw, 9rem)', fontWeight: 300, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: '2.5rem', display: 'flex', flexDirection: 'column', textTransform: 'uppercase' }}>
                     <div style={{ overflow: 'hidden', paddingBottom: '0.5rem' }}>
-                        <span className="hero-word" style={{ display: 'inline-block' }}>We build</span>
+                        <span className="hero-word" style={{ display: 'inline-block' }}>Elevating Your</span>
                     </div>
                     <div style={{ overflow: 'hidden', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '3vw' }}>
-                        <span className="hero-word" style={{ display: 'inline-block', fontWeight: 600 }}>High-Conversion</span>
+                        <span className="hero-word" style={{ display: 'inline-block', fontWeight: 600 }}>Digital Presence</span>
                         <div className="hero-line" style={{ flexGrow: 1, height: '1px', background: 'var(--border-subtle)', marginTop: '2vw' }} />
                     </div>
                     <div style={{ overflow: 'hidden', paddingBottom: '0.5rem' }}>
-                        <span className="hero-word" style={{ display: 'inline-block', color: 'var(--text-secondary)' }}>Websites.</span>
+                        <span className="hero-word" style={{ display: 'inline-block', color: 'var(--text-secondary)' }}>With Precision.</span>
                     </div>
                 </h1>
 
-                <p className="hero-sub" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', maxWidth: '700px', lineHeight: 1.6, marginBottom: '3.5rem' }}>
-                    From design to development, we create websites that do more than just look good. <span style={{ color: '#fff', fontWeight: 600 }}>They bring in real customers.</span>
+                <p className="hero-sub" style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', maxWidth: '600px', lineHeight: 1.6, marginBottom: '3.5rem' }}>
+                    We design modern, high-performance websites that strengthen brand credibility and drive real business growth.
                 </p>
 
-                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <a href="#work" className="hero-btn" style={{
                         padding: '1.25rem 3rem', border: '1px solid rgba(255,255,255,0.15)',
                         borderRadius: '50px',
@@ -82,15 +82,15 @@ const Hero = () => {
                         View Our Work
                     </a>
                     <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{
-                        padding: '1.25rem 3rem',
-                        background: 'var(--accent-color)',
-                        borderRadius: '50px',
-                        color: 'var(--bg-primary)',
-                        fontWeight: 600, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em',
-                        transition: 'all 0.4s ease', display: 'inline-block'
-                    }} onMouseEnter={(e) => { e.target.style.opacity = '0.9'; e.target.style.transform = 'translateY(-2px)'; }}
-                        onMouseLeave={(e) => { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }}>
-                        Book a Call
+                        color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em',
+                        transition: 'color 0.4s ease', position: 'relative', display: 'inline-block', paddingBottom: '6px'
+                    }} onMouseEnter={(e) => { e.target.style.color = '#fff'; e.currentTarget.querySelector('.underline').style.transform = 'scaleX(1)'; }}
+                        onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.currentTarget.querySelector('.underline').style.transform = 'scaleX(0)'; }}>
+                        Book a Consultation
+                        <div className="underline" style={{
+                            position: 'absolute', bottom: 0, left: 0, width: '100%', height: '1px',
+                            background: '#fff', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                        }} />
                     </a>
                 </div>
             </div>

@@ -11,11 +11,11 @@ import Navbar from './components/layout/Navbar';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Services from './components/sections/Services';
+import Process from './components/sections/Process';
 import Portfolio from './components/sections/Portfolio';
-import Products from './components/sections/Products';
 import WhyScalera from './components/sections/WhyScalera';
+import Testimonials from './components/sections/Testimonials';
 import CTA from './components/sections/CTA';
-import MiniCTA from './components/sections/MiniCTA';
 import Footer from './components/layout/Footer';
 
 // ... (skipping unchanged code for brevity in instruction, using exactly what was targeted)
@@ -78,12 +78,11 @@ function App() {
         <main style={{ pointerEvents: 'auto' }}>
           <Hero />
           <About />
-          <MiniCTA title="Want to see how we can help your business?" btnText="Book a Call" />
           <Services />
-          <MiniCTA title="Ready to turn your visitors into customers?" btnText="Get a Demo" />
+          <Process />
           <Portfolio />
-          <Products />
           <WhyScalera />
+          <Testimonials />
           <CTA />
         </main>
 

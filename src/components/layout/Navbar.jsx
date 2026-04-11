@@ -56,23 +56,15 @@ const Navbar = () => {
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: scrolled ? 'calc(100% - 40px)' : '100%',
-                maxWidth: scrolled ? '800px' : '100%',
-                padding: scrolled ? '12px 32px' : '32px 5%',
+                maxWidth: scrolled ? '700px' : '100%',
+                padding: scrolled ? '10px 24px' : '32px 5%',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 zIndex: 110, pointerEvents: 'auto',
-                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                 background: !scrolled ? 'transparent' : undefined,
             }}>
                 <div
-                    style={{ 
-                        fontWeight: 300, 
-                        fontSize: '1.25rem', 
-                        letterSpacing: '0.1em', 
-                        cursor: 'pointer', 
-                        zIndex: 102,
-                        textTransform: 'uppercase',
-                        color: '#fff'
-                    }}
+                    style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102 }}
                     onClick={() => {
                         if (isOpen) setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -82,11 +74,10 @@ const Navbar = () => {
                 </div>
 
                 {/* Desktop Menu */}
-                <div className="desktop-menu" style={{ display: 'flex', alignItems: 'center', gap: '3rem', fontSize: '0.75rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
-                    <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'color 0.4s ease', color: 'var(--text-secondary)' }} onMouseEnter={(e) => { e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; }}>About</a>
-                    <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'color 0.4s ease', color: 'var(--text-secondary)' }} onMouseEnter={(e) => { e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; }}>Services</a>
-                    <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'color 0.4s ease', color: 'var(--text-secondary)' }} onMouseEnter={(e) => { e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; }}>Work</a>
-                    <a href="#products" onClick={scrollTo('#products')} style={{ transition: 'color 0.4s ease', color: 'var(--text-secondary)' }} onMouseEnter={(e) => { e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; }}>Products</a>
+                <div className="desktop-menu" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', fontSize: '0.95rem', fontWeight: 500 }}>
+                    <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>About</a>
+                    <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
+                    <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
                     <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn">
                         Let's Talk
                     </a>
@@ -100,21 +91,21 @@ const Navbar = () => {
                         zIndex: 102,
                         display: 'none',
                         flexDirection: 'column',
-                        gap: '8px',
+                        gap: '6px',
                         padding: '10px'
                     }}
                 >
                     <span style={{
-                        width: '28px', height: '1px', background: '#fff',
-                        transition: '0.4s', transform: isOpen ? 'rotate(45deg) translate(6px, 6px)' : 'none'
+                        width: '24px', height: '2px', background: 'var(--text-primary)',
+                        transition: '0.4s', transform: isOpen ? 'rotate(45deg) translate(5px, 6px)' : 'none'
                     }} />
                     <span style={{
-                        width: '28px', height: '1px', background: '#fff',
+                        width: '24px', height: '2px', background: 'var(--text-primary)',
                         opacity: isOpen ? 0 : 1, transition: '0.2s'
                     }} />
                     <span style={{
-                        width: '28px', height: '1px', background: '#fff',
-                        transition: '0.4s', transform: isOpen ? 'rotate(-45deg) translate(6px, -6px)' : 'none'
+                        width: '24px', height: '2px', background: 'var(--text-primary)',
+                        transition: '0.4s', transform: isOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'none'
                     }} />
                 </button>
             </nav>
@@ -124,9 +115,9 @@ const Navbar = () => {
                 ref={menuRef}
                 style={{
                     position: 'fixed', top: 0, right: 0, width: '100%', height: '100dvh',
-                    background: 'rgba(10, 10, 10, 0.99)', backdropFilter: 'blur(30px)',
+                    background: 'rgba(10, 10, 10, 0.98)', backdropFilter: 'blur(20px)',
                     zIndex: 101, display: 'flex', flexDirection: 'column',
-                    justifyContent: 'center', alignItems: 'center', gap: '2.5rem',
+                    justifyContent: 'center', alignItems: 'center', gap: '3rem',
                     transform: 'translateX(100%)', pointerEvents: 'auto'
                 }}
             >
@@ -135,7 +126,7 @@ const Navbar = () => {
                     href="#about"
                     onClick={scrollTo('#about')}
                     className="mobile-nav-link"
-                    style={{ fontSize: '2.5rem', fontWeight: 300, letterSpacing: '0.1em', textTransform: 'uppercase' }}
+                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
                 >
                     About
                 </a>
@@ -144,7 +135,7 @@ const Navbar = () => {
                     href="#services"
                     onClick={scrollTo('#services')}
                     className="mobile-nav-link"
-                    style={{ fontSize: '2.5rem', fontWeight: 300, letterSpacing: '0.1em', textTransform: 'uppercase' }}
+                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
                 >
                     Services
                 </a>
@@ -153,26 +144,17 @@ const Navbar = () => {
                     href="#work"
                     onClick={scrollTo('#work')}
                     className="mobile-nav-link"
-                    style={{ fontSize: '2.5rem', fontWeight: 300, letterSpacing: '0.1em', textTransform: 'uppercase' }}
+                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
                 >
                     Work
                 </a>
                 <a
                     ref={el => linksRef.current[3] = el}
-                    href="#products"
-                    onClick={scrollTo('#products')}
-                    className="mobile-nav-link"
-                    style={{ fontSize: '2.5rem', fontWeight: 300, letterSpacing: '0.1em', textTransform: 'uppercase' }}
-                >
-                    Products
-                </a>
-                <a
-                    ref={el => linksRef.current[4] = el}
                     href="https://wa.me/917975242650"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="nav-contact-btn"
-                    style={{ marginTop: '2rem', fontSize: '1.2rem', padding: '16px 40px' }}
+                    style={{ marginTop: '2rem', fontSize: '1.5rem', padding: '16px 40px' }}
                 >
                     Let's Talk
                 </a>
