@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Elara Hotel | Timeless Luxury, Unforgettable Stays</title>
+    <meta name="description" content="The Elara Hotel — where timeless elegance meets modern luxury. Five-star dining, world-class spa, and breathtaking city views. Book your stay.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container nav-inner">
+            <div class="nav-side">
+                <a href="#rooms">Rooms &amp; Suites</a>
+                <a href="#dining">Dining</a>
+                <a href="#spa">Spa</a>
+            </div>
+            <a href="#" class="logo">THE ELARA</a>
+            <div class="nav-side nav-right">
+                <a href="#experiences">Experiences</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#book" class="btn-reserve">Reserve Now</a>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <header class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-eyebrow reveal">★★★★★ — Since 1923 — San Francisco, California</p>
+            <h1 class="reveal delay-1">Where Every Stay Becomes an Unforgettable Memory.</h1>
+            <p class="hero-sub reveal delay-2">Perched atop Nob Hill with panoramic bay views, The Elara is San Francisco's most celebrated luxury destination — a sanctuary of refined elegance and impeccable service.</p>
+            <div class="hero-actions reveal delay-3">
+                <a href="#book" class="btn-gold">Book Your Stay</a>
+                <a href="#rooms" class="btn-ghost">Explore Rooms →</a>
+            </div>
+        </div>
+        <div class="hero-scroll"><span>Scroll</span><div class="scroll-bar"></div></div>
+    </header>
+
+    <section class="booking-bar">
+        <div class="container booking-inner">
+            <div class="booking-field"><label>Check In</label><input type="date"></div>
+            <div class="booking-field"><label>Check Out</label><input type="date"></div>
+            <div class="booking-field"><label>Guests</label>
+                <select><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4+ Guests</option></select>
+            </div>
+            <div class="booking-field"><label>Room Type</label>
+                <select><option>Any Room</option><option>Deluxe King</option><option>Premium Suite</option><option>Presidential Suite</option></select>
+            </div>
+            <button class="btn-gold booking-btn">Check Availability</button>
+        </div>
+    </section>
+
+    <section class="intro section">
+        <div class="container intro-grid">
+            <div class="intro-text reveal">
+                <span class="section-eyebrow">Welcome to The Elara</span>
+                <h2>A Legacy of Extraordinary Hospitality.</h2>
+                <p>For over a century, The Elara has welcomed the world's most discerning travellers. Our 186 meticulously appointed rooms and suites blend Art Deco grandeur with contemporary comfort, while our Michelin-starred restaurant, rooftop bar, and world-class spa ensure every moment is exceptional.</p>
+                <div class="intro-stats">
+                    <div class="is"><strong>186</strong><span>Rooms &amp; Suites</span></div>
+                    <div class="is"><strong>3</strong><span>Restaurants &amp; Bars</span></div>
+                    <div class="is"><strong>100</strong><span>Years of Excellence</span></div>
+                </div>
+            </div>
+            <div class="intro-image reveal delay-1">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80" alt="Elara Hotel Lobby" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <section id="rooms" class="section section-cream">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Rooms &amp; Suites</span>
+                <h2>Your Private Sanctuary Awaits.</h2>
+                <p class="section-sub">Each room is individually designed with curated furnishings, Italian marble bathrooms, and floor-to-ceiling bay views.</p>
+            </div>
+            <div class="rooms-grid">
+                <div class="room-card reveal">
+                    <div class="room-img"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80" alt="Deluxe King Room" loading="lazy"></div>
+                    <div class="room-body">
+                        <h3>Deluxe King</h3>
+                        <p>450 sq ft · City View · King Bed</p>
+                        <div class="room-amenities"><span>Rain Shower</span><span>Mini Bar</span><span>Smart TV</span></div>
+                        <div class="room-footer"><span class="room-price">From $420<small>/night</small></span><a href="#book" class="btn-gold-sm">Reserve</a></div>
+                    </div>
+                </div>
+                <div class="room-card reveal delay-1">
+                    <div class="room-img"><img src="https://images.unsplash.com/photo-1590490360182-c33d955f4e3c?w=800&q=80" alt="Premium Bay Suite" loading="lazy"></div>
+                    <div class="room-body">
+                        <h3>Premium Bay Suite</h3>
+                        <p>780 sq ft · Panoramic Bay View · Separate Living</p>
+                        <div class="room-amenities"><span>Soaking Tub</span><span>Butler Service</span><span>Terrace</span></div>
+                        <div class="room-footer"><span class="room-price">From $890<small>/night</small></span><a href="#book" class="btn-gold-sm">Reserve</a></div>
+                    </div>
+                </div>
+                <div class="room-card reveal delay-2">
+                    <div class="room-img"><img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80" alt="Presidential Suite" loading="lazy"></div>
+                    <div class="room-body">
+                        <h3>The Presidential Suite</h3>
+                        <p>1,800 sq ft · Corner Penthouse · 2 Bedrooms</p>
+                        <div class="room-amenities"><span>Grand Piano</span><span>Private Chef</span><span>360° Views</span></div>
+                        <div class="room-footer"><span class="room-price">From $2,800<small>/night</small></span><a href="#book" class="btn-gold-sm">Reserve</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dining" class="section section-dark">
+        <div class="container dining-grid">
+            <div class="dining-image reveal">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Fine Dining at Aurelius" loading="lazy">
+            </div>
+            <div class="dining-text reveal delay-1">
+                <span class="section-eyebrow gold">Fine Dining</span>
+                <h2>Aurelius — Michelin-Starred Excellence.</h2>
+                <p>Executive Chef Maria Santorini transforms seasonal, locally-sourced ingredients into extraordinary culinary journeys. Our 12-course tasting menu has earned two Michelin stars and a devoted international following.</p>
+                <div class="dining-hours">
+                    <div><strong>Breakfast</strong><span>6:30 AM – 10:30 AM</span></div>
+                    <div><strong>Dinner</strong><span>6:00 PM – 10:00 PM</span></div>
+                    <div><strong>Rooftop Bar</strong><span>4:00 PM – Midnight</span></div>
+                </div>
+                <a href="#" class="btn-gold">View Menus &amp; Reserve</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="spa" class="section">
+        <div class="container spa-grid">
+            <div class="spa-text reveal">
+                <span class="section-eyebrow">The Elara Spa</span>
+                <h2>Restore. Renew. Revitalise.</h2>
+                <p>Our 12,000 sq ft spa sanctuary features eight treatment rooms, a hydrotherapy circuit, infrared sauna, and meditation garden. Our therapists draw from Eastern and Western healing traditions to create deeply personalised wellness experiences.</p>
+                <ul class="spa-treatments">
+                    <li>Signature Hot Stone Journey — 90 min</li>
+                    <li>Couples Champagne Ritual — 120 min</li>
+                    <li>Golden Age Facial — 60 min</li>
+                    <li>Deep Tissue Recovery — 75 min</li>
+                </ul>
+                <a href="#" class="btn-gold">Book a Treatment</a>
+            </div>
+            <div class="spa-image reveal delay-1">
+                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbec6e?w=800&q=80" alt="Spa Treatment Room" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <section id="experiences" class="section section-cream">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Curated Experiences</span>
+                <h2>Beyond the Ordinary.</h2>
+            </div>
+            <div class="exp-grid">
+                <div class="exp-card reveal">
+                    <div class="exp-icon">🍷</div>
+                    <h3>Private Wine Cellar Dinner</h3>
+                    <p>An intimate 8-course dinner in our underground wine cellar, paired with rare vintages from our 3,000-bottle collection.</p>
+                </div>
+                <div class="exp-card reveal delay-1">
+                    <div class="exp-icon">🚁</div>
+                    <h3>Golden Gate Helicopter Tour</h3>
+                    <p>Take flight over the bay, the bridge, and Alcatraz with a private helicopter chartered exclusively for Elara guests.</p>
+                </div>
+                <div class="exp-card reveal delay-2">
+                    <div class="exp-icon">🎭</div>
+                    <h3>Opera &amp; Theatre Concierge</h3>
+                    <p>Premium seats to the San Francisco Opera and ACT Theatre, with private car transfers and champagne at intermission.</p>
+                </div>
+                <div class="exp-card reveal delay-3">
+                    <div class="exp-icon">⛵</div>
+                    <h3>Private Bay Sailing</h3>
+                    <p>Board a 40-foot yacht for a sunset sail under the Golden Gate, complete with artisan cheeses and vintage champagne.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials-section section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Guest Reviews</span>
+                <h2>Words From Our Guests.</h2>
+            </div>
+            <div class="test-grid">
+                <div class="test-card reveal">
+                    <div class="test-stars">★★★★★</div>
+                    <blockquote>"The most exquisite hotel experience we've ever had. Every detail — from the hand-pressed linens to the personalised turndown notes — spoke of genuine care."</blockquote>
+                    <div class="test-author"><strong>Elizabeth & Arthur W.</strong><span>London, UK — Condé Nast Traveller</span></div>
+                </div>
+                <div class="test-card reveal delay-1">
+                    <div class="test-stars">★★★★★</div>
+                    <blockquote>"The Presidential Suite is beyond description. Waking up to a 360-degree view of the bay, bridge, and city skyline is a memory I'll treasure forever."</blockquote>
+                    <div class="test-author"><strong>Hiroshi Tanaka</strong><span>Tokyo, Japan — Forbes Travel</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="book" class="cta-section">
+        <div class="container cta-inner">
+            <h2 class="reveal">Begin Your Elara Experience.</h2>
+            <p class="reveal delay-1">Book directly for the best rates, complimentary upgrades, and a welcome amenity on arrival.</p>
+            <div class="reveal delay-2">
+                <a href="#" class="btn-gold btn-lg">Book Direct — Best Rate Guaranteed</a>
+            </div>
+            <p class="cta-phone reveal delay-3">Or call our reservations team: <strong>+1 (415) 555-ELARA</strong></p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo footer-logo">THE ELARA</a>
+                <p>1 Nob Hill Place<br>San Francisco, CA 94108<br>United States</p>
+                <p class="footer-phone">+1 (415) 555-ELARA</p>
+            </div>
+            <div class="footer-col"><h4>Hotel</h4><a href="#">Rooms &amp; Suites</a><a href="#">Dining</a><a href="#">Spa &amp; Wellness</a><a href="#">Experiences</a><a href="#">Meetings &amp; Events</a></div>
+            <div class="footer-col"><h4>Information</h4><a href="#">About The Elara</a><a href="#">Our History</a><a href="#">Press</a><a href="#">Careers</a><a href="#">Sustainability</a></div>
+            <div class="footer-col"><h4>Connect</h4><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">Pinterest</a><a href="#">Newsletter</a></div>
+        </div>
+        <div class="footer-bottom container">
+            <p>© 2024 The Elara Hotel. All rights reserved.</p>
+            <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a></div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

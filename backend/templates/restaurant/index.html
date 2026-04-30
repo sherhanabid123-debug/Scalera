@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maison | Fine Dining & Culinary Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Maison</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#menu">Menu</a>
+                <a href="#reservations">Reservations</a>
+            </div>
+            <a href="#reservations" class="btn btn-outline">Book a Table</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-split">
+            <div class="hero-image reveal">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Restaurant Interior">
+            </div>
+            <div class="hero-content">
+                <h1 class="reveal" style="transition-delay: 0.2s;">A culinary <br>journey through <br><em>modern flavors.</em></h1>
+                <p class="reveal" style="transition-delay: 0.3s;">Experience the finest seasonal ingredients crafted with passion and precision.</p>
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <a href="#menu" class="btn btn-primary">Discover the Menu</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="section">
+        <div class="container container-sm text-center">
+            <div class="reveal">
+                <p class="eyebrow">Our Philosophy</p>
+                <h2>Tradition meets innovation.</h2>
+                <p class="lead-text">At Maison, we believe that dining is more than just a meal—it is an experience. Our chefs work closely with local farmers to source the freshest ingredients, bringing together classic techniques and modern innovation to create dishes that tell a story.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="section bg-light">
+        <div class="container">
+            <div class="text-center mb-4 reveal">
+                <p class="eyebrow">A la Carte</p>
+                <h2>Seasonal Menu</h2>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Starters -->
+                <div class="menu-category reveal">
+                    <h3>Starters</h3>
+                    <div class="menu-item">
+                        <div class="menu-header">
+                            <h4>Heirloom Tomato Tart</h4>
+                            <span class="menu-price">$18</span>
+                        </div>
+                        <p>Whipped ricotta, basil emulsion, pine nuts</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-header">
+                            <h4>Wagyu Beef Carpaccio</h4>
+                            <span class="menu-price">$24</span>
+                        </div>
+                        <p>Black truffle vinaigrette, shaved parmesan, capers</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-header">
+                            <h4>Seared Scallops</h4>
+                            <span class="menu-price">$22</span>
+                        </div>
+                        <p>Cauliflower purée, brown butter caper sauce</p>
+                    </div>
+                </div>
+
+                <!-- Mains -->
+                <div class="menu-category reveal" style="transition-delay: 0.2s;">
+                    <h3>Mains</h3>
+                    <div class="menu-item">
+                        <div class="menu-header">
+                            <h4>Pan-Roasted Halibut</h4>
+                            <span class="menu-price">$38</span>
+                        </div>
+                        <p>Fennel confit, citrus beurre blanc, asparagus</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-header">
+                            <h4>Duck Breast</h4>
+                            <span class="menu-price">$42</span>
+                        </div>
+                        <p>Cherry gastrique, sweet potato fondant, swiss chard</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-header">
+                            <h4>Wild Mushroom Risotto</h4>
+                            <span class="menu-price">$32</span>
+                        </div>
+                        <p>Porcini broth, aged parmesan, truffle oil (V)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reservations" class="section">
+        <div class="container reservation-container">
+            <div class="reservation-content reveal">
+                <p class="eyebrow">Join Us</p>
+                <h2>Make a Reservation</h2>
+                <p>We accept reservations up to 30 days in advance. For parties of 6 or more, please contact the restaurant directly.</p>
+                
+                <div class="contact-details mt-2">
+                    <p><strong>Call:</strong> +1 (555) 123-4567</p>
+                    <p><strong>Email:</strong> reservations@maison.com</p>
+                    <p><strong>Location:</strong> 123 Culinary Way, Food City</p>
+                </div>
+            </div>
+            
+            <div class="reservation-form-container reveal" style="transition-delay: 0.2s;">
+                <form class="reservation-form">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <select id="time" required>
+                            <option value="">Select a time</option>
+                            <option value="18:00">6:00 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                            <option value="21:00">9:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guests">Guests</label>
+                        <select id="guests" required>
+                            <option value="">Number of guests</option>
+                            <option value="1">1 Person</option>
+                            <option value="2">2 People</option>
+                            <option value="3">3 People</option>
+                            <option value="4">4 People</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Find a Table</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <h2 class="logo mb-2">Maison</h2>
+            <div class="footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">Newsletter</a>
+            </div>
+            <p class="copyright">&copy; 2024 Maison Restaurant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
