@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="ai-styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body class="ai-body">
     <!-- Ambient Background Effects -->
@@ -21,7 +22,7 @@
     </div>
 
     <!-- Glassmorphic Navbar -->
-    <nav class="glass-nav">
+    <nav class="glass-nav reveal-init">
         <div class="nav-container">
             <a href="index.html" class="logo" style="text-decoration: none;">Scalera<span class="dot">.</span> <span style="font-weight: 400; opacity: 0.7; font-size: 1rem; margin-left: 0.5rem; color: var(--text-main);">AI</span></a>
             <div class="nav-links">
@@ -33,7 +34,7 @@
     <main class="ai-main">
         <div class="ai-builder-container">
             <!-- Chat Interface -->
-            <div id="ai-chat" class="ai-chat-box">
+            <div id="ai-chat" class="ai-chat-box reveal-init">
                 <div class="chat-header">
                     <div class="status-dot pulsing"></div>
                     <span>Scalera AI is active</span>
