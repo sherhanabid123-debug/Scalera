@@ -274,6 +274,52 @@ h3 {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
+.btn-generate-premium {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: #000;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 10px 30px rgba(250, 204, 21, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-generate-premium:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(250, 204, 21, 0.4);
+    filter: brightness(1.1);
+}
+
+.btn-generate-premium:active {
+    transform: translateY(-1px);
+}
+
+.btn-generate-premium::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+.btn-generate-premium:hover::after {
+    left: 100%;
+    top: 100%;
+}
+
 .btn-glass {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
