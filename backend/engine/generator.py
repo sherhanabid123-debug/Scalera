@@ -303,14 +303,13 @@ async def chat_with_ai(messages: list) -> dict:
             "Content-Type": "application/json"
         }
         data = {
-            "model": "llama-3.1-8b-instant",
+            "model": "llama-3.3-70b-versatile",
             "messages": formatted_messages,
             "max_tokens": 512,
             "temperature": 0.7,
             "response_format": {"type": "json_object"}
         }
         
-        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
     if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
         return {
             "reply": "Debugging: I cannot see the GROQ_API_KEY in Vercel. Please make sure you added it to the *Scalera* project in Vercel, and that it is applied to the Production environment.",
@@ -318,6 +317,15 @@ async def chat_with_ai(messages: list) -> dict:
         }
 
     try:
+        # Scrub any literal backslash-n or actual newlines just in case
+        clean_key = GROQ_API_KEY.replace('\\n', '').replace('\n', '').strip()
+        
+        headers = {
+            "Authorization": f"Bearer {clean_key}",
+            "Content-Type": "application/json"
+        }
+        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
+        
         with urllib.request.urlopen(req, timeout=15) as response:
             result = json.loads(response.read().decode("utf-8"))
             raw_content = result["choices"][0]["message"]["content"]
