@@ -318,9 +318,14 @@ async def chat_with_ai(messages: list) -> dict:
                 return json.loads(raw_content)
         except Exception as e:
             print(f"[Groq Chat Error]: {e}")
+            return {
+                "reply": f"SYSTEM ERROR: {str(e)}",
+                "ready_to_generate": False
+            }
 
     # Fallback response if API fails
+    key_status = "SET" if GROQ_API_KEY else "EMPTY"
     return {
-        "reply": "I'm having a little trouble connecting. Could you tell me more about the style you want for the website?",
+        "reply": f"API Key Status: {key_status}. Please make sure GROQ_API_KEY is set in Vercel.",
         "ready_to_generate": False
     }
