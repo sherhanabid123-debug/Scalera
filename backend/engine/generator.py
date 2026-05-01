@@ -43,7 +43,8 @@ Conversation:
 Reply with ONLY the folder name, nothing else. Example: corporate"""
 
     try:
-        response = await groq_client.chat.completions.create(
+        client = AsyncGroq(api_key=GROQ_API_KEY)
+        response = await client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=20,
@@ -155,7 +156,8 @@ TEMPLATE HTML TO REWRITE:
 
     try:
         print("[Personalise] Sending full HTML to Groq for deep text rewrite...")
-        response = await groq_client.chat.completions.create(
+        client = AsyncGroq(api_key=GROQ_API_KEY)
+        response = await client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=16384,
@@ -193,7 +195,8 @@ TEMPLATE HTML TO REWRITE:
     # ── Fallback: try with the lighter 8b model ──
     try:
         print("[Personalise] Attempting fallback with llama-3.1-8b-instant...")
-        response = await groq_client.chat.completions.create(
+        client = AsyncGroq(api_key=GROQ_API_KEY)
+        response = await client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=16384,
@@ -291,7 +294,8 @@ async def chat_with_ai(messages: list) -> dict:
 
     if GROQ_API_KEY and GROQ_API_KEY != "PASTE_YOUR_GROQ_KEY_HERE":
         try:
-            response = await groq_client.chat.completions.create(
+            client = AsyncGroq(api_key=GROQ_API_KEY)
+            response = await client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=formatted_messages,
                 max_tokens=512,
