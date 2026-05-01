@@ -311,21 +311,19 @@ async def chat_with_ai(messages: list) -> dict:
         }
         
         req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=15) as response:
-                result = json.loads(response.read().decode("utf-8"))
-                raw_content = result["choices"][0]["message"]["content"]
-                return json.loads(raw_content)
-        except Exception as e:
-            print(f"[Groq Chat Error]: {e}")
-            return {
-                "reply": f"SYSTEM ERROR: {str(e)}",
-                "ready_to_generate": False
-            }
+    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
+        return {
+            "reply": "Debugging: I cannot see the GROQ_API_KEY in Vercel. Please make sure you added it to the *Scalera* project in Vercel, and that it is applied to the Production environment.",
+            "ready_to_generate": False
+        }
 
-    # Fallback response if API fails
-    key_status = "SET" if GROQ_API_KEY else "EMPTY"
-    return {
-        "reply": f"API Key Status: {key_status}. Please make sure GROQ_API_KEY is set in Vercel.",
-        "ready_to_generate": False
-    }
+    try:
+        with urllib.request.urlopen(req, timeout=15) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            raw_content = result["choices"][0]["message"]["content"]
+            return json.loads(raw_content)
+    except Exception as e:
+        return {
+            "reply": f"Debugging: API Key is present (starts with {GROQ_API_KEY[:4]}), but the Groq API call failed: {str(e)}",
+            "ready_to_generate": False
+        }
