@@ -322,7 +322,8 @@ async def chat_with_ai(messages: list) -> dict:
         
         headers = {
             "Authorization": f"Bearer {clean_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "User-Agent": "ScaleraAI/1.0 (Mozilla/5.0; Vercel)"
         }
         req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
         
