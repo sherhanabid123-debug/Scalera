@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura | Wellness & Spa</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Aura.</a>
+            <div class="nav-links">
+                <a href="#about">Philosophy</a>
+                <a href="#services">Treatments</a>
+                <a href="#booking">Booking</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Spa Retreat">
+        </div>
+        <div class="hero-content reveal">
+            <h1>Sanctuary<br>for the Soul</h1>
+            <p class="lead">Discover a holistic approach to wellness, beauty, and relaxation.</p>
+            <a href="#services" class="btn btn-primary mt-4">Explore Treatments</a>
+        </div>
+    </header>
+
+    <section id="about" class="section">
+        <div class="container text-center">
+            <div class="reveal">
+                <span class="eyebrow">Our Philosophy</span>
+                <h2>Harmony of Mind & Body</h2>
+                <p class="desc-text mt-4">At Aura, we believe that true beauty radiates from within. Our holistic treatments are designed to restore balance, using nature's finest ingredients and ancient healing techniques combined with modern luxury.</p>
+            </div>
+            
+            <div class="features-grid mt-5">
+                <div class="feature reveal" style="transition-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Organic Products">
+                    <h3>Organic Ingredients</h3>
+                    <p>We use only 100% natural, cruelty-free products tailored to nourish your skin deeply.</p>
+                </div>
+                <div class="feature reveal" style="transition-delay: 0.2s;">
+                    <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Expert Therapists">
+                    <h3>Expert Therapists</h3>
+                    <p>Our dedicated team provides personalized care to ensure a transformative experience.</p>
+                </div>
+                <div class="feature reveal" style="transition-delay: 0.3s;">
+                    <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tranquil Environment">
+                    <h3>Tranquil Space</h3>
+                    <p>Immerse yourself in a serene environment designed to melt away everyday stress.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section bg-sand">
+        <div class="container">
+            <div class="reveal text-center mb-5">
+                <span class="eyebrow">Menu</span>
+                <h2>Signature Treatments</h2>
+            </div>
+
+            <div class="menu-list">
+                <div class="menu-item reveal">
+                    <div class="menu-header">
+                        <h4>Aura Renewal Massage</h4>
+                        <span class="price">$150</span>
+                    </div>
+                    <p>A full-body Swedish massage combined with warm essential oils to release tension.</p>
+                    <span class="duration">90 mins</span>
+                </div>
+                <div class="menu-item reveal">
+                    <div class="menu-header">
+                        <h4>Botanical Facial</h4>
+                        <span class="price">$120</span>
+                    </div>
+                    <p>Customized organic facial targeting hydration and youthful glow.</p>
+                    <span class="duration">60 mins</span>
+                </div>
+                <div class="menu-item reveal">
+                    <div class="menu-header">
+                        <h4>Himalayan Salt Scrub</h4>
+                        <span class="price">$95</span>
+                    </div>
+                    <p>Exfoliating body treatment that detoxifies and softens the skin.</p>
+                    <span class="duration">45 mins</span>
+                </div>
+                <div class="menu-item reveal">
+                    <div class="menu-header">
+                        <h4>Couples Retreat</h4>
+                        <span class="price">$280</span>
+                    </div>
+                    <p>Share a relaxing massage experience in our private couples suite.</p>
+                    <span class="duration">90 mins</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking" class="section">
+        <div class="container container-sm text-center reveal">
+            <span class="eyebrow">Reservation</span>
+            <h2>Book Your Escape</h2>
+            <p class="desc-text mt-2 mb-4">Select your desired treatment and preferred time to begin your journey to relaxation.</p>
+            
+            <form class="booking-form">
+                <div class="form-row">
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-row">
+                    <select required>
+                        <option value="">Select Treatment</option>
+                        <option value="massage">Aura Renewal Massage</option>
+                        <option value="facial">Botanical Facial</option>
+                        <option value="scrub">Himalayan Salt Scrub</option>
+                        <option value="couples">Couples Retreat</option>
+                    </select>
+                    <input type="date" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4">Request Appointment</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer bg-dark">
+        <div class="container text-center">
+            <h2 class="logo mb-4">Aura.</h2>
+            <p class="footer-text">123 Serenity Lane, Wellness District<br>info@auraspa.com | (555) 987-6543</p>
+            <div class="footer-links mt-4">
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">Terms</a>
+            </div>
+            <p class="copyright mt-5">&copy; 2024 Aura Spa. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
