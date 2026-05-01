@@ -1154,13 +1154,7 @@ h3 {
     display: flex;
     gap: 1rem;
     justify-content: center;
-}
-
-.modal-actions-row .btn {
-    flex: 1;
-    font-size: 0.9rem;
-    padding: 0.85rem 1.25rem;
-    white-space: nowrap;
+    flex-wrap: wrap;
 }
 
 .animate-modal {
