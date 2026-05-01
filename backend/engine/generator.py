@@ -1,4 +1,4 @@
-from groq import AsyncGroq
+from groq import Groq
 import re
 import os
 import json
@@ -43,8 +43,8 @@ Conversation:
 Reply with ONLY the folder name, nothing else. Example: corporate"""
 
     try:
-        client = AsyncGroq(api_key=GROQ_API_KEY)
-        response = await client.chat.completions.create(
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=20,
@@ -156,8 +156,8 @@ TEMPLATE HTML TO REWRITE:
 
     try:
         print("[Personalise] Sending full HTML to Groq for deep text rewrite...")
-        client = AsyncGroq(api_key=GROQ_API_KEY)
-        response = await client.chat.completions.create(
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=16384,
@@ -195,8 +195,8 @@ TEMPLATE HTML TO REWRITE:
     # ── Fallback: try with the lighter 8b model ──
     try:
         print("[Personalise] Attempting fallback with llama-3.1-8b-instant...")
-        client = AsyncGroq(api_key=GROQ_API_KEY)
-        response = await client.chat.completions.create(
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=16384,
@@ -293,17 +293,29 @@ async def chat_with_ai(messages: list) -> dict:
     formatted_messages = [system_prompt] + messages
 
     if GROQ_API_KEY and GROQ_API_KEY != "PASTE_YOUR_GROQ_KEY_HERE":
+        import urllib.request
+        import urllib.error
+        import json
+        
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "model": "llama-3.3-70b-versatile",
+            "messages": formatted_messages,
+            "max_tokens": 512,
+            "temperature": 0.7,
+            "response_format": {"type": "json_object"}
+        }
+        
+        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
         try:
-            client = AsyncGroq(api_key=GROQ_API_KEY)
-            response = await client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=formatted_messages,
-                max_tokens=512,
-                temperature=0.7,
-                response_format={"type": "json_object"}
-            )
-            raw_content = response.choices[0].message.content
-            return json.loads(raw_content)
+            with urllib.request.urlopen(req, timeout=15) as response:
+                result = json.loads(response.read().decode("utf-8"))
+                raw_content = result["choices"][0]["message"]["content"]
+                return json.loads(raw_content)
         except Exception as e:
             print(f"[Groq Chat Error]: {e}")
 
