@@ -175,39 +175,39 @@ window.addEventListener('DOMContentLoaded', () => {
         tl.to(".ambient-bg .blob", {
             opacity: 0.5,
             scale: 1,
-            duration: 2.5,
-            stagger: 0.4
+            duration: 1.2,
+            stagger: 0.2
         });
         
         // 2. Reveal navbar and main chat box
         tl.to(".glass-nav, .ai-chat-box", {
             opacity: 1,
             y: 0,
-            duration: 1.8,
-            stagger: 0.2
-        }, "-=2");
+            duration: 0.8,
+            stagger: 0.1
+        }, "-=1");
         
         // 3. Reveal Logo and Nav links
         tl.to(".logo, .nav-link", {
             opacity: 1,
-            duration: 1.2,
-            stagger: 0.1
-        }, "-=1.5");
+            duration: 0.6,
+            stagger: 0.05
+        }, "-=0.6");
         
         // 4. Stagger reveal the initial message content
         tl.from(".ai-message .message-avatar, .ai-message .message-content", {
             opacity: 0,
-            y: 15,
-            stagger: 0.15,
-            duration: 1
-        }, "-=1");
+            y: 10,
+            stagger: 0.1,
+            duration: 0.6
+        }, "-=0.4");
 
         // 5. Reveal the input area
         tl.from(".chat-input-area", {
             opacity: 0,
-            y: 10,
-            duration: 1
-        }, "-=0.8");
+            y: 5,
+            duration: 0.6
+        }, "-=0.3");
     } else {
         // Fallback if GSAP is not loaded
         document.querySelectorAll('.reveal-init').forEach(el => {
