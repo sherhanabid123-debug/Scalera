@@ -124,10 +124,22 @@
                     <h2>Website Generated Successfully.</h2>
                     <p>Here is a preview of your custom digital presence.</p>
                     <div class="result-actions">
-                        <button class="btn-primary" onclick="downloadWebsitePackage()">⬇ Download Source Code</button>
-                        <button class="btn-secondary" onclick="openInNewTab()">↗ Open in New Tab</button>
-                        <button class="btn-secondary" onclick="toggleFullscreen()">⛶ Full Screen</button>
-                        <button class="btn-secondary" onclick="location.reload()">↺ Start Over</button>
+                        <button class="action-btn-pill btn-download-source" onclick="downloadWebsitePackage()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download Source
+                        </button>
+                        <button class="action-btn-pill btn-secondary" onclick="openInNewTab()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            Open Preview
+                        </button>
+                        <button class="action-btn-pill btn-secondary" onclick="toggleFullscreen()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                            Fullscreen
+                        </button>
+                        <button class="action-btn-pill btn-secondary" onclick="location.reload()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                            Start Over
+                        </button>
                     </div>
                 </div>
                 <div class="mockup-window-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; height: 100%;">
