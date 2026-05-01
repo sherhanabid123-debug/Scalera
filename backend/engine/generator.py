@@ -303,7 +303,7 @@ async def chat_with_ai(messages: list) -> dict:
             "Content-Type": "application/json"
         }
         data = {
-            "model": "llama-3.3-70b-versatile",
+            "model": "llama-3.1-8b-instant",
             "messages": formatted_messages,
             "max_tokens": 512,
             "temperature": 0.7,
