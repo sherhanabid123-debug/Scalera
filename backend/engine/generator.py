@@ -11,7 +11,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 # ──────────────────────────────────────────────
 # Clients
 # ──────────────────────────────────────────────
-groq_client = AsyncGroq(api_key=GROQ_API_KEY)
+# groq_client removed to avoid event loop issues
 
 
 # ──────────────────────────────────────────────
