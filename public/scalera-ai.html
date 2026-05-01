@@ -77,17 +77,43 @@
             <!-- Loading/Generating State -->
             <div id="ai-generating" class="ai-generating-box" style="display: none;">
                 <div class="generation-visual">
-                    <div class="ai-spinner"></div>
+                    <div class="ai-orb-container">
+                        <div class="ai-orb"></div>
+                        <div class="ai-orb-ring"></div>
+                        <div class="ai-orb-ring ring-delayed"></div>
+                    </div>
                     <h2 class="text-accent">Architecting your website...</h2>
                     <p id="generation-status">Analyzing brand requirements</p>
                 </div>
-                <div class="fake-terminal">
-                    <div class="terminal-header">
-                        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                        <span class="terminal-title">scalera-ai-engine.sh</span>
+                
+                <div class="process-tracker">
+                    <div class="process-step" id="step-1">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label">Analysis</span>
+                            <span class="step-desc">Processing brand identity</span>
+                        </div>
                     </div>
-                    <div class="terminal-body">
-                        <pre><code id="terminal-output"></code></pre>
+                    <div class="process-step" id="step-2">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label">Design</span>
+                            <span class="step-desc">Crafting layout & styles</span>
+                        </div>
+                    </div>
+                    <div class="process-step" id="step-3">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label">Engineering</span>
+                            <span class="step-desc">Generating source code</span>
+                        </div>
+                    </div>
+                    <div class="process-step" id="step-4">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label">Finalization</span>
+                            <span class="step-desc">Optimizing for launch</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -239,34 +239,44 @@ function startGeneration(chatHistoryStr) {
     aiChatBox.style.display = 'none';
     aiGeneratingBox.style.display = 'flex';
 
-    const statuses = [
-        "Initializing Scalera AI Engine...",
-        "Analyzing conversation context...",
-        "Architecting HTML structure...",
-        "Writing premium CSS design system...",
-        "Composing JavaScript interactions...",
-        "Optimizing layout & alignment...",
-        "Finalizing build..."
+    const steps = [
+        { id: 'step-1', status: "Analyzing brand identity..." },
+        { id: 'step-2', status: "Crafting layout & styles..." },
+        { id: 'step-3', status: "Generating source code..." },
+        { id: 'step-4', status: "Optimizing for launch..." }
     ];
 
-    let idx = 0;
+    let currentIdx = 0;
     const statusEl = document.getElementById('generation-status');
-    const termOut  = document.getElementById('terminal-output');
 
     const interval = setInterval(() => {
-        if (idx < statuses.length) {
-            statusEl.textContent = statuses[idx];
-            termOut.innerHTML += `> ${statuses[idx]}<br>`;
-            idx++;
-            termOut.scrollTop = termOut.scrollHeight;
+        if (currentIdx < steps.length) {
+            const step = steps[currentIdx];
+            
+            // Mark previous as completed
+            if (currentIdx > 0) {
+                const prev = document.getElementById(steps[currentIdx-1].id);
+                prev.classList.remove('active');
+                prev.classList.add('completed');
+            }
+
+            // Mark current as active
+            const current = document.getElementById(step.id);
+            current.classList.add('active');
+            statusEl.textContent = step.status;
+
+            currentIdx++;
         } else {
             clearInterval(interval);
-            statusEl.textContent = "Awaiting AI response (this may take up to 20 seconds)...";
-            termOut.innerHTML += `> Streaming from Groq LLM...<br>`;
-            termOut.scrollTop = termOut.scrollHeight;
+            // Final step active
+            const last = document.getElementById(steps[steps.length-1].id);
+            last.classList.remove('active');
+            last.classList.add('completed');
+            
+            statusEl.textContent = "Awaiting final response from Scalera AI...";
             generateFromBackend(chatHistoryStr);
         }
-    }, 1500);
+    }, 2500); // Slower for better visual impact
 }
 
 // ─────────────────────────────────────────────────
