@@ -549,22 +549,28 @@ async def _parse_raw_text_to_json(raw_text: str) -> dict:
     }
     
     data = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {"role": "system", "content": system_msg},
             {"role": "user", "content": f"Text to extract:\n{raw_text[:8000]}"}
         ],
         "response_format": {"type": "json_object"},
-        "temperature": 0.1
+        "temperature": 0.0
     }
     
     try:
         req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=30) as response:
+        with urllib.request.urlopen(req, timeout=45) as response:
             result = json.loads(response.read().decode("utf-8"))
             content = result["choices"][0]["message"]["content"]
             print(f"[Extractor] Groq extraction complete. Structured {len(content)} bytes of JSON.")
             return json.loads(content)
+    except urllib.error.HTTPError as e:
+        status_code = e.code
+        print(f"[Extractor] HTTP Error {status_code}: {e.reason}")
+        if status_code in [401, 403]:
+            return {"error": "Invalid Groq API Key. Please check your .env or environment variables."}
+        return {"error": f"Groq API returned error {status_code}. The service might be busy."}
     except Exception as e:
-        print(f"[Extractor] Groq Error: {e}")
+        print(f"[Extractor] General Error: {e}")
         return {"error": "AI extraction failed. The file text was too complex or the engine is busy."}
