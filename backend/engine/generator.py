@@ -339,3 +339,78 @@ async def chat_with_ai(messages: list) -> dict:
             "reply": f"Debugging: API Key is present (starts with {GROQ_API_KEY[:4]}), but the Groq API call failed: {str(e)}",
             "ready_to_generate": False
         }
+
+# ──────────────────────────────────────────────
+# AI Editor — Targeted updates
+# ──────────────────────────────────────────────
+async def edit_website(html: str, css: str, prompt: str) -> dict:
+    """
+    Takes the current HTML/CSS and a user's natural language edit prompt,
+    and returns the modified HTML and CSS.
+    """
+    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
+        return {"html": html, "css": css} # Fallback
+
+    system_msg = """You are Scalera AI, an expert front-end web developer.
+Your task is to modify the provided HTML and CSS based exactly on the user's request.
+ONLY make the changes requested by the user. Keep everything else intact.
+Do not change the overall structure unless asked.
+Always return your response as a valid JSON object with EXACTLY two keys: "html" and "css".
+Do not include markdown blocks around the JSON."""
+
+    user_msg = f"""
+Here is the current code:
+
+[HTML]
+{html}
+[/HTML]
+
+[CSS]
+{css}
+[/CSS]
+
+The user's edit request is: "{prompt}"
+
+Return the updated code as JSON.
+    """
+
+    import urllib.request
+    import urllib.error
+    import json
+    
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    clean_key = GROQ_API_KEY.replace('\\n', '').replace('\n', '').strip()
+    headers = {
+        "Authorization": f"Bearer {clean_key}",
+        "Content-Type": "application/json",
+        "User-Agent": "ScaleraAI/1.0"
+    }
+    
+    data = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": [
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg}
+        ],
+        "response_format": {"type": "json_object"},
+        "temperature": 0.2
+    }
+    
+    try:
+        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
+        with urllib.request.urlopen(req, timeout=30) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            raw_content = result["choices"][0]["message"]["content"]
+            parsed = json.loads(raw_content)
+            
+            # Ensure keys exist
+            final_html = parsed.get("html", html)
+            final_css = parsed.get("css", css)
+            
+            return {
+                "html": final_html,
+                "css": final_css
+            }
+    except Exception as e:
+        print(f"[AI Editor] Error: {e}")
+        return {"html": html, "css": css} # Return original on failure

@@ -124,7 +124,11 @@
                     <h2>Website Generated Successfully.</h2>
                     <p>Here is a preview of your custom digital presence.</p>
                     <div class="result-actions">
-                        <button class="action-btn-pill btn-download-source" onclick="downloadWebsitePackage()">
+                        <button class="action-btn-pill btn-download-source" onclick="openAIEditor()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            Edit with AI
+                        </button>
+                        <button class="action-btn-pill btn-secondary" onclick="downloadWebsitePackage()">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             Download Source
                         </button>
@@ -201,6 +205,44 @@
                 </div>
             </div>
         </div>
+
+        <!-- AI Editor Panel -->
+        <div id="ai-editor-panel" class="ai-editor-panel" style="display: none;">
+            <div class="ai-editor-header">
+                <h3>Scalera AI Editor</h3>
+                <button class="close-editor-btn" onclick="closeAIEditor()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <div class="ai-editor-chat" id="ai-editor-chat">
+                <div class="editor-message assistant">
+                    <p>What would you like to change on this website?</p>
+                </div>
+            </div>
+            
+            <div class="ai-editor-suggestions" id="ai-editor-suggestions">
+                <button class="suggestion-btn" onclick="submitAIEdit('Change the headline to something more premium')">Improve Headline</button>
+                <button class="suggestion-btn" onclick="submitAIEdit('Make the colors darker and more elegant')">Darker Colors</button>
+                <button class="suggestion-btn" onclick="submitAIEdit('Add a testimonials section below the hero')">Add Testimonials</button>
+            </div>
+            
+            <div class="ai-editor-input-area">
+                <input type="text" id="ai-editor-input" placeholder="e.g. Change the primary button to blue...">
+                <button id="ai-editor-submit" onclick="handleAIEditSubmit()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+            
+            <div id="ai-editor-confirm" class="ai-editor-confirm" style="display: none;">
+                <p>Changes generated. Apply to website?</p>
+                <div class="confirm-actions">
+                    <button class="btn-confirm apply" onclick="applyAIEdit()">Apply Changes</button>
+                    <button class="btn-confirm discard" onclick="discardAIEdit()">Discard</button>
+                </div>
+            </div>
+        </div>
+
     </main>
     
     <script src="scalera-ai.js"></script>

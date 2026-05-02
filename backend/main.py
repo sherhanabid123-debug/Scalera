@@ -20,6 +20,11 @@ class ChatRequest(BaseModel):
 class GenerateRequest(BaseModel):
     chat_history: str
 
+class EditRequest(BaseModel):
+    html: str
+    css: str
+    prompt: str
+
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     from .engine.generator import chat_with_ai
@@ -36,6 +41,20 @@ async def generate(request: GenerateRequest):
         "html": result["html"],
         "css": result["css"],
         "js": result["js"],
+    }
+
+@app.post("/api/edit")
+async def edit(request: EditRequest):
+    from .engine.generator import edit_website
+    result = await edit_website(
+        html=request.html,
+        css=request.css,
+        prompt=request.prompt
+    )
+    return {
+        "status": "success",
+        "html": result["html"],
+        "css": result["css"]
     }
 
 @app.get("/")

@@ -588,3 +588,132 @@ function handleImageUpload(event) {
     };
     reader.readAsDataURL(file);
 }
+
+// ─────────────────────────────────────────────────
+// AI Editor Logic
+// ─────────────────────────────────────────────────
+let editorHistory = []; // to store undo states
+let pendingEdit = null; // {html, css}
+
+function openAIEditor() {
+    document.getElementById('ai-editor-panel').style.display = 'flex';
+}
+
+function closeAIEditor() {
+    document.getElementById('ai-editor-panel').style.display = 'none';
+}
+
+function submitAIEdit(prompt) {
+    document.getElementById('ai-editor-input').value = prompt;
+    handleAIEditSubmit();
+}
+
+async function handleAIEditSubmit() {
+    const inputEl = document.getElementById('ai-editor-input');
+    const prompt = inputEl.value.trim();
+    if (!prompt) return;
+    
+    // Add user message to chat
+    appendEditorMessage(prompt, 'user');
+    inputEl.value = '';
+    
+    // Show loading state
+    appendEditorMessage("Analyzing your request and generating updates...", 'assistant', true);
+    
+    // Hide suggestions
+    document.getElementById('ai-editor-suggestions').style.display = 'none';
+    
+    try {
+        const response = await fetch('/api/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                html: generatedHTML,
+                css: generatedCSS,
+                prompt: prompt
+            })
+        });
+        
+        const data = await response.json();
+        
+        // Remove loading message
+        removeLoadingEditorMessage();
+        
+        if (data.status === 'success' && data.html) {
+            appendEditorMessage("I've made the changes! You can preview them now.", 'assistant');
+            
+            // Save current state to history
+            editorHistory.push({ html: generatedHTML, css: generatedCSS, js: generatedJS });
+            
+            // Store pending edit
+            pendingEdit = { html: data.html, css: data.css };
+            
+            // Show preview
+            updateIframePreview(data.html, data.css, generatedJS);
+            
+            // Show confirm dialog
+            document.getElementById('ai-editor-confirm').style.display = 'block';
+            
+        } else {
+            appendEditorMessage("Sorry, I couldn't process that edit right now.", 'assistant');
+        }
+    } catch (e) {
+        removeLoadingEditorMessage();
+        appendEditorMessage("Connection error while trying to edit.", 'assistant');
+        console.error(e);
+    }
+}
+
+function updateIframePreview(html, css, js) {
+    const tempComposite = buildCompositeHTML(html, css, js);
+    const iframe = document.getElementById('preview-iframe');
+    if (iframe) {
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write(tempComposite);
+        iframe.contentWindow.document.close();
+    }
+}
+
+function applyAIEdit() {
+    if (!pendingEdit) return;
+    
+    // Make changes permanent
+    generatedHTML = pendingEdit.html;
+    generatedCSS = pendingEdit.css;
+    compositeHTML = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
+    
+    pendingEdit = null;
+    document.getElementById('ai-editor-confirm').style.display = 'none';
+    appendEditorMessage("Changes applied successfully!", 'assistant');
+}
+
+function discardAIEdit() {
+    if (editorHistory.length === 0) return;
+    
+    // Revert to last state
+    const lastState = editorHistory.pop();
+    generatedHTML = lastState.html;
+    generatedCSS = lastState.css;
+    
+    updateIframePreview(generatedHTML, generatedCSS, generatedJS);
+    
+    pendingEdit = null;
+    document.getElementById('ai-editor-confirm').style.display = 'none';
+    appendEditorMessage("Changes discarded. We're back to the previous version.", 'assistant');
+}
+
+function appendEditorMessage(text, role, isLoading = false) {
+    const chat = document.getElementById('ai-editor-chat');
+    const msg = document.createElement('div');
+    msg.className = `editor-message ${role}`;
+    if (isLoading) msg.id = 'editor-loading-msg';
+    
+    msg.innerHTML = `<p>${text}</p>`;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function removeLoadingEditorMessage() {
+    const loadingMsg = document.getElementById('editor-loading-msg');
+    if (loadingMsg) loadingMsg.remove();
+}
