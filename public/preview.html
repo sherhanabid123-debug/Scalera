@@ -107,14 +107,56 @@
         let generatedJS = localStorage.getItem('scalera-preview-js') || '';
         let compositeHTML = '';
         
+        console.log("[Preview] Initializing with data:", { 
+            htmlLen: generatedHTML.length, 
+            cssLen: generatedCSS.length,
+            jsLen: generatedJS.length 
+        });
+        
         let editorHistory = [];
         let pendingEdit = null;
 
-        function buildCompositeHTML(h, c, j) {
-            let doc = h;
-            if (c) { doc = doc.replace('</head>', `<style>\n${c}\n</style>\n</head>`); }
-            if (j) { doc = doc.replace('</body>', `<script>\n${j}\n<\/script>\n</body>`); }
-            return doc;
+        function buildCompositeHTML(html, css, js) {
+            if (!html) return '';
+            
+            // If it's already a full document, inject styles/scripts into head/body
+            if (html.trim().toLowerCase().startsWith('<!doctype') || html.trim().startsWith('<html')) {
+                let doc = html;
+                if (css) {
+                    if (doc.includes('</head>')) {
+                        doc = doc.replace('</head>', `<style>\n${css}\n</style>\n</head>`);
+                    } else {
+                        doc = doc + `<style>\n${css}\n</style>`;
+                    }
+                }
+                if (js) {
+                    if (doc.includes('</body>')) {
+                        doc = doc.replace('</body>', `<script>\n${js}\n<\/script>\n</body>`);
+                    } else {
+                        doc = doc + `<script>\n${js}\n<\/script>`;
+                    }
+                }
+                return doc;
+            }
+            
+            // If it's a snippet, wrap it in a full boilerplate
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scalera Preview</title>
+    <style>
+${css}
+    </style>
+</head>
+<body>
+${html}
+<script>
+${js}
+<\/script>
+</body>
+</html>`;
         }
 
         function renderPreview() {
