@@ -19,6 +19,7 @@ class ChatRequest(BaseModel):
 
 class GenerateRequest(BaseModel):
     chat_history: str
+    data: Optional[dict] = None
 
 class EditRequest(BaseModel):
     html: str
@@ -34,7 +35,8 @@ async def chat(request: ChatRequest):
 @app.post("/api/generate")
 async def generate(request: GenerateRequest):
     result = await generate_website(
-        chat_history=request.chat_history
+        chat_history=request.chat_history,
+        data=request.data
     )
     return {
         "status": "success",
@@ -55,6 +57,33 @@ async def edit(request: EditRequest):
         "status": "success",
         "html": result["html"],
         "css": result["css"]
+    }
+
+from fastapi import UploadFile, File, Form
+from typing import Optional
+
+@app.post("/api/extract")
+async def extract(
+    file: Optional[UploadFile] = File(None),
+    link: Optional[str] = Form(None)
+):
+    from .engine.generator import extract_data_from_resume, extract_data_from_link
+    
+    resume_data = {}
+    if file:
+        content = await file.read()
+        resume_data = await extract_data_from_resume(content, file.filename)
+    
+    link_data = {}
+    if link:
+        link_data = await extract_data_from_link(link)
+        
+    # Merge data (basic merge for now)
+    merged = {**resume_data, **link_data}
+    
+    return {
+        "status": "success",
+        "data": merged
     }
 
 @app.get("/")

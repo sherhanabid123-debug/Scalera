@@ -65,11 +65,49 @@
                             </svg>
                         </button>
                     </form>
-                    <div style="text-align: right; margin-top: 1rem;">
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; align-items: center;">
+                        <button id="magic-import-btn" class="btn-magic-import" title="Generate from Resume/LinkedIn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            Magic Import
+                        </button>
                         <button id="generate-trigger-btn" class="btn-generate-premium">Generate Website ✨</button>
                     </div>
+                    <input type="file" id="resume-upload" style="display: none;" accept=".pdf,.txt,.doc,.docx">
                     <div class="quick-replies" id="quick-replies" style="display: none;">
                         <!-- Injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Magic Import Data Review Modal -->
+            <div id="data-review-modal" class="data-review-modal" style="display: none;">
+                <div class="modal-content glass">
+                    <div class="modal-header">
+                        <h3>Review Extracted Data</h3>
+                        <p>We've structured your profile. You can edit it before we build the site.</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="review-name">
+                        </div>
+                        <div class="form-group">
+                            <label>Professional Title</label>
+                            <input type="text" id="review-title">
+                        </div>
+                        <div class="form-group">
+                            <label>Bio / Summary</label>
+                            <textarea id="review-bio"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Skills (comma separated)</label>
+                            <input type="text" id="review-skills">
+                        </div>
+                        <!-- We can add more fields dynamically if needed -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                        <button class="btn-primary" onclick="proceedWithMagicGenerate()">Generate with this Data</button>
                     </div>
                 </div>
             </div>

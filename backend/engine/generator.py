@@ -236,7 +236,7 @@ TEMPLATE HTML TO REWRITE:
 # ──────────────────────────────────────────────
 # Main Generation Entry Point
 # ──────────────────────────────────────────────
-async def generate_website(chat_history: str) -> dict:
+async def generate_website(chat_history: str, data: dict = None) -> dict:
     """
     Generates a website by:
     1. Routing to the best matching template
@@ -253,7 +253,14 @@ async def generate_website(chat_history: str) -> dict:
         }
 
     # 1. Route to the best template
-    folder = await _route_template(chat_history)
+    # If we have structured data, we can use the 'professional_title' to help routing
+    routing_context = chat_history
+    if data and data.get("professional_title"):
+        routing_context += f"\nProfessional Title: {data['professional_title']}"
+        if data.get("bio"):
+            routing_context += f"\nBio: {data['bio']}"
+
+    folder = await _route_template(routing_context)
     if not folder:
         return error_result("⚠️ No templates found. Please add templates to the /templates directory.")
 
@@ -265,7 +272,13 @@ async def generate_website(chat_history: str) -> dict:
     print(f"[Generator] Loaded template: {folder} (HTML: {len(template['html'])} bytes, CSS: {len(template['css'])} bytes, JS: {len(template['js'])} bytes)")
 
     # 3. Personalise the template with user's business details
-    result = await _personalise_template(template, chat_history)
+    # Construct a rich prompt if we have structured data
+    if data:
+        personalisation_prompt = f"User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
+    else:
+        personalisation_prompt = chat_history
+
+    result = await _personalise_template(template, personalisation_prompt)
     print(f"[Generator] ✅ Website generated using '{folder}' template")
     return result
 
@@ -358,18 +371,20 @@ async def edit_website(html: str, css: str, prompt: str) -> dict:
     if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
         return {"html": html, "css": css} # Fallback
 
-    system_msg = """You are Scalera AI, an expert front-end web developer.
-Your task is to modify the provided HTML and CSS based exactly on the user's request.
+    system_msg = """You are Scalera AI, a surgical front-end developer.
+Your task is to modify the provided HTML and CSS based on the user's prompt.
 
-STRICT RULE: Only modify the CSS if the user specifically asks for a design change (colors, fonts, spacing, layout).
-If the user asks for a text change (e.g., "Change the headline"), ONLY update the text in the HTML and DO NOT touch the CSS.
-Maintain the exact structure and classes of the HTML unless explicitly told to add or remove elements.
-
-Always return your response as a valid JSON object with EXACTLY two keys: "html" and "css".
-Do not include markdown blocks around the JSON."""
+SURGICAL RULES:
+1. ONLY change the specific sections or text mentioned by the user.
+2. DO NOT rewrite the entire page structure.
+3. If the user asks for a text change, DO NOT touch the CSS.
+4. If the user asks for a design change (colors, etc.), ONLY touch the relevant CSS rules.
+5. KEEP all existing classes, IDs, and structure perfectly intact.
+6. Return the FULL updated code as JSON (the frontend needs the full string to re-render), but ensure only the target content has changed."""
 
     user_msg = f"""
-Here is the current code:
+[CONTEXT]
+We are editing a generated website. You must be non-destructive.
 
 [HTML]
 {html}
@@ -379,10 +394,11 @@ Here is the current code:
 {css}
 [/CSS]
 
-The user's edit request is: "{prompt}"
+[USER REQUEST]
+{prompt}
 
-Return the updated code as JSON.
-    """
+Return a JSON object: {{"html": "...", "css": "..."}}
+"""
 
     import urllib.request
     import urllib.error
@@ -424,3 +440,82 @@ Return the updated code as JSON.
     except Exception as e:
         print(f"[AI Editor] Error: {e}")
         return {"html": html, "css": css} # Return original on failure
+
+# ──────────────────────────────────────────────
+# Data Extraction — Resume & Links
+# ──────────────────────────────────────────────
+async def extract_data_from_resume(content: bytes, filename: str) -> dict:
+    """Extracts text from PDF/DOC and uses Groq to structure it."""
+    text = ""
+    if filename.lower().endswith(".pdf"):
+        import io
+        from pypdf import PdfReader
+        try:
+            reader = PdfReader(io.BytesIO(content))
+            for page in reader.pages:
+                text += page.extract_text() + "\n"
+        except Exception as e:
+            print(f"[Extractor] PDF Error: {e}")
+    else:
+        # Fallback for plain text or unknown
+        try:
+            text = content.decode("utf-8", errors="ignore")
+        except:
+            text = ""
+
+    if not text.strip():
+        return {}
+
+    return await _parse_raw_text_to_json(text)
+
+async def extract_data_from_link(link: str) -> dict:
+    """Processes a link (LinkedIn etc). For now, it just returns the link for future scraping."""
+    # Real LinkedIn scraping is complex, so we'll just return a note to the user
+    # in the structured data for now.
+    return {"linkedin_url": link, "note": "LinkedIn URL detected. Please ensure your profile text is added below if missing."}
+
+async def _parse_raw_text_to_json(raw_text: str) -> dict:
+    """Uses Groq to turn raw resume text into a structured JSON schema."""
+    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
+        return {"raw_text": raw_text[:500]}
+
+    system_msg = """You are a profile data extractor. Extract the following information from the provided text into a clean JSON object:
+    - full_name
+    - professional_title
+    - bio (short summary)
+    - skills (list of strings)
+    - experience (list of objects: title, company, duration, description)
+    - projects (list of objects: name, description, link)
+    - education (list of objects: degree, school, year)
+    - contact (email, phone, location)
+    
+    Return ONLY valid JSON. If a field is missing, use null or an empty list."""
+
+    import urllib.request
+    import json
+    
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    clean_key = GROQ_API_KEY.replace('\\n', '').replace('\n', '').strip()
+    headers = {
+        "Authorization": f"Bearer {clean_key}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": [
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": f"Text to extract:\n{raw_text[:8000]}"}
+        ],
+        "response_format": {"type": "json_object"},
+        "temperature": 0.1
+    }
+    
+    try:
+        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
+        with urllib.request.urlopen(req, timeout=30) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            return json.loads(result["choices"][0]["message"]["content"])
+    except Exception as e:
+        print(f"[Extractor] Groq Error: {e}")
+        return {"error": "Failed to parse text"}

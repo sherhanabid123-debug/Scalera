@@ -761,3 +761,105 @@ function removeLoadingEditorMessage() {
     const loadingMsg = document.getElementById('editor-loading-msg');
     if (loadingMsg) loadingMsg.remove();
 }
+
+// ─────────────────────────────────────────────────
+// Magic Import Logic
+// ─────────────────────────────────────────────────
+const magicImportBtn = document.getElementById('magic-import-btn');
+const resumeUpload = document.getElementById('resume-upload');
+const dataReviewModal = document.getElementById('data-review-modal');
+let extractedData = null;
+
+if (magicImportBtn) {
+    magicImportBtn.addEventListener('click', () => {
+        resumeUpload.click();
+    });
+}
+
+if (resumeUpload) {
+    resumeUpload.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        console.log("[Magic Import] Uploading file:", file.name);
+        
+        // Show a temporary assistant message
+        appendAssistantMessage("I'm analyzing your resume now. This will just take a second...");
+        
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('/api/extract', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.status === 'success' && data.data) {
+                extractedData = data.data;
+                showReviewModal(extractedData);
+            } else {
+                appendAssistantMessage("I'm sorry, I couldn't extract data from that file. Could you try a different format or paste the details?");
+            }
+        } catch (err) {
+            console.error("[Magic Import] Error:", err);
+            appendAssistantMessage("Something went wrong during extraction. Please check your connection.");
+        }
+    });
+}
+
+function showReviewModal(data) {
+    document.getElementById('review-name').value = data.full_name || '';
+    document.getElementById('review-title').value = data.professional_title || '';
+    document.getElementById('review-bio').value = data.bio || '';
+    document.getElementById('review-skills').value = (data.skills || []).join(', ');
+    
+    dataReviewModal.style.display = 'flex';
+}
+
+function closeReviewModal() {
+    dataReviewModal.style.display = 'none';
+}
+
+async function proceedWithMagicGenerate() {
+    // Update data from modal fields
+    const updatedData = {
+        full_name: document.getElementById('review-name').value,
+        professional_title: document.getElementById('review-title').value,
+        bio: document.getElementById('review-bio').value,
+        skills: document.getElementById('review-skills').value.split(',').map(s => s.trim())
+    };
+    
+    closeReviewModal();
+    console.log("[Magic Import] Generating with data:", updatedData);
+    
+    // Switch to generating state
+    aiChatBox.style.display = 'none';
+    aiGeneratingBox.style.display = 'flex';
+    
+    const chatHistoryStr = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
+    
+    try {
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_history: chatHistoryStr,
+                data: updatedData
+            })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            generatedHTML = data.html || '';
+            generatedCSS  = data.css  || '';
+            generatedJS   = data.js   || '';
+            showResult();
+        } else {
+            showResult('<h3 style="padding:2rem;color:red">Generation failed. Please try again.</h3>', '', '');
+        }
+    } catch (e) {
+        console.error(e);
+        showResult("<h3 style='padding: 2rem; color: red;'>Error generating website.</h3>", '', '');
+    }
+}
