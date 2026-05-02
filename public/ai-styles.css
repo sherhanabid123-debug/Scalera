@@ -1338,7 +1338,7 @@ h3 {
 
 .mockup-window {
     background: #000; border-radius: 12px; border: 1px solid var(--glass-border);
-    overflow: hidden; flex: 1; min-height: 50vh; display: flex; flex-direction: column; width: 100%;
+    overflow: hidden; flex: 1; height: 75vh; min-height: 600px; display: flex; flex-direction: column; width: 100%;
 }
 
 .mockup-header {
