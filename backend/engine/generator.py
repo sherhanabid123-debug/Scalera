@@ -2,6 +2,8 @@ from groq import Groq
 import re
 import os
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 # ──────────────────────────────────────────────
 # API Keys
@@ -503,7 +505,7 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
     # Validation: Is the text empty?
     if not text.strip():
         print("[Extractor] ❌ Parsing failed: No text content found.")
-        return {"error": "The uploaded file appears to be empty or unreadable."}
+        return {"error": "The file appears to be a scanned image or empty. Please use a text-based PDF or DOCX file."}
 
     # Debug Log: Sample of extracted text
     print(f"[Extractor] Raw text sample (first 300 chars):\n{text[:300]}...")
