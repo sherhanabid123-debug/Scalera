@@ -78,7 +78,20 @@ const Navbar = () => {
                     <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>About</a>
                     <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
                     <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
-                    <a href="/scalera-ai.html" style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--accent-color)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; }}>AI ✨</a>
+                    <a href="/scalera-ai.html" style={{ 
+                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', 
+                        color: '#000', 
+                        background: 'linear-gradient(135deg, #facc15, #f59e0b)',
+                        padding: '8px 16px',
+                        borderRadius: '99px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 0 15px rgba(250, 204, 21, 0.4)'
+                    }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 25px rgba(250, 204, 21, 0.6)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(250, 204, 21, 0.4)'; }}>
+                        Try AI ✨
+                    </a>
                     <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn">
                         Let's Talk
                     </a>
@@ -153,9 +166,20 @@ const Navbar = () => {
                     ref={el => linksRef.current[3] = el}
                     href="/scalera-ai.html"
                     className="mobile-nav-link"
-                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase', color: 'var(--accent-color)' }}
+                    style={{ 
+                        fontSize: '2.5rem', 
+                        fontWeight: 700, 
+                        letterSpacing: '-0.02em', 
+                        textTransform: 'uppercase', 
+                        color: '#000',
+                        background: 'linear-gradient(135deg, #facc15, #f59e0b)',
+                        padding: '12px 32px',
+                        borderRadius: '99px',
+                        boxShadow: '0 0 20px rgba(250, 204, 21, 0.4)',
+                        marginTop: '1rem'
+                    }}
                 >
-                    AI ✨
+                    Try AI ✨
                 </a>
                 <a
                     ref={el => linksRef.current[4] = el}
