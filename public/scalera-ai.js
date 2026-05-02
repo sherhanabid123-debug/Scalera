@@ -486,3 +486,105 @@ function setPreviewMode(mode) {
         btnDesktop.style.color = 'inherit';
     }
 }
+
+// ─────────────────────────────────────────────────
+// Image Manager Logic
+// ─────────────────────────────────────────────────
+let scannedImages = [];
+
+function openImageManager() {
+    const modal = document.getElementById('image-manager-modal');
+    modal.style.display = 'flex';
+    scanImages();
+}
+
+function closeImageManager() {
+    const modal = document.getElementById('image-manager-modal');
+    modal.style.display = 'none';
+}
+
+function scanImages() {
+    const listContainer = document.getElementById('image-manager-list');
+    listContainer.innerHTML = '';
+    
+    const iframe = document.getElementById('preview-iframe');
+    if (!iframe || !iframe.contentWindow) {
+        listContainer.innerHTML = '<div class="text-center" style="padding: 2rem; color: var(--text-muted);">Website preview not found.</div>';
+        return;
+    }
+    
+    const doc = iframe.contentWindow.document;
+    const images = doc.querySelectorAll('img');
+    
+    if (images.length === 0) {
+        listContainer.innerHTML = '<div class="text-center" style="padding: 2rem; color: var(--text-muted);">No images found in this layout.</div>';
+        return;
+    }
+    
+    scannedImages = Array.from(images);
+    
+    scannedImages.forEach((img, index) => {
+        // Try to guess context based on alt tag or parent classes
+        let sectionName = "General Section";
+        const altText = img.alt || "";
+        const parentId = img.closest('section, header, div[id]')?.id || "";
+        
+        if (altText) {
+            sectionName = altText;
+        } else if (parentId) {
+            sectionName = parentId.charAt(0).toUpperCase() + parentId.slice(1) + " Image";
+        } else if (index === 0) {
+            sectionName = "Hero Image";
+        }
+        
+        const item = document.createElement('div');
+        item.className = 'image-item';
+        item.innerHTML = `
+            <img src="${img.src}" class="image-preview-thumb" id="thumb-${index}">
+            <div class="image-info">
+                <h4>${sectionName}</h4>
+                <p>Suggested format: JPG/PNG/WebP</p>
+            </div>
+            <div class="image-upload-wrapper">
+                <button class="btn-upload-small">Replace</button>
+                <input type="file" class="image-upload-input" accept="image/png, image/jpeg, image/webp" data-index="${index}" onchange="handleImageUpload(event)">
+            </div>
+        `;
+        listContainer.appendChild(item);
+    });
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    const index = event.target.getAttribute('data-index');
+    
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        
+        // Update the thumbnail in the modal
+        document.getElementById(`thumb-${index}`).src = dataUrl;
+        
+        // Update the actual image inside the iframe!
+        const targetImg = scannedImages[index];
+        if (targetImg) {
+            targetImg.src = dataUrl;
+            
+            // Re-render compositeHTML if they download source code later
+            // We need to fetch the updated HTML from the iframe
+            const iframe = document.getElementById('preview-iframe');
+            if (iframe && iframe.contentWindow) {
+                const doc = iframe.contentWindow.document;
+                // Just update the src attribute in the raw DOM
+                // When we download the source code, we use `compositeHTML` variable,
+                // so we should ideally update it, but `compositeHTML` includes CSS and JS inline.
+                // For simplicity, we can serialize the current iframe DOM body and update compositeHTML.
+                // A better approach is fetching the updated outerHTML of the html tag.
+                compositeHTML = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
