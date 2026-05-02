@@ -375,11 +375,15 @@ function showResult(htmlOverride, cssOverride, jsOverride) {
 // Open in New Tab
 // ─────────────────────────────────────────────────
 function openInNewTab() {
-    if (!compositeHTML) { alert("No website generated yet."); return; }
-    const blob = new Blob([compositeHTML], { type: 'text/html' });
-    const url  = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    if (!generatedHTML) { alert("No website generated yet."); return; }
+    
+    // Store in localStorage so preview.html can read it
+    localStorage.setItem('scalera-preview-html', generatedHTML);
+    localStorage.setItem('scalera-preview-css', generatedCSS);
+    localStorage.setItem('scalera-preview-js', generatedJS);
+    
+    // Open the new intelligent preview page
+    window.open('/preview.html', '_blank');
 }
 
 // ─────────────────────────────────────────────────

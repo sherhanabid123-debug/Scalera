@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Preview | Scalera AI</title>
+    <link rel="stylesheet" href="ai-styles.css">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+        #preview-iframe { width: 100%; height: 100%; border: none; display: block; }
+        
+        .floating-tools {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            gap: 12px;
+            z-index: 900;
+        }
+
+        .floating-btn {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #000;
+            border: none;
+            box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3);
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="preview-iframe"></iframe>
+
+    <div class="floating-tools">
+        <button class="floating-btn" onclick="downloadSource()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download
+        </button>
+        <button class="floating-btn primary" onclick="openAIEditor()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            Edit with AI
+        </button>
+    </div>
+
+    <!-- AI Editor Panel (Copied from main UI) -->
+    <div id="ai-editor-panel" class="ai-editor-panel" style="display: none; bottom: 80px; top: auto; max-height: 80vh;">
+        <div class="ai-editor-header">
+            <h3>Scalera AI Editor</h3>
+            <button class="close-editor-btn" onclick="closeAIEditor()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        
+        <div class="ai-editor-chat" id="ai-editor-chat">
+            <div class="editor-message assistant">
+                <p>What would you like to change on this website?</p>
+            </div>
+        </div>
+        
+        <div class="ai-editor-suggestions" id="ai-editor-suggestions">
+            <button class="suggestion-btn" onclick="submitAIEdit('Change the headline to something more premium')">Improve Headline</button>
+            <button class="suggestion-btn" onclick="submitAIEdit('Make the colors darker and more elegant')">Darker Colors</button>
+            <button class="suggestion-btn" onclick="submitAIEdit('Add a testimonials section below the hero')">Add Testimonials</button>
+        </div>
+        
+        <div class="ai-editor-input-area">
+            <input type="text" id="ai-editor-input" placeholder="e.g. Change the primary button to blue...">
+            <button id="ai-editor-submit" onclick="handleAIEditSubmit()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+        
+        <div id="ai-editor-confirm" class="ai-editor-confirm" style="display: none;">
+            <p>Changes generated. Apply to website?</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm apply" onclick="applyAIEdit()">Apply Changes</button>
+                <button class="btn-confirm discard" onclick="discardAIEdit()">Discard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Logic specific for the standalone preview -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        let generatedHTML = localStorage.getItem('scalera-preview-html') || '';
+        let generatedCSS = localStorage.getItem('scalera-preview-css') || '';
+        let generatedJS = localStorage.getItem('scalera-preview-js') || '';
+        let compositeHTML = '';
+        
+        let editorHistory = [];
+        let pendingEdit = null;
+
+        function buildCompositeHTML(h, c, j) {
+            let doc = h;
+            if (c) { doc = doc.replace('</head>', `<style>\n${c}\n</style>\n</head>`); }
+            if (j) { doc = doc.replace('</body>', `<script>\n${j}\n<\/script>\n</body>`); }
+            return doc;
+        }
+
+        function renderPreview() {
+            compositeHTML = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
+            const iframe = document.getElementById('preview-iframe');
+            iframe.contentWindow.document.open();
+            iframe.contentWindow.document.write(compositeHTML);
+            iframe.contentWindow.document.close();
+        }
+
+        // Initialize
+        if (generatedHTML) {
+            renderPreview();
+        } else {
+            document.body.innerHTML = '<h2 style="color:white; text-align:center; padding: 50px;">No preview data found. Please generate a website first.</h2>';
+        }
+
+        function downloadSource() {
+            try {
+                const zip = new JSZip();
+                zip.file("index.html", generatedHTML);
+                zip.file("styles.css", generatedCSS);
+                zip.file("script.js", generatedJS);
+                zip.generateAsync({type:"blob"}).then(function(content) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(content);
+                    link.download = `scalera-ai-website.zip`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            } catch (e) {
+                alert("Error downloading package.");
+            }
+        }
+
+        // --- AI Editor Logic ---
+        function openAIEditor() { document.getElementById('ai-editor-panel').style.display = 'flex'; }
+        function closeAIEditor() { document.getElementById('ai-editor-panel').style.display = 'none'; }
+        function submitAIEdit(prompt) {
+            document.getElementById('ai-editor-input').value = prompt;
+            handleAIEditSubmit();
+        }
+
+        async function handleAIEditSubmit() {
+            const inputEl = document.getElementById('ai-editor-input');
+            const prompt = inputEl.value.trim();
+            if (!prompt) return;
+            
+            appendEditorMessage(prompt, 'user');
+            inputEl.value = '';
+            appendEditorMessage("Analyzing your request and generating updates...", 'assistant', true);
+            document.getElementById('ai-editor-suggestions').style.display = 'none';
+            
+            try {
+                // Use absolute URL or relative if on same domain
+                const apiUrl = window.location.origin + '/api/edit';
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        html: generatedHTML,
+                        css: generatedCSS,
+                        prompt: prompt
+                    })
+                });
+                
+                const data = await response.json();
+                removeLoadingEditorMessage();
+                
+                if (data.status === 'success' && data.html) {
+                    appendEditorMessage("I've made the changes! You can preview them now.", 'assistant');
+                    editorHistory.push({ html: generatedHTML, css: generatedCSS });
+                    pendingEdit = { html: data.html, css: data.css };
+                    
+                    const tempComposite = buildCompositeHTML(data.html, data.css, generatedJS);
+                    const iframe = document.getElementById('preview-iframe');
+                    iframe.contentWindow.document.open();
+                    iframe.contentWindow.document.write(tempComposite);
+                    iframe.contentWindow.document.close();
+                    
+                    document.getElementById('ai-editor-confirm').style.display = 'block';
+                } else {
+                    appendEditorMessage("Sorry, I couldn't process that edit right now.", 'assistant');
+                }
+            } catch (e) {
+                removeLoadingEditorMessage();
+                appendEditorMessage("Connection error while trying to edit.", 'assistant');
+                console.error(e);
+            }
+        }
+
+        function applyAIEdit() {
+            if (!pendingEdit) return;
+            generatedHTML = pendingEdit.html;
+            generatedCSS = pendingEdit.css;
+            
+            // Sync back to localStorage so the main window can also see it
+            localStorage.setItem('scalera-preview-html', generatedHTML);
+            localStorage.setItem('scalera-preview-css', generatedCSS);
+            
+            renderPreview();
+            pendingEdit = null;
+            document.getElementById('ai-editor-confirm').style.display = 'none';
+            appendEditorMessage("Changes applied successfully!", 'assistant');
+        }
+
+        function discardAIEdit() {
+            if (editorHistory.length === 0) return;
+            const lastState = editorHistory.pop();
+            generatedHTML = lastState.html;
+            generatedCSS = lastState.css;
+            renderPreview();
+            pendingEdit = null;
+            document.getElementById('ai-editor-confirm').style.display = 'none';
+            appendEditorMessage("Changes discarded. We're back to the previous version.", 'assistant');
+        }
+
+        function appendEditorMessage(text, role, isLoading = false) {
+            const chat = document.getElementById('ai-editor-chat');
+            const msg = document.createElement('div');
+            msg.className = `editor-message ${role}`;
+            if (isLoading) msg.id = 'editor-loading-msg';
+            msg.innerHTML = `<p>${text}</p>`;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function removeLoadingEditorMessage() {
+            const loadingMsg = document.getElementById('editor-loading-msg');
+            if (loadingMsg) loadingMsg.remove();
+        }
+
+        document.getElementById('ai-editor-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleAIEditSubmit();
+        });
+    </script>
+</body>
+</html>
