@@ -6,8 +6,8 @@
     <title>Live Preview | Scalera AI</title>
     <link rel="stylesheet" href="ai-styles.css">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-        #preview-iframe { width: 100%; height: 100%; border: none; display: block; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
+        #preview-iframe { width: 100%; height: 100%; border: none; display: block; background: #fff; }
         
         .floating-tools {
             position: fixed;
@@ -45,11 +45,34 @@
         .floating-btn:hover {
             transform: translateY(-2px);
         }
+
+        #error-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            color: #ff6b6b;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            z-index: 10000;
+        }
     </style>
 </head>
 <body>
 
-    <iframe id="preview-iframe"></iframe>
+    <div id="error-overlay">
+        <h2 style="margin-bottom: 1rem;">Preview Error</h2>
+        <p id="error-message"></p>
+        <button onclick="location.reload()" style="margin-top: 2rem; padding: 0.5rem 1rem; cursor: pointer;">Reload Page</button>
+    </div>
+
+    <iframe id="preview-iframe" title="Website Preview"></iframe>
 
     <div class="floating-tools">
         <button class="floating-btn" onclick="downloadSource()">
@@ -62,7 +85,7 @@
         </button>
     </div>
 
-    <!-- AI Editor Panel (Copied from main UI) -->
+    <!-- AI Editor Panel -->
     <div id="ai-editor-panel" class="ai-editor-panel" style="display: none; bottom: 80px; top: auto; max-height: 80vh;">
         <div class="ai-editor-header">
             <h3>Scalera AI Editor</h3>
@@ -99,105 +122,129 @@
         </div>
     </div>
 
-    <!-- JS Logic specific for the standalone preview -->
+    <!-- JS Logic -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        let generatedHTML = localStorage.getItem('scalera-preview-html') || '';
-        let generatedCSS = localStorage.getItem('scalera-preview-css') || '';
-        let generatedJS = localStorage.getItem('scalera-preview-js') || '';
-        let compositeHTML = '';
-        
-        console.log("[Preview] Initializing with data:", { 
-            htmlLen: generatedHTML.length, 
-            cssLen: generatedCSS.length,
-            jsLen: generatedJS.length 
-        });
-        
-        let editorHistory = [];
+        // Global error catcher
+        window.onerror = function(msg, url, line) {
+            const overlay = document.getElementById('error-overlay');
+            const msgEl = document.getElementById('error-message');
+            overlay.style.display = 'flex';
+            msgEl.textContent = `Error: ${msg} (Line: ${line})`;
+            console.error(msg, url, line);
+            return false;
+        };
+
+        let generatedHTML = '';
+        let generatedCSS = '';
+        let generatedJS = '';
+        let currentBlobUrl = null;
+        let stableState = null;
         let pendingEdit = null;
+        let editorHistory = [];
+
+        function loadFromStorage() {
+            generatedHTML = localStorage.getItem('scalera-preview-html') || '';
+            generatedCSS = localStorage.getItem('scalera-preview-css') || '';
+            generatedJS = localStorage.getItem('scalera-preview-js') || '';
+            console.log("[Preview] Storage Loaded", { html: generatedHTML.length, css: generatedCSS.length });
+        }
 
         function buildCompositeHTML(html, css, js) {
-            if (!html) return '';
+            if (!html) return '<html><body><h2 style="padding: 2rem; font-family: sans-serif; text-align: center;">Rendering...</h2></body></html>';
             
-            // If it's already a full document, inject styles/scripts into head/body
+            let finalDoc = '';
+            // If it's a full document
             if (html.trim().toLowerCase().startsWith('<!doctype') || html.trim().startsWith('<html')) {
-                let doc = html;
+                finalDoc = html;
                 if (css) {
-                    if (doc.includes('</head>')) {
-                        doc = doc.replace('</head>', `<style>\n${css}\n</style>\n</head>`);
+                    if (finalDoc.includes('</head>')) {
+                        finalDoc = finalDoc.replace('</head>', `<style>\n${css}\n</style>\n</head>`);
                     } else {
-                        doc = doc + `<style>\n${css}\n</style>`;
+                        finalDoc = finalDoc + `<style>\n${css}\n</style>`;
                     }
                 }
                 if (js) {
-                    if (doc.includes('</body>')) {
-                        doc = doc.replace('</body>', `<script>\n${js}\n<\/script>\n</body>`);
+                    const escapedJS = js.replace(/<\/script>/gi, '<\\/script>');
+                    if (finalDoc.includes('</body>')) {
+                        finalDoc = finalDoc.replace('</body>', `<script>\n${escapedJS}\n<\/script>\n</body>`);
                     } else {
-                        doc = doc + `<script>\n${js}\n<\/script>`;
+                        finalDoc = finalDoc + `<script>\n${escapedJS}\n<\/script>`;
                     }
                 }
-                return doc;
-            }
-            
-            // If it's a snippet, wrap it in a full boilerplate
-            return `<!DOCTYPE html>
+            } else {
+                // If it's a snippet
+                const escapedJS = js.replace(/<\/script>/gi, '<\\/script>');
+                finalDoc = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scalera Preview</title>
-    <style>
-${css}
-    </style>
+    <style>${css}</style>
 </head>
 <body>
-${html}
-<script>
-${js}
-<\/script>
+    ${html}
+    <script>${escapedJS}<\/script>
 </body>
 </html>`;
+            }
+            return finalDoc;
         }
 
         function renderPreview() {
-            compositeHTML = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
-            const iframe = document.getElementById('preview-iframe');
-            iframe.contentWindow.document.open();
-            iframe.contentWindow.document.write(compositeHTML);
-            iframe.contentWindow.document.close();
-        }
-
-        // Initialize
-        if (generatedHTML) {
-            renderPreview();
-        } else {
-            document.body.innerHTML = '<h2 style="color:white; text-align:center; padding: 50px;">No preview data found. Please generate a website first.</h2>';
-        }
-
-        function downloadSource() {
             try {
-                const zip = new JSZip();
-                zip.file("index.html", generatedHTML);
-                zip.file("styles.css", generatedCSS);
-                zip.file("script.js", generatedJS);
-                zip.generateAsync({type:"blob"}).then(function(content) {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(content);
-                    link.download = `scalera-ai-website.zip`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
-            } catch (e) {
-                alert("Error downloading package.");
+                console.log("[Preview] Rendering...");
+                const composite = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
+                const iframe = document.getElementById('preview-iframe');
+                
+                // Use Blob URL for much more robust rendering across all browsers
+                if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+                const blob = new Blob([composite], { type: 'text/html' });
+                currentBlobUrl = URL.createObjectURL(blob);
+                iframe.src = currentBlobUrl;
+                
+                console.log("[Preview] Blob URL created and set to iframe");
+            } catch (err) {
+                console.error("[Preview] Render Error:", err);
             }
         }
 
-        // --- AI Editor Logic ---
-        let editorHistory = [];
-        let pendingEdit = null;
-        let stableState = null;
+        // Initialize with retry logic for localStorage
+        function init() {
+            loadFromStorage();
+            if (!generatedHTML) {
+                console.warn("[Preview] No HTML found, retrying in 500ms...");
+                setTimeout(() => {
+                    loadFromStorage();
+                    if (generatedHTML) {
+                        renderPreview();
+                    } else {
+                        document.body.innerHTML = '<h2 style="color:white; text-align:center; padding: 50px;">No preview data found. Please generate a website first.</h2>';
+                    }
+                }, 500);
+            } else {
+                renderPreview();
+            }
+        }
 
+        window.onload = init;
+
+        function downloadSource() {
+            if (!window.JSZip) { alert("JSZip not loaded"); return; }
+            const zip = new JSZip();
+            zip.file("index.html", generatedHTML);
+            zip.file("styles.css", generatedCSS);
+            zip.file("script.js", generatedJS);
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `scalera-ai-website.zip`;
+                link.click();
+            });
+        }
+
+        // --- AI Editor Logic ---
         function openAIEditor() { 
             document.getElementById('ai-editor-panel').style.display = 'flex';
             stableState = { html: generatedHTML, css: generatedCSS, js: generatedJS };
@@ -223,8 +270,7 @@ ${js}
             document.getElementById('ai-editor-suggestions').style.display = 'none';
             
             try {
-                const apiUrl = window.location.origin + '/api/edit';
-                const response = await fetch(apiUrl, {
+                const response = await fetch(window.location.origin + '/api/edit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -238,12 +284,16 @@ ${js}
                 removeLoadingEditorMessage();
                 
                 if (data.status === 'success' && data.html) {
-                    appendEditorMessage("I've made the changes! You can preview them now.", 'assistant');
-                    editorHistory.push({ html: generatedHTML, css: generatedCSS });
+                    appendEditorMessage("I've made the changes! Previewing now.", 'assistant');
                     pendingEdit = { html: data.html, css: data.css };
                     
-                    // Show preview using safe function
-                    updateIframePreview(data.html, data.css, generatedJS);
+                    // Show draft preview
+                    const composite = buildCompositeHTML(data.html, data.css, generatedJS);
+                    const iframe = document.getElementById('preview-iframe');
+                    if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+                    const blob = new Blob([composite], { type: 'text/html' });
+                    currentBlobUrl = URL.createObjectURL(blob);
+                    iframe.src = currentBlobUrl;
                     
                     document.getElementById('ai-editor-confirm').style.display = 'block';
                 } else {
@@ -256,28 +306,10 @@ ${js}
             }
         }
 
-        function updateIframePreview(html, css, js) {
-            if (!html || html.length < 10) {
-                if (stableState) {
-                    html = stableState.html;
-                    css = stableState.css;
-                    js = stableState.js;
-                } else {
-                    return;
-                }
-            }
-            const tempComposite = buildCompositeHTML(html, css, js);
-            const iframe = document.getElementById('preview-iframe');
-            iframe.contentWindow.document.open();
-            iframe.contentWindow.document.write(tempComposite);
-            iframe.contentWindow.document.close();
-        }
-
         function applyAIEdit() {
             if (!pendingEdit) return;
             generatedHTML = pendingEdit.html;
             generatedCSS = pendingEdit.css;
-            
             localStorage.setItem('scalera-preview-html', generatedHTML);
             localStorage.setItem('scalera-preview-css', generatedCSS);
             
@@ -296,7 +328,7 @@ ${js}
             }
             pendingEdit = null;
             document.getElementById('ai-editor-confirm').style.display = 'none';
-            appendEditorMessage("Changes discarded. Reverted to previous version.", 'assistant');
+            appendEditorMessage("Changes discarded.", 'assistant');
         }
 
         function appendEditorMessage(text, role, isLoading = false) {
