@@ -104,12 +104,32 @@ async def _personalise_template(template: dict, chat_history: str) -> dict:
 
     html = template["html"]
 
-    prompt = f"""You are an expert website content writer. Your job is to take an existing HTML template and rewrite ALL the visible text content so it perfectly matches the user's business described below.
+    prompt = f"""You are an expert website content writer. Your job is to take an existing HTML template and rewrite ALL the visible text content so it perfectly matches the user's requirements and personal data described below.
 
 ═══════════════════════════════════════════
-USER'S BUSINESS REQUIREMENTS:
+USER'S BUSINESS & PERSONAL DATA:
 ═══════════════════════════════════════════
 {chat_history}
+
+═══════════════════════════════════════════
+MAPPING INSTRUCTIONS (PRIORITY):
+═══════════════════════════════════════════
+If structured "User Data" (JSON) is provided in the requirements above:
+1. BRANDING: Use 'full_name' for EVERY instance of the company name, logo text, or personal brand.
+2. HERO SECTION: 
+   - Headline <h1>: Use 'full_name'.
+   - Sub-headline/Intro: Use 'professional_title' and a snippet of 'bio'.
+3. ABOUT SECTION: 
+   - Description: Use the 'bio' or 'summary'. If short, expand it slightly but keep the core facts.
+4. SERVICES/SKILLS SECTION: 
+   - Replace generic service names with items from the 'skills' list.
+   - Match the number of skills to the number of service blocks available.
+5. EXPERIENCE/PORTFOLIO SECTION: 
+   - Map 'experience' items (company, title, description) to the template's project or work sections.
+   - If the template has a "Testimonials" section, you can repurpose it to show career highlights or roles if appropriate.
+6. CONTACT: Use the provided email, phone, or location.
+
+STRICT RULE: Priority 1 is ACCURACY to the User Data. Priority 2 is the Creative Tone. Do NOT invent a fake business name like "Creative Agency" if 'full_name' is available.
 
 ═══════════════════════════════════════════
 RULES — READ CAREFULLY:
@@ -279,6 +299,7 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
         personalisation_prompt = chat_history
 
     result = await _personalise_template(template, personalisation_prompt)
+    print(f"[Generator] Full Prompt sent to Groq:\n{personalisation_prompt[:500]}...")
     print(f"[Generator] ✅ Website generated using '{folder}' template")
     return result
 
