@@ -152,8 +152,19 @@
         }
 
         // --- AI Editor Logic ---
-        function openAIEditor() { document.getElementById('ai-editor-panel').style.display = 'flex'; }
-        function closeAIEditor() { document.getElementById('ai-editor-panel').style.display = 'none'; }
+        let editorHistory = [];
+        let pendingEdit = null;
+        let stableState = null;
+
+        function openAIEditor() { 
+            document.getElementById('ai-editor-panel').style.display = 'flex';
+            stableState = { html: generatedHTML, css: generatedCSS, js: generatedJS };
+        }
+        function closeAIEditor() { 
+            document.getElementById('ai-editor-panel').style.display = 'none'; 
+            pendingEdit = null;
+            document.getElementById('ai-editor-confirm').style.display = 'none';
+        }
         function submitAIEdit(prompt) {
             document.getElementById('ai-editor-input').value = prompt;
             handleAIEditSubmit();
@@ -170,7 +181,6 @@
             document.getElementById('ai-editor-suggestions').style.display = 'none';
             
             try {
-                // Use absolute URL or relative if on same domain
                 const apiUrl = window.location.origin + '/api/edit';
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -190,11 +200,8 @@
                     editorHistory.push({ html: generatedHTML, css: generatedCSS });
                     pendingEdit = { html: data.html, css: data.css };
                     
-                    const tempComposite = buildCompositeHTML(data.html, data.css, generatedJS);
-                    const iframe = document.getElementById('preview-iframe');
-                    iframe.contentWindow.document.open();
-                    iframe.contentWindow.document.write(tempComposite);
-                    iframe.contentWindow.document.close();
+                    // Show preview using safe function
+                    updateIframePreview(data.html, data.css, generatedJS);
                     
                     document.getElementById('ai-editor-confirm').style.display = 'block';
                 } else {
@@ -207,30 +214,47 @@
             }
         }
 
+        function updateIframePreview(html, css, js) {
+            if (!html || html.length < 10) {
+                if (stableState) {
+                    html = stableState.html;
+                    css = stableState.css;
+                    js = stableState.js;
+                } else {
+                    return;
+                }
+            }
+            const tempComposite = buildCompositeHTML(html, css, js);
+            const iframe = document.getElementById('preview-iframe');
+            iframe.contentWindow.document.open();
+            iframe.contentWindow.document.write(tempComposite);
+            iframe.contentWindow.document.close();
+        }
+
         function applyAIEdit() {
             if (!pendingEdit) return;
             generatedHTML = pendingEdit.html;
             generatedCSS = pendingEdit.css;
             
-            // Sync back to localStorage so the main window can also see it
             localStorage.setItem('scalera-preview-html', generatedHTML);
             localStorage.setItem('scalera-preview-css', generatedCSS);
             
             renderPreview();
+            stableState = { html: generatedHTML, css: generatedCSS, js: generatedJS };
             pendingEdit = null;
             document.getElementById('ai-editor-confirm').style.display = 'none';
             appendEditorMessage("Changes applied successfully!", 'assistant');
         }
 
         function discardAIEdit() {
-            if (editorHistory.length === 0) return;
-            const lastState = editorHistory.pop();
-            generatedHTML = lastState.html;
-            generatedCSS = lastState.css;
-            renderPreview();
+            if (stableState) {
+                generatedHTML = stableState.html;
+                generatedCSS = stableState.css;
+                renderPreview();
+            }
             pendingEdit = null;
             document.getElementById('ai-editor-confirm').style.display = 'none';
-            appendEditorMessage("Changes discarded. We're back to the previous version.", 'assistant');
+            appendEditorMessage("Changes discarded. Reverted to previous version.", 'assistant');
         }
 
         function appendEditorMessage(text, role, isLoading = false) {

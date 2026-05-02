@@ -596,15 +596,27 @@ function handleImageUpload(event) {
 // ─────────────────────────────────────────────────
 // AI Editor Logic
 // ─────────────────────────────────────────────────
-let editorHistory = []; // to store undo states
-let pendingEdit = null; // {html, css}
+let editorHistory = []; 
+let pendingEdit = null; 
+let stableState = null; // To store the state before any "draft" changes are made
 
 function openAIEditor() {
+    console.log("[AI Editor] Opening Panel");
     document.getElementById('ai-editor-panel').style.display = 'flex';
+    // Capture the state as "stable" before starting an edit session
+    stableState = { 
+        html: generatedHTML, 
+        css: generatedCSS, 
+        js: generatedJS 
+    };
+    console.log("[AI Editor] Stable state captured");
 }
 
 function closeAIEditor() {
+    console.log("[AI Editor] Closing Panel");
     document.getElementById('ai-editor-panel').style.display = 'none';
+    pendingEdit = null;
+    document.getElementById('ai-editor-confirm').style.display = 'none';
 }
 
 function submitAIEdit(prompt) {
@@ -617,16 +629,14 @@ async function handleAIEditSubmit() {
     const prompt = inputEl.value.trim();
     if (!prompt) return;
     
-    // Add user message to chat
     appendEditorMessage(prompt, 'user');
     inputEl.value = '';
-    
-    // Show loading state
     appendEditorMessage("Analyzing your request and generating updates...", 'assistant', true);
-    
-    // Hide suggestions
     document.getElementById('ai-editor-suggestions').style.display = 'none';
     
+    console.log("[AI Editor] Submitting prompt:", prompt);
+    console.log("[AI Editor] Current State (pre-edit):", { htmlLen: generatedHTML.length, cssLen: generatedCSS.length });
+
     try {
         const response = await fetch('/api/edit', {
             method: 'POST',
@@ -639,71 +649,101 @@ async function handleAIEditSubmit() {
         });
         
         const data = await response.json();
-        
-        // Remove loading message
         removeLoadingEditorMessage();
         
+        console.log("[AI Editor] API Response received:", data.status);
+
         if (data.status === 'success' && data.html) {
+            console.log("[AI Editor] New HTML/CSS generated successfully");
             appendEditorMessage("I've made the changes! You can preview them now.", 'assistant');
             
-            // Save current state to history
+            // Save current state to history (for multi-step undo)
             editorHistory.push({ html: generatedHTML, css: generatedCSS, js: generatedJS });
             
             // Store pending edit
             pendingEdit = { html: data.html, css: data.css };
             
-            // Show preview
+            // Show preview instantly
             updateIframePreview(data.html, data.css, generatedJS);
             
             // Show confirm dialog
             document.getElementById('ai-editor-confirm').style.display = 'block';
             
         } else {
-            appendEditorMessage("Sorry, I couldn't process that edit right now.", 'assistant');
+            console.error("[AI Editor] API returned error or empty content", data);
+            appendEditorMessage("Sorry, I couldn't process that edit right now. Please try a different prompt.", 'assistant');
         }
     } catch (e) {
         removeLoadingEditorMessage();
-        appendEditorMessage("Connection error while trying to edit.", 'assistant');
-        console.error(e);
+        console.error("[AI Editor] Connection Error:", e);
+        appendEditorMessage("Connection error while trying to edit. Is the server running?", 'assistant');
     }
 }
 
 function updateIframePreview(html, css, js) {
+    // SAFEGUARD: If html is somehow empty, fallback to stableState to prevent blank screen
+    if (!html || html.length < 10) {
+        console.error("[AI Editor] updateIframePreview called with invalid content, falling back.");
+        if (stableState) {
+            html = stableState.html;
+            css = stableState.css;
+            js = stableState.js;
+        } else {
+            return; // Nowhere to go
+        }
+    }
+
     const tempComposite = buildCompositeHTML(html, css, js);
     const iframe = document.getElementById('preview-iframe');
     if (iframe) {
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(tempComposite);
         iframe.contentWindow.document.close();
+        console.log("[AI Editor] Iframe preview updated");
     }
 }
 
 function applyAIEdit() {
     if (!pendingEdit) return;
     
-    // Make changes permanent
+    console.log("[AI Editor] Applying changes permanently");
+    
+    // Make changes permanent in global state
     generatedHTML = pendingEdit.html;
     generatedCSS = pendingEdit.css;
     compositeHTML = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
     
+    // After apply, the new state becomes the stable base
+    stableState = { 
+        html: generatedHTML, 
+        css: generatedCSS, 
+        js: generatedJS 
+    };
+
     pendingEdit = null;
     document.getElementById('ai-editor-confirm').style.display = 'none';
     appendEditorMessage("Changes applied successfully!", 'assistant');
+    console.log("[AI Editor] Apply complete");
 }
 
 function discardAIEdit() {
-    if (editorHistory.length === 0) return;
+    console.log("[AI Editor] Discarding changes");
     
-    // Revert to last state
-    const lastState = editorHistory.pop();
-    generatedHTML = lastState.html;
-    generatedCSS = lastState.css;
-    
-    updateIframePreview(generatedHTML, generatedCSS, generatedJS);
+    // ALWAYS revert to the last stable state
+    if (stableState) {
+        generatedHTML = stableState.html;
+        generatedCSS = stableState.css;
+        generatedJS = stableState.js;
+        
+        updateIframePreview(generatedHTML, generatedCSS, generatedJS);
+        console.log("[AI Editor] Reverted to stable state");
+    } else {
+        console.warn("[AI Editor] No stable state found to discard to!");
+    }
     
     pendingEdit = null;
     document.getElementById('ai-editor-confirm').style.display = 'none';
-    appendEditorMessage("Changes discarded. We're back to the previous version.", 'assistant');
+    appendEditorMessage("Changes discarded. Reverted to previous version.", 'assistant');
 }
 
 function appendEditorMessage(text, role, isLoading = false) {
