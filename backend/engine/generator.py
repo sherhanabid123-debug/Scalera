@@ -128,15 +128,22 @@ RULES — READ CAREFULLY:
    - ALL footer text, addresses, phone numbers, emails
    - Navigation link text if appropriate for the business
 
-2. DO NOT CHANGE any of these — they must stay exactly as-is:
+2. STRUCTURE IS SACRED — DO NOT CHANGE any of these:
    - HTML tags (do not add, remove, or modify any tags)
-   - CSS classes, IDs, or any HTML attributes
-   - The tag structure and nesting order
+   - CSS classes, IDs, or any HTML attributes (these are the "hooks" for the design)
+   - The tag structure, hierarchy, and nesting order
    - <link>, <script>, <meta charset>, <meta viewport> tags
-   - Image src URLs and alt text structure (update alt text to match new content)
+   - Image src URLs (keep them exactly as they are)
    - href="#section-id" anchor links
    - Any inline styles
-   - The number of elements (e.g., if there are 4 service cards, keep 4)
+   - The number of elements (e.g., if there are exactly 4 <li> items in a list, there must be exactly 4 in your output)
+   - DO NOT add any <style> tags or new CSS code inside the HTML.
+
+3. YOU ARE A TEXT-ONLY SURGEON:
+   - You are only swapping the text *inside* the tags.
+   - Example: <h1>Dental Excellence</h1> becomes <h1>Scalera Innovations</h1>.
+   - The <h1> tag itself and its classes must not change.
+   - If a tag is empty or contains only an icon, leave it alone.
 
 3. CONTENT QUALITY:
    - Write professional, persuasive, industry-specific copy
@@ -353,8 +360,11 @@ async def edit_website(html: str, css: str, prompt: str) -> dict:
 
     system_msg = """You are Scalera AI, an expert front-end web developer.
 Your task is to modify the provided HTML and CSS based exactly on the user's request.
-ONLY make the changes requested by the user. Keep everything else intact.
-Do not change the overall structure unless asked.
+
+STRICT RULE: Only modify the CSS if the user specifically asks for a design change (colors, fonts, spacing, layout).
+If the user asks for a text change (e.g., "Change the headline"), ONLY update the text in the HTML and DO NOT touch the CSS.
+Maintain the exact structure and classes of the HTML unless explicitly told to add or remove elements.
+
 Always return your response as a valid JSON object with EXACTLY two keys: "html" and "css".
 Do not include markdown blocks around the JSON."""
 
