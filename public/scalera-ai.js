@@ -103,6 +103,22 @@ async function sendToAI(userText) {
         if (data.status === 'success' && data.reply) {
             const aiReply = typeof data.reply === 'string' ? data.reply : data.reply.reply;
             const isReady = typeof data.reply === 'object' && data.reply.ready_to_generate;
+            const websiteType = typeof data.reply === 'object' ? data.reply.website_type : 'other';
+
+            // Conditional Logic for Magic Import (Resume/LinkedIn)
+            const magicImportOptions = document.getElementById('magic-import-options');
+            if (magicImportOptions) {
+                if (websiteType === 'portfolio') {
+                    console.log("[Scalera AI] Portfolio detected. Showing Magic Import options.");
+                    magicImportOptions.style.display = 'flex';
+                } else {
+                    console.log("[Scalera AI] Non-portfolio niche. Hiding Magic Import options.");
+                    magicImportOptions.style.display = 'none';
+                    // Reset Magic Import state if user switched away from portfolio
+                    extractedData = null;
+                    currentUploadedFile = null;
+                }
+            }
 
             messages.push({ role: "assistant", content: aiReply });
             appendAIMessage(aiReply);

@@ -328,10 +328,12 @@ async def chat_with_ai(messages: list) -> dict:
         CRITICAL: You must return your response in a JSON format like this:
         {
           "reply": "Your conversational response here",
-          "ready_to_generate": true/false
+          "ready_to_generate": true/false,
+          "website_type": "portfolio" | "business" | "restaurant" | "other"
         }
         
-        Set "ready_to_generate" to true ONLY if you have identified all three key pieces of information (Name, Industry, Style). Otherwise, set it to false."""
+        Set "ready_to_generate" to true ONLY if you have identified all key pieces of information. 
+        Set "website_type" based on the user's niche. If they want a portfolio or personal site, set it to "portfolio"."""
     }
 
     formatted_messages = [system_prompt] + messages
