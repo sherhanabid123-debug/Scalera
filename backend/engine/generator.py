@@ -466,26 +466,50 @@ Return a JSON object: {{"html": "...", "css": "..."}}
 # Data Extraction — Resume & Links
 # ──────────────────────────────────────────────
 async def extract_data_from_resume(content: bytes, filename: str) -> dict:
-    """Extracts text from PDF/DOC and uses Groq to structure it."""
+    """Extracts text from PDF/DOCX and uses Groq to structure it."""
+    print(f"[Extractor] Processing file: {filename} ({len(content)} bytes)")
     text = ""
-    if filename.lower().endswith(".pdf"):
-        import io
-        from pypdf import PdfReader
-        try:
+    ext = filename.lower().split('.')[-1]
+    
+    import io
+
+    try:
+        if ext == "pdf":
+            from pypdf import PdfReader
             reader = PdfReader(io.BytesIO(content))
             for page in reader.pages:
-                text += page.extract_text() + "\n"
-        except Exception as e:
-            print(f"[Extractor] PDF Error: {e}")
-    else:
-        # Fallback for plain text or unknown
-        try:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
+            print(f"[Extractor] PDF parsed. Extracted {len(text)} characters.")
+            
+        elif ext in ["docx", "doc"]:
+            import mammoth
+            result = mammoth.extract_raw_text(io.BytesIO(content))
+            text = result.value
+            print(f"[Extractor] DOCX parsed. Extracted {len(text)} characters.")
+            
+        else:
+            # Fallback for plain text
             text = content.decode("utf-8", errors="ignore")
-        except:
-            text = ""
+            print(f"[Extractor] Plain text/fallback used. Extracted {len(text)} characters.")
 
+    except Exception as e:
+        print(f"[Extractor] Critical Parsing Error: {e}")
+        return {"error": f"Failed to parse {ext} file: {str(e)}"}
+
+    # Validation: Is the text empty?
     if not text.strip():
-        return {}
+        print("[Extractor] ❌ Parsing failed: No text content found.")
+        return {"error": "The uploaded file appears to be empty or unreadable."}
+
+    # Debug Log: Sample of extracted text
+    print(f"[Extractor] Raw text sample (first 300 chars):\n{text[:300]}...")
+
+    # Cleaning text
+    import re
+    text = re.sub(r'\n+', '\n', text) # Remove excessive newlines
+    text = re.sub(r' +', ' ', text)   # Remove excessive spaces
 
     return await _parse_raw_text_to_json(text)
 
@@ -536,7 +560,9 @@ async def _parse_raw_text_to_json(raw_text: str) -> dict:
         req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
         with urllib.request.urlopen(req, timeout=30) as response:
             result = json.loads(response.read().decode("utf-8"))
-            return json.loads(result["choices"][0]["message"]["content"])
+            content = result["choices"][0]["message"]["content"]
+            print(f"[Extractor] Groq extraction complete. Structured {len(content)} bytes of JSON.")
+            return json.loads(content)
     except Exception as e:
         print(f"[Extractor] Groq Error: {e}")
-        return {"error": "Failed to parse text"}
+        return {"error": "AI extraction failed. The file text was too complex or the engine is busy."}

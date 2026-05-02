@@ -812,17 +812,23 @@ if (resumeUpload) {
             });
             const data = await response.json();
             
-            console.log("[Magic Import] Analysis Response received:", data);
+            console.log("[Magic Import] API Response received:", data);
             hideTypingIndicator();
 
             if (data.status === 'success' && data.data) {
+                if (data.data.error) {
+                    console.error("[Magic Import] Extraction Error:", data.data.error);
+                    appendAIMessage(`<strong>Analysis Issue:</strong> ${data.data.error}. Please try another file or enter your details manually.`);
+                    return;
+                }
+                
                 extractedData = data.data;
                 console.log("[Magic Import] Data extraction successful:", extractedData);
                 appendAIMessage("Analysis complete! I've structured your profile data. Please review and edit it below to ensure everything looks perfect.");
                 showReviewModal(extractedData);
             } else {
-                console.error("[Magic Import] Analysis failed or returned no data:", data);
-                appendAIMessage("I'm sorry, I couldn't extract data from that file. Could you try a different format (PDF is best) or paste your details?");
+                console.error("[Magic Import] Analysis failed or returned invalid structure:", data);
+                appendAIMessage("I'm sorry, I couldn't extract data from that file. Could you try a different format (PDF or DOCX are best)?");
             }
         } catch (err) {
             console.error("[Magic Import] Connection Error during analysis:", err);
