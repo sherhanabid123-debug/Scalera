@@ -763,15 +763,17 @@ function removeLoadingEditorMessage() {
 }
 
 // ─────────────────────────────────────────────────
-// Magic Import Logic
+// Magic Import Logic (Resume & LinkedIn)
 // ─────────────────────────────────────────────────
 const magicImportBtn = document.getElementById('magic-import-btn');
 const resumeUpload = document.getElementById('resume-upload');
 const dataReviewModal = document.getElementById('data-review-modal');
 let extractedData = null;
+let currentUploadedFile = null;
 
 if (magicImportBtn) {
     magicImportBtn.addEventListener('click', () => {
+        console.log("[Magic Import] Triggering file selection...");
         resumeUpload.click();
     });
 }
@@ -779,16 +781,30 @@ if (magicImportBtn) {
 if (resumeUpload) {
     resumeUpload.addEventListener('change', async (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) {
+            console.warn("[Magic Import] No file selected.");
+            return;
+        }
 
-        console.log("[Magic Import] Uploading file:", file.name);
+        currentUploadedFile = file;
+        console.log("[Magic Import] File object detected:", file);
+        console.log("[Magic Import] File details:", {
+            name: file.name,
+            size: file.size,
+            type: file.type
+        });
         
-        // Show a temporary assistant message
-        appendAssistantMessage("I'm analyzing your resume now. This will just take a second...");
+        // UI Feedback: Show user what they uploaded
+        appendUserMessage(`Uploaded resume: ${file.name}`);
+        
+        // Show Typing/Processing state
+        showTypingIndicator();
+        appendAIMessage(`Analyzing <strong>${file.name}</strong>. This usually takes 5-10 seconds...`);
         
         const formData = new FormData();
         formData.append('file', file);
 
+        console.log("[Magic Import] Triggering /api/extract analysis...");
         try {
             const response = await fetch('/api/extract', {
                 method: 'POST',
@@ -796,33 +812,52 @@ if (resumeUpload) {
             });
             const data = await response.json();
             
+            console.log("[Magic Import] Analysis Response received:", data);
+            hideTypingIndicator();
+
             if (data.status === 'success' && data.data) {
                 extractedData = data.data;
+                console.log("[Magic Import] Data extraction successful:", extractedData);
+                appendAIMessage("Analysis complete! I've structured your profile data. Please review and edit it below to ensure everything looks perfect.");
                 showReviewModal(extractedData);
             } else {
-                appendAssistantMessage("I'm sorry, I couldn't extract data from that file. Could you try a different format or paste the details?");
+                console.error("[Magic Import] Analysis failed or returned no data:", data);
+                appendAIMessage("I'm sorry, I couldn't extract data from that file. Could you try a different format (PDF is best) or paste your details?");
             }
         } catch (err) {
-            console.error("[Magic Import] Error:", err);
-            appendAssistantMessage("Something went wrong during extraction. Please check your connection.");
+            console.error("[Magic Import] Connection Error during analysis:", err);
+            hideTypingIndicator();
+            appendAIMessage("Connection error. Please check if the Scalera AI backend is running on port 8000.");
         }
     });
 }
 
 function showReviewModal(data) {
+    console.log("[Magic Import] Displaying Review Modal");
     document.getElementById('review-name').value = data.full_name || '';
     document.getElementById('review-title').value = data.professional_title || '';
     document.getElementById('review-bio').value = data.bio || '';
     document.getElementById('review-skills').value = (data.skills || []).join(', ');
     
-    dataReviewModal.style.display = 'flex';
+    // Safety check for UI elements
+    if (dataReviewModal) {
+        dataReviewModal.style.display = 'flex';
+        // Add animation class if exists
+        dataReviewModal.classList.add('active');
+    } else {
+        console.error("[Magic Import] Review Modal element not found in DOM!");
+    }
 }
 
 function closeReviewModal() {
+    console.log("[Magic Import] Closing Review Modal");
     dataReviewModal.style.display = 'none';
+    dataReviewModal.classList.remove('active');
 }
 
 async function proceedWithMagicGenerate() {
+    console.log("[Magic Import] Starting Generation Flow...");
+    
     // Update data from modal fields
     const updatedData = {
         full_name: document.getElementById('review-name').value,
@@ -832,34 +867,72 @@ async function proceedWithMagicGenerate() {
     };
     
     closeReviewModal();
-    console.log("[Magic Import] Generating with data:", updatedData);
+    console.log("[Magic Import] Final Structured Data for Generation:", updatedData);
     
-    // Switch to generating state
+    // Switch to generating state UI
     aiChatBox.style.display = 'none';
     aiGeneratingBox.style.display = 'flex';
     
+    // Ensure we have some chat history for context
     const chatHistoryStr = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
     
     try {
+        console.log("[Magic Import] Calling /api/generate with structured data...");
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                chat_history: chatHistoryStr,
+                chat_history: chatHistoryStr || "Professional portfolio generation from resume.",
                 data: updatedData
             })
         });
         const data = await response.json();
+        
         if (data.status === 'success') {
+            console.log("[Magic Import] Generation successful!");
             generatedHTML = data.html || '';
             generatedCSS  = data.css  || '';
             generatedJS   = data.js   || '';
             showResult();
         } else {
-            showResult('<h3 style="padding:2rem;color:red">Generation failed. Please try again.</h3>', '', '');
+            console.error("[Magic Import] Generation failed:", data);
+            showResult('<h3 style="padding:2rem;color:red">Generation failed. Please try again or check your Groq API key.</h3>', '', '');
         }
     } catch (e) {
-        console.error(e);
-        showResult("<h3 style='padding: 2rem; color: red;'>Error generating website.</h3>", '', '');
+        console.error("[Magic Import] Generation Error:", e);
+        showResult("<h3 style='padding: 2rem; color: red;'>Connection Error: Failed to reach the Scalera AI engine.</h3>", '', '');
     }
+}
+
+const linkedinBtn = document.getElementById('linkedin-import-btn');
+if (linkedinBtn) {
+    linkedinBtn.addEventListener('click', async () => {
+        const url = prompt("Please enter your LinkedIn Profile URL:");
+        if (!url) return;
+        
+        appendUserMessage(`Analyze LinkedIn: ${url}`);
+        showTypingIndicator();
+        appendAIMessage("Connecting to LinkedIn... Please note that automated extraction might be limited by profile privacy settings.");
+        
+        const formData = new FormData();
+        formData.append('link', url);
+        
+        try {
+            const response = await fetch('/api/extract', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            hideTypingIndicator();
+            
+            if (data.status === 'success' && data.data) {
+                appendAIMessage("LinkedIn data detected. Since LinkedIn is protected, please ensure you paste your bio and experience in the review modal if they are missing.");
+                showReviewModal(data.data);
+            }
+        } catch (err) {
+            console.error("[LinkedIn Import] Error:", err);
+            hideTypingIndicator();
+            appendAIMessage("Failed to process LinkedIn URL. Please check your connection.");
+        }
+    });
 }
