@@ -74,6 +74,10 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
                             LinkedIn <span class="beta-badge">Beta</span>
                         </button>
+                        <button id="google-business-btn" class="btn-magic-import" style="display: none;" title="Generate from Google Maps">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            Google Business
+                        </button>
                     </div>
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; align-items: center;">
                         <button id="generate-trigger-btn" class="btn-generate-premium">
@@ -292,6 +296,57 @@
 
     </main>
     
+    <!-- Business Review Modal -->
+    <div id="business-review-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card animate-modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Verify Business Details</h3>
+                <p>We've fetched this from Google Maps. Feel free to refine it.</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Business Name</label>
+                    <input type="text" id="review-biz-name" class="premium-input">
+                </div>
+                <div class="form-group">
+                    <label>Business Type</label>
+                    <input type="text" id="review-biz-type" class="premium-input">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="review-biz-desc" class="premium-input" style="height: 100px;"></textarea>
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="review-biz-address" class="premium-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <input type="text" id="review-biz-rating" class="premium-input">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Customer Highlight (Review)</label>
+                    <input type="text" id="review-biz-highlight" class="premium-input" placeholder="e.g. Best coffee in town!">
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Business Photos (Placeholder for actual selection)</label>
+                    <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px dashed var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🖼️</div>
+                        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px dashed var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🖼️</div>
+                        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px dashed var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🖼️</div>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">We'll automatically select the 5 best photos for your gallery.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeBusinessModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmBusinessDataAndUnlock()">Confirm & Generate ✨</button>
+            </div>
+        </div>
+    </div>
+
     <script src="scalera-ai.js"></script>
 </body>
 </html>

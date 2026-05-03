@@ -105,21 +105,41 @@ async function sendToAI(userText) {
             const isReady = typeof data.reply === 'object' && data.reply.ready_to_generate;
             const websiteType = typeof data.reply === 'object' ? data.reply.website_type : 'other';
 
-            // Conditional Logic for Magic Import (Resume/LinkedIn)
             const magicImportOptions = document.getElementById('magic-import-options');
+            const resumeBtn = document.getElementById('magic-import-btn');
+            const linkedinBtn = document.getElementById('linkedin-import-btn');
+            const googleBtn = document.getElementById('google-business-btn');
+
             if (magicImportOptions) {
                 if (websiteType === 'portfolio') {
-                    console.log("[Scalera AI] Portfolio detected. Showing Magic Import options.");
                     magicImportOptions.style.display = 'flex';
+                    resumeBtn.style.display = 'inline-flex';
+                    linkedinBtn.style.display = 'inline-flex';
+                    googleBtn.style.display = 'none';
+                    
                     magicImportOptions.classList.remove('magic-options-appear');
-                    void magicImportOptions.offsetWidth; // Force reflow
+                    void magicImportOptions.offsetWidth;
+                    magicImportOptions.classList.add('magic-options-appear');
+                } else if (['business', 'restaurant', 'service'].includes(websiteType)) {
+                    magicImportOptions.style.display = 'flex';
+                    resumeBtn.style.display = 'none';
+                    linkedinBtn.style.display = 'none';
+                    googleBtn.style.display = 'inline-flex';
+                    
+                    // Lock the generate button until data is fetched
+                    const genBtn = document.getElementById('generate-trigger-btn');
+                    if (genBtn && !extractedData) {
+                        genBtn.disabled = true;
+                        genBtn.style.opacity = '0.5';
+                        genBtn.style.cursor = 'not-allowed';
+                        genBtn.title = "Please import your Google Business details first.";
+                    }
+
+                    magicImportOptions.classList.remove('magic-options-appear');
+                    void magicImportOptions.offsetWidth;
                     magicImportOptions.classList.add('magic-options-appear');
                 } else {
-                    console.log("[Scalera AI] Non-portfolio niche. Hiding Magic Import options.");
                     magicImportOptions.style.display = 'none';
-                    // Reset Magic Import state if user switched away from portfolio
-                    extractedData = null;
-                    currentUploadedFile = null;
                 }
             }
 
@@ -310,7 +330,8 @@ async function generateFromBackend(chatHistoryStr) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                chat_history: chatHistoryStr
+                chat_history: chatHistoryStr,
+                data: extractedData
             })
         });
         const data = await response.json();
@@ -966,4 +987,105 @@ if (linkedinBtn) {
             appendAIMessage("Failed to process LinkedIn URL. Please check your connection.");
         }
     });
+}
+
+// ─────────────────────────────────────────────────
+// Google Business Import Logic
+// ─────────────────────────────────────────────────
+const googleBusinessBtn = document.getElementById('google-business-btn');
+if (googleBusinessBtn) {
+    googleBusinessBtn.addEventListener('click', async () => {
+        const link = prompt("Please paste your Google Business / Maps link:");
+        if (!link) return;
+        
+        appendAIMessage("Fetching your business details from Google Maps... 📍");
+        
+        try {
+            const response = await fetch('/api/import/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ link })
+            });
+            const result = await response.json();
+            
+            if (result.status === 'success' && !result.data.error) {
+                showBusinessModalExtended(result.data);
+            } else {
+                appendAIMessage("I couldn't fetch details for that link. You can still type your business details and I'll generate the site! 🛠️");
+            }
+        } catch (e) {
+            console.error(e);
+            appendAIMessage("Connection error. Please check your link or try again later.");
+        }
+    });
+}
+
+function showBusinessModal(data) {
+    document.getElementById('business-review-modal').style.display = 'flex';
+    document.getElementById('review-biz-name').value = data.business_name || '';
+    document.getElementById('review-biz-type').value = data.business_type || '';
+    document.getElementById('review-biz-desc').value = data.description || '';
+    document.getElementById('review-biz-address').value = data.address || '';
+    document.getElementById('review-biz-rating').value = data.rating || '';
+}
+
+function closeBusinessModal() {
+    document.getElementById('business-review-modal').style.display = 'none';
+}
+
+function confirmBusinessData() {
+    const data = {
+        business_name: document.getElementById('review-biz-name').value,
+        business_type: document.getElementById('review-biz-type').value,
+        description: document.getElementById('review-biz-desc').value,
+        address: document.getElementById('review-biz-address').value,
+        rating: document.getElementById('review-biz-rating').value,
+        source: 'google_business'
+    };
+    
+    extractedData = data; // Store for generation
+    closeBusinessModal();
+    appendAIMessage(`Great! I've loaded your business data for **${data.business_name}**. You can now click "Generate Website" to build your site! 🚀`);
+}
+
+// Update Review Modal Data injection
+function showBusinessModalExtended(data) {
+    document.getElementById('business-review-modal').style.display = 'flex';
+    document.getElementById('review-biz-name').value = data.business_name || '';
+    document.getElementById('review-biz-type').value = data.business_type || '';
+    document.getElementById('review-biz-desc').value = data.description || '';
+    document.getElementById('review-biz-address').value = data.address || '';
+    document.getElementById('review-biz-rating').value = data.rating || '';
+    document.getElementById('review-biz-highlight').value = data.highlight_review || '';
+}
+
+// Override confirmBusinessData with more fields
+function confirmBusinessData() {
+    const data = {
+        business_name: document.getElementById('review-biz-name').value,
+        business_type: document.getElementById('review-biz-type').value,
+        description: document.getElementById('review-biz-desc').value,
+        address: document.getElementById('review-biz-address').value,
+        rating: document.getElementById('review-biz-rating').value,
+        highlight_review: document.getElementById('review-biz-highlight').value,
+        source: 'google_business'
+    };
+    
+    extractedData = data; 
+    closeBusinessModal();
+    appendAIMessage(`Great! I've loaded your business data for **${data.business_name}**. Click "Generate Website" to build your site with this data! 🚀`);
+}
+
+// Enhanced Confirmation to unlock Generate Button
+function confirmBusinessDataAndUnlock() {
+    const genBtn = document.getElementById('generate-trigger-btn');
+    if (genBtn) {
+        genBtn.disabled = false;
+        genBtn.style.opacity = '1';
+        genBtn.style.cursor = 'pointer';
+        genBtn.title = "Ready to generate!";
+        // Add a "ready" glow effect
+        genBtn.style.boxShadow = "0 0 30px rgba(220, 180, 128, 0.6)";
+    }
+    confirmBusinessData(); // Call the original data storage function
 }

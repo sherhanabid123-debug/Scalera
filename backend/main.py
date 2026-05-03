@@ -50,6 +50,20 @@ async def generate(request: GenerateRequest):
         "js": result["js"],
     }
 
+@app.post("/api/import/linkedin")
+async def import_linkedin(request: dict):
+    from .engine.generator import extract_data_from_link
+    link = request.get("link")
+    data = await extract_data_from_link(link)
+    return {"status": "success", "data": data}
+
+@app.post("/api/import/google")
+async def import_google(request: dict):
+    from .engine.generator import extract_business_data
+    link = request.get("link")
+    data = await extract_business_data(link)
+    return {"status": "success", "data": data}
+
 @app.post("/api/edit")
 async def edit(request: EditRequest):
     from .engine.generator import edit_website

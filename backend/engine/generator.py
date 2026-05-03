@@ -132,22 +132,23 @@ USER'S BUSINESS & PERSONAL DATA:
 ═══════════════════════════════════════════
 MAPPING INSTRUCTIONS (PRIORITY):
 ═══════════════════════════════════════════
-If structured "User Data" (JSON) is provided in the requirements above:
-1. BRANDING: Use 'full_name' for EVERY instance of the company name, logo text, or personal brand.
-2. HERO SECTION: 
-   - Headline <h1>: Use 'full_name'.
-   - Sub-headline/Intro: Use 'professional_title' and a snippet of 'bio'.
-3. ABOUT SECTION: 
-   - Description: Use the 'bio' or 'summary'. If short, expand it slightly but keep the core facts.
-4. SERVICES/SKILLS SECTION: 
-   - Replace generic service names with items from the 'skills' list.
-   - Match the number of skills to the number of service blocks available.
-5. EXPERIENCE/PORTFOLIO SECTION: 
-   - Map 'experience' items (company, title, description) to the template's project or work sections.
-   - If the template has a "Testimonials" section, you can repurpose it to show career highlights or roles if appropriate.
-6. CONTACT: Use the provided email, phone, or location.
+If structured "User Data" (JSON) is provided:
 
-STRICT RULE: Priority 1 is ACCURACY to the User Data. Priority 2 is the Creative Tone. Do NOT invent a fake business name like "Creative Agency" if 'full_name' is available.
+A. FOR PORTFOLIOS / PEOPLE:
+1. BRANDING: Use 'full_name' for company name/logo.
+2. HERO: Headline = 'full_name', Subtitle = 'professional_title'.
+3. ABOUT: Description = 'bio'.
+4. SKILLS/SERVICES: Map 'skills' list to service blocks.
+
+B. FOR BUSINESSES / GOOGLE MAPS DATA:
+1. BRANDING: Use 'business_name' for logo and company mentions.
+2. HERO: Headline = 'business_name', Subtitle = 'business_type'.
+3. ABOUT: Use 'description' for the story/about section.
+4. SOCIAL PROOF: If 'rating' is available, mention it (e.g. "Rated 4.8/5 on Google"). 
+5. TESTIMONIALS: If 'highlight_review' exists, use it as a primary customer quote.
+6. CONTACT: Use 'address' in the footer and contact sections.
+
+STRICT RULE: Priority 1 is ACCURACY to the User Data. Do NOT invent a fake business name if structured data is provided.
 
 ═══════════════════════════════════════════
 RULES — READ CAREFULLY:
@@ -549,13 +550,17 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
     print("[Extractor] Gemini failed or key missing, falling back to Groq...")
     return await _parse_raw_text_to_json(text)
 
-async def _try_gemini(raw_text: str, model_name: str) -> dict:
+async def _try_gemini(raw_text: str, model_name: str, custom_prompt: str = None) -> dict:
     """Helper to try a specific Gemini model."""
     try:
         import google.generativeai as genai
-        # Gemini Pro might not support json_object in older versions, but 1.5/2.0 Flash does
         model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
-        prompt = f"Extract profile data from this resume text into structured JSON. Include: full_name, professional_title, bio, skills[], experience[], projects[], education[].\n\nText:\n{raw_text[:15000]}"
+        
+        if custom_prompt:
+            prompt = f"{custom_prompt}\n\nData:\n{raw_text[:15000]}"
+        else:
+            prompt = f"Extract profile data from this text into structured JSON. Include: full_name, professional_title, bio, skills[], experience[], projects[], education[].\n\nText:\n{raw_text[:15000]}"
+            
         response = model.generate_content(prompt)
         return json.loads(response.text)
     except Exception as e:
@@ -603,12 +608,13 @@ async def extract_data_from_link(link: str) -> dict:
         print(f"[Extractor] Link Scrape Failed: {e}")
         return {"error": "LinkedIn blocked the automated request. Tip: Save your LinkedIn profile as PDF and upload it for better results!"}
 
-async def _parse_raw_text_to_json(raw_text: str) -> dict:
-    """Uses Groq to turn raw resume text into a structured JSON schema."""
+async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict:
+    """Uses Groq to turn raw text into a structured JSON schema."""
     if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
         return {"raw_text": raw_text[:500]}
 
-    system_msg = """You are a profile data extractor. Extract the following information from the provided text into a clean JSON object:
+    if not system_msg:
+        system_msg = """You are a profile data extractor. Extract the following information from the provided text into a clean JSON object:
     - full_name
     - professional_title
     - bio (short summary)
@@ -662,3 +668,48 @@ async def _parse_raw_text_to_json(raw_text: str) -> dict:
     except Exception as e:
         print(f"[Extractor] General Error: {e}")
         return {"error": f"System Error: {str(e)}"}
+
+async def extract_business_data(link: str) -> dict:
+    """Robust extraction from a Google Maps link with multi-model waterfall."""
+    print(f"[Business Extractor] Analyzing: {link}")
+    
+    try:
+        import urllib.request
+        from bs4 import BeautifulSoup
+        
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'}
+        req = urllib.request.Request(link, headers=headers)
+        
+        with urllib.request.urlopen(req, timeout=10) as response:
+            html = response.read().decode('utf-8', errors='ignore')
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            meta_title = soup.find('meta', property='og:title')
+            meta_desc = soup.find('meta', property='og:description')
+            
+            title_text = meta_title['content'] if meta_title else ""
+            desc_text = meta_desc['content'] if meta_desc else ""
+            raw_blob = f"Business: {title_text}\nInfo: {desc_text}\nSnippet: {html[:4000]}"
+            
+            biz_prompt = """Extract these fields into JSON: business_name, business_type, address, rating, description, highlight_review. 
+            Ensure 'rating' is a number."""
+
+            # 1. Try Gemini 2.0
+            if GEMINI_API_KEY:
+                res = await _try_gemini(raw_blob, 'gemini-2.0-flash', biz_prompt)
+                if "error" not in res: return res
+                
+                # 2. Try Gemini Flash Latest
+                res = await _try_gemini(raw_blob, 'gemini-flash-latest', biz_prompt)
+                if "error" not in res: return res
+
+            # 3. Final Fallback: Groq
+            if GROQ_API_KEY:
+                print("[Business Extractor] Gemini failed/limited. Falling back to Groq...")
+                return await _parse_raw_text_to_json(raw_blob, system_msg=f"System: Business Expert. {biz_prompt}")
+
+            return {"business_name": title_text, "description": desc_text}
+
+    except Exception as e:
+        print(f"[Business Extractor] Fatal: {e}")
+        return {"error": str(e)}
