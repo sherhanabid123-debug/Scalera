@@ -326,6 +326,7 @@ function startGeneration(chatHistoryStr) {
 // ─────────────────────────────────────────────────
 async function generateFromBackend(chatHistoryStr) {
     try {
+        console.log("[Generator] Triggering generation with Data:", extractedData);
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -871,7 +872,7 @@ if (resumeUpload) {
                 extractedData = data.data;
                 console.log("[Magic Import] Data extraction successful:", extractedData);
                 appendAIMessage("Analysis complete! I've structured your profile data. Please review and edit it below to ensure everything looks perfect.");
-                showReviewModal(extractedData);
+                showResumeModal(extractedData);
             } else {
                 console.error("[Magic Import] Analysis failed or returned invalid structure:", data);
                 appendAIMessage("I'm sorry, I couldn't extract data from that file. Could you try a different format (PDF or DOCX are best)?");
@@ -882,78 +883,6 @@ if (resumeUpload) {
             appendAIMessage("Connection error. Please check if the Scalera AI backend is running on port 8000.");
         }
     });
-}
-
-function showReviewModal(data) {
-    console.log("[Magic Import] Displaying Review Modal");
-    document.getElementById('review-name').value = data.full_name || '';
-    document.getElementById('review-title').value = data.professional_title || '';
-    document.getElementById('review-bio').value = data.bio || '';
-    document.getElementById('review-skills').value = (data.skills || []).join(', ');
-    
-    // Safety check for UI elements
-    if (dataReviewModal) {
-        dataReviewModal.style.display = 'flex';
-        // Add animation class if exists
-        dataReviewModal.classList.add('active');
-    } else {
-        console.error("[Magic Import] Review Modal element not found in DOM!");
-    }
-}
-
-function closeReviewModal() {
-    console.log("[Magic Import] Closing Review Modal");
-    dataReviewModal.style.display = 'none';
-    dataReviewModal.classList.remove('active');
-}
-
-async function proceedWithMagicGenerate() {
-    console.log("[Magic Import] Starting Generation Flow...");
-    
-    // Update data from modal fields
-    const updatedData = {
-        full_name: document.getElementById('review-name').value,
-        professional_title: document.getElementById('review-title').value,
-        bio: document.getElementById('review-bio').value,
-        skills: document.getElementById('review-skills').value.split(',').map(s => s.trim())
-    };
-    
-    closeReviewModal();
-    console.log("[Magic Import] Final Structured Data for Generation:", updatedData);
-    
-    // Switch to generating state UI
-    aiChatBox.style.display = 'none';
-    aiGeneratingBox.style.display = 'flex';
-    
-    // Ensure we have some chat history for context
-    const chatHistoryStr = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
-    
-    try {
-        console.log("[Magic Import] Calling /api/generate with structured data...");
-        const response = await fetch('/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_history: chatHistoryStr || "Professional portfolio generation from resume.",
-                data: updatedData
-            })
-        });
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            console.log("[Magic Import] Generation successful!");
-            generatedHTML = data.html || '';
-            generatedCSS  = data.css  || '';
-            generatedJS   = data.js   || '';
-            showResult();
-        } else {
-            console.error("[Magic Import] Generation failed:", data);
-            showResult('<h3 style="padding:2rem;color:red">Generation failed. Please try again or check your Groq API key.</h3>', '', '');
-        }
-    } catch (e) {
-        console.error("[Magic Import] Generation Error:", e);
-        showResult("<h3 style='padding: 2rem; color: red;'>Connection Error: Failed to reach the Scalera AI engine.</h3>", '', '');
-    }
 }
 
 const linkedinBtn = document.getElementById('linkedin-import-btn');
@@ -1020,37 +949,15 @@ if (googleBusinessBtn) {
     });
 }
 
-function showBusinessModal(data) {
-    document.getElementById('business-review-modal').style.display = 'flex';
-    document.getElementById('review-biz-name').value = data.business_name || '';
-    document.getElementById('review-biz-type').value = data.business_type || '';
-    document.getElementById('review-biz-desc').value = data.description || '';
-    document.getElementById('review-biz-address').value = data.address || '';
-    document.getElementById('review-biz-rating').value = data.rating || '';
-}
 
-function closeBusinessModal() {
-    document.getElementById('business-review-modal').style.display = 'none';
-}
+// ─────────────────────────────────────────────────
+// Business & Resume Review Logic (Unified)
+// ─────────────────────────────────────────────────
 
-function confirmBusinessData() {
-    const data = {
-        business_name: document.getElementById('review-biz-name').value,
-        business_type: document.getElementById('review-biz-type').value,
-        description: document.getElementById('review-biz-desc').value,
-        address: document.getElementById('review-biz-address').value,
-        rating: document.getElementById('review-biz-rating').value,
-        source: 'google_business'
-    };
-    
-    extractedData = data; // Store for generation
-    closeBusinessModal();
-    appendAIMessage(`Great! I've loaded your business data for **${data.business_name}**. You can now click "Generate Website" to build your site! 🚀`);
-}
-
-// Update Review Modal Data injection
 function showBusinessModalExtended(data) {
-    document.getElementById('business-review-modal').style.display = 'flex';
+    const modal = document.getElementById('business-review-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
     document.getElementById('review-biz-name').value = data.business_name || '';
     document.getElementById('review-biz-type').value = data.business_type || '';
     document.getElementById('review-biz-desc').value = data.description || '';
@@ -1059,8 +966,7 @@ function showBusinessModalExtended(data) {
     document.getElementById('review-biz-highlight').value = data.highlight_review || '';
 }
 
-// Override confirmBusinessData with more fields
-function confirmBusinessData() {
+function confirmBusinessDataAndUnlock() {
     const data = {
         business_name: document.getElementById('review-biz-name').value,
         business_type: document.getElementById('review-biz-type').value,
@@ -1072,20 +978,67 @@ function confirmBusinessData() {
     };
     
     extractedData = data; 
-    closeBusinessModal();
-    appendAIMessage(`Great! I've loaded your business data for **${data.business_name}**. Click "Generate Website" to build your site with this data! 🚀`);
-}
+    document.getElementById('business-review-modal').style.display = 'none';
 
-// Enhanced Confirmation to unlock Generate Button
-function confirmBusinessDataAndUnlock() {
+    // Unlock button
     const genBtn = document.getElementById('generate-trigger-btn');
     if (genBtn) {
         genBtn.disabled = false;
         genBtn.style.opacity = '1';
         genBtn.style.cursor = 'pointer';
-        genBtn.title = "Ready to generate!";
-        // Add a "ready" glow effect
         genBtn.style.boxShadow = "0 0 30px rgba(220, 180, 128, 0.6)";
     }
-    confirmBusinessData(); // Call the original data storage function
+    appendAIMessage(`Great! I've loaded your business data for **${data.business_name}**. Click "Generate Website" to build your site with this data! 🚀`);
+}
+
+function closeBusinessModal() {
+    document.getElementById('business-review-modal').style.display = 'none';
+}
+
+function showResumeModal(data) {
+    const modal = document.getElementById('resume-review-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.getElementById('review-resume-name').value = data.full_name || '';
+    document.getElementById('review-resume-title').value = data.professional_title || '';
+    document.getElementById('review-resume-bio').value = data.bio || '';
+    document.getElementById('review-resume-skills').value = Array.isArray(data.skills) ? data.skills.join(', ') : (data.skills || '');
+    
+    if (Array.isArray(data.experience)) {
+        const expStr = data.experience.map(e => `${e.role} at ${e.company} (${e.duration || ''}) - ${e.description || ''}`).join('\n\n');
+        document.getElementById('review-resume-exp').value = expStr;
+    } else {
+        document.getElementById('review-resume-exp').value = data.experience || '';
+    }
+}
+
+function confirmResumeData() {
+    const skillsText = document.getElementById('review-resume-skills').value;
+    const expText = document.getElementById('review-resume-exp').value;
+    
+    const data = {
+        full_name: document.getElementById('review-resume-name').value,
+        professional_title: document.getElementById('review-resume-title').value,
+        bio: document.getElementById('review-resume-bio').value,
+        skills: skillsText.split(',').map(s => s.trim()).filter(s => s),
+        experience: expText,
+        source: 'resume_upload'
+    };
+    
+    extractedData = data;
+    document.getElementById('resume-review-modal').style.display = 'none';
+    
+    const genBtn = document.getElementById('generate-trigger-btn');
+    if (genBtn) {
+        genBtn.disabled = false;
+        genBtn.style.opacity = '1';
+        genBtn.style.cursor = 'pointer';
+        genBtn.style.boxShadow = "0 0 30px rgba(220, 180, 128, 0.6)";
+    }
+    
+    appendAIMessage(`Excellent! Your profile for **${data.full_name}** is ready. Click "Generate Website" to see your professional portfolio! 🚀`);
+}
+
+function closeResumeModal() {
+    document.getElementById('resume-review-modal').style.display = 'none';
 }

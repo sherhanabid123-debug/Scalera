@@ -93,37 +93,6 @@
             </div>
 
             <!-- Magic Import Data Review Modal -->
-            <div id="data-review-modal" class="data-review-modal" style="display: none;">
-                <div class="modal-content glass">
-                    <div class="modal-header">
-                        <h3>Review Extracted Data</h3>
-                        <p>We've structured your profile. You can edit it before we build the site.</p>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" id="review-name">
-                        </div>
-                        <div class="form-group">
-                            <label>Professional Title</label>
-                            <input type="text" id="review-title">
-                        </div>
-                        <div class="form-group">
-                            <label>Bio / Summary</label>
-                            <textarea id="review-bio"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Skills (comma separated)</label>
-                            <input type="text" id="review-skills">
-                        </div>
-                        <!-- We can add more fields dynamically if needed -->
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn-secondary" onclick="closeReviewModal()">Cancel</button>
-                        <button class="btn-primary" onclick="proceedWithMagicGenerate()">Generate with this Data</button>
-                    </div>
-                </div>
-            </div>
 
             <!-- Loading/Generating State -->
             <div id="ai-generating" class="ai-generating-box" style="display: none;">
@@ -347,6 +316,42 @@
         </div>
     </div>
 
-    <script src="scalera-ai.js"></script>
+    <!-- Resume Review Modal -->
+    <div id="resume-review-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card animate-modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Review Your Professional Profile</h3>
+                <p>We've analyzed your resume. Verify the details below for a perfect website.</p>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="review-resume-name" class="premium-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Professional Title</label>
+                        <input type="text" id="review-resume-title" class="premium-input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Professional Bio</label>
+                    <textarea id="review-resume-bio" class="premium-input" style="height: 80px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Skills (Comma separated)</label>
+                    <input type="text" id="review-resume-skills" class="premium-input">
+                </div>
+                <div class="form-group">
+                    <label>Work Experience (Key Highlights)</label>
+                    <textarea id="review-resume-exp" class="premium-input" style="height: 120px;" placeholder="Role at Company (Year) - Description"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeResumeModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmResumeData()">Confirm & Generate ✨</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

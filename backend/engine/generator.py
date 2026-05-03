@@ -111,142 +111,76 @@ def _read_template(folder_name: str) -> dict:
 
 
 # ──────────────────────────────────────────────
-# Personalisation — Full deep text rewrite via Groq
+# Personalisation — Full deep text rewrite via Gemini/Groq
 # ──────────────────────────────────────────────
 async def _personalise_template(template: dict, chat_history: str) -> dict:
     """
-    Sends the full HTML to Groq and asks it to rewrite ALL visible text content
-    to match the user's business. Structure, tags, classes, IDs, CSS, and JS
-    are strictly preserved — only the human-readable text changes.
+    Rewrites the HTML template using Gemini 2.0 for high-fidelity data injection.
     """
-
     html = template["html"]
+    
+    # Construct the instruction
+    instruction = f"""You are a luxury website content architect. Rewrite the text content of this HTML template to match the user's data.
 
-    prompt = f"""You are an expert website content writer. Your job is to take an existing HTML template and rewrite ALL the visible text content so it perfectly matches the user's requirements and personal data described below.
+PRIME DIRECTIVE:
+Your priority #1 is to replace all generic placeholders with the REAL USER DATA provided below. Keeping generic text is a failure.
 
-═══════════════════════════════════════════
-USER'S BUSINESS & PERSONAL DATA:
-═══════════════════════════════════════════
+USER DATA & REQUIREMENTS:
 {chat_history}
 
-═══════════════════════════════════════════
-MAPPING INSTRUCTIONS (PRIORITY):
-═══════════════════════════════════════════
-If structured "User Data" (JSON) is provided:
+MAPPING RULES:
+1. HERO: Headline = 'full_name', Subtitle = 'professional_title' (or 'business_type').
+2. ABOUT/BIO: Use 'bio' or 'description'. If short, expand into professional, high-end copy.
+3. EXPERIENCE/SERVICES: Map each item to a card or list item.
+4. SOCIAL PROOF: If 'rating' exists, mention it (e.g., "Top Rated Business").
+5. CONTACT: Use the provided address/email in the footer and contact sections.
 
-A. FOR PORTFOLIOS / PEOPLE:
-1. BRANDING: Use 'full_name' for company name/logo.
-2. HERO: Headline = 'full_name', Subtitle = 'professional_title'.
-3. ABOUT: Description = 'bio'.
-4. SKILLS/SERVICES: Map 'skills' list to service blocks.
+STRICT TECHNICAL RULES:
+- Output ONLY the raw HTML starting with <!DOCTYPE html>.
+- PRESERVE all classes and IDs.
+- REPEATING ELEMENTS: If the template has repeating elements (like 'Experience cards' or 'Service blocks'), you MUST duplicate or remove them to match the number of items in the user's data.
+- If data is provided, the original template text MUST be gone.
 
-B. FOR BUSINESSES / GOOGLE MAPS DATA:
-1. BRANDING: Use 'business_name' for logo and company mentions.
-2. HERO: Headline = 'business_name', Subtitle = 'business_type'.
-3. ABOUT: Use 'description' for the story/about section.
-4. SOCIAL PROOF: If 'rating' is available, mention it (e.g. "Rated 4.8/5 on Google"). 
-5. TESTIMONIALS: If 'highlight_review' exists, use it as a primary customer quote.
-6. CONTACT: Use 'address' in the footer and contact sections.
-
-STRICT RULE: Priority 1 is ACCURACY to the User Data. Do NOT invent a fake business name if structured data is provided.
-
-═══════════════════════════════════════════
-RULES — READ CAREFULLY:
-═══════════════════════════════════════════
-
-1. REWRITE ALL VISIBLE TEXT to match the user's business. This includes:
-   - Page <title> and <meta description>
-   - Logo / brand name text
-   - ALL headings (h1, h2, h3, h4)
-   - ALL paragraphs, descriptions, and body text
-   - ALL button and link text (e.g. "Get a Quote →", "Learn More →")
-   - ALL service/feature names and descriptions
-   - ALL testimonial quotes, author names, and titles
-   - ALL stats/numbers and their labels
-   - ALL form labels and placeholder text
-   - ALL footer text, addresses, phone numbers, emails
-   - Navigation link text if appropriate for the business
-
-2. STRUCTURE IS SACRED — DO NOT CHANGE any of these:
-   - HTML tags (do not add, remove, or modify any tags)
-   - CSS classes, IDs, or any HTML attributes (these are the "hooks" for the design)
-   - The tag structure, hierarchy, and nesting order
-   - <link>, <script>, <meta charset>, <meta viewport> tags
-   - Image src URLs (keep them exactly as they are)
-   - href="#section-id" anchor links
-   - Any inline styles
-   - The number of elements (e.g., if there are exactly 4 <li> items in a list, there must be exactly 4 in your output)
-   - DO NOT add any <style> tags or new CSS code inside the HTML.
-
-3. YOU ARE A TEXT-ONLY SURGEON:
-   - You are only swapping the text *inside* the tags.
-   - Example: <h1>Dental Excellence</h1> becomes <h1>Scalera Innovations</h1>.
-   - The <h1> tag itself and its classes must not change.
-   - If a tag is empty or contains only an icon, leave it alone.
-
-3. CONTENT QUALITY:
-   - Write professional, persuasive, industry-specific copy
-   - Use real-sounding business details (address, phone, email) relevant to the industry
-   - Make testimonials sound authentic with realistic names and roles
-   - Stats/numbers should be realistic for the business type
-   - CTAs should be action-oriented and relevant
-
-4. OUTPUT: Return the COMPLETE modified HTML document. Nothing before or after it.
-   Do NOT wrap it in markdown code fences. Just output raw HTML starting with <!DOCTYPE html>.
-
-═══════════════════════════════════════════
-TEMPLATE HTML TO REWRITE:
-═══════════════════════════════════════════
-
+TEMPLATE TO REWRITE:
 {html}"""
 
-    try:
-        print("[Personalise] Sending full HTML to Groq for deep text rewrite...")
-        client = Groq(api_key=GROQ_API_KEY)
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=16384,
-            temperature=0.6,
-        )
-        result_html = response.choices[0].message.content.strip()
-
-        # Strip markdown code fences if the model wrapped the output
-        if result_html.startswith("```"):
-            result_html = re.sub(r'^```[a-z]*\n?', '', result_html)
-            result_html = re.sub(r'\n?```$', '', result_html)
-
-        # Validate: the result should still look like HTML
-        if "<!DOCTYPE" in result_html.upper() or "<html" in result_html.lower():
-            # Quick sanity check — make sure key structural elements survived
-            if "<nav" in result_html and "</footer>" in result_html:
-                print(f"[Personalise] ✅ Deep rewrite successful ({len(result_html)} bytes)")
+    # Try Gemini 2.0 first for best quality
+    if GEMINI_API_KEY:
+        try:
+            print("[Personalise] Sending HTML to Gemini 2.0 for deep injection...")
+            import google.generativeai as genai
+            model = genai.GenerativeModel('gemini-2.0-flash')
+            response = model.generate_content(instruction)
+            result_html = response.text.strip()
+            
+            # Clean markdown code blocks if present
+            if result_html.startswith("```"):
+                result_html = re.sub(r'^```[a-z]*\n?', '', result_html)
+                result_html = re.sub(r'\n?```$', '', result_html)
+                
+            if "<!DOCTYPE" in result_html.upper() and "</html>" in result_html.lower():
+                print(f"[Personalise] ✅ Gemini rewrite successful ({len(result_html)} bytes)")
                 return {
                     "html": result_html,
                     "css": template["css"],
                     "js": template["js"],
                 }
+        except Exception as e:
+            err = str(e)
+            if "429" in err or "rate_limit" in err.lower():
+                print(f"[Personalise] Rate limited on 70b, trying 8b instant fallback...")
             else:
-                print("[Personalise] ⚠️ Output missing structural elements, trying fallback...")
-        else:
-            print("[Personalise] ⚠️ Output doesn't look like HTML, trying fallback...")
+                print(f"[Personalise] Error with 70b: {e}, trying 8b fallback...")
 
-    except Exception as e:
-        err = str(e)
-        if "429" in err or "rate_limit" in err.lower():
-            print(f"[Personalise] Rate limited on 70b, trying 8b instant fallback...")
-        else:
-            print(f"[Personalise] Error with 70b: {e}, trying 8b fallback...")
-
-    # ── Fallback: try with the lighter 8b model ──
+    # Fallback to Groq Llama 3.1 8b
     try:
-        print("[Personalise] Attempting fallback with llama-3.1-8b-instant...")
+        print("[Personalise] Using Groq fallback...")
         client = Groq(api_key=GROQ_API_KEY)
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            messages=[{"role": "user", "content": prompt}],
+            messages=[{"role": "user", "content": instruction}],
             max_tokens=16384,
-            temperature=0.6,
+            temperature=0.5,
         )
         result_html = response.choices[0].message.content.strip()
 
@@ -310,16 +244,19 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
 
     print(f"[Generator] Loaded template: {folder} (HTML: {len(template['html'])} bytes, CSS: {len(template['css'])} bytes, JS: {len(template['js'])} bytes)")
 
-    # 3. Personalise the template with user's business details
-    # Construct a rich prompt if we have structured data
+    # 3. Pre-process template (optional but helpful for AI)
+    # We can inject a small hint into the HTML to help the AI identify placeholders
+    processed_html = template['html'].replace("hello@example.com", "[USER_EMAIL_HERE]")
+    template['html'] = processed_html
+
+    # 4. Personalise the template with user's business details
     if data:
         personalisation_prompt = f"User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
     else:
         personalisation_prompt = chat_history
 
     result = await _personalise_template(template, personalisation_prompt)
-    print(f"[Generator] Full Prompt sent to Groq:\n{personalisation_prompt[:500]}...")
-    print(f"[Generator] ✅ Website generated using '{folder}' template")
+    print(f"[Generator] ✅ Website generated using '{folder}' template with deep injection.")
     return result
 
 
@@ -614,17 +551,18 @@ async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict
         return {"raw_text": raw_text[:500]}
 
     if not system_msg:
-        system_msg = """You are a profile data extractor. Extract the following information from the provided text into a clean JSON object:
-    - full_name
-    - professional_title
-    - bio (short summary)
-    - skills (list of strings)
-    - experience (list of objects: title, company, duration, description)
-    - projects (list of objects: name, description, link)
-    - education (list of objects: degree, school, year)
-    - contact (email, phone, location)
-    
-    Return ONLY valid JSON. If a field is missing, use null or an empty list."""
+        system_msg = """You are a precision profile data extractor. Extract information from the provided text into a clean JSON object. 
+        STRICT RULES:
+        1. Use 'full_name' for the person's name.
+        2. Use 'professional_title' for their current role or headline.
+        3. Use 'bio' for a short, professional summary.
+        4. Use 'skills' (list of tags).
+        5. Use 'experience' (list of: company, role, duration, description).
+        6. Use 'projects' (list of: title, description).
+        7. Use 'education' (list of: institution, degree, year).
+        8. CLEANING: Fix capitalization, remove redundant text, and ensure professional tone.
+        
+        Output ONLY valid JSON."""
 
     import urllib.request
     import json
