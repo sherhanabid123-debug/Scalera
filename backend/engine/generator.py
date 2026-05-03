@@ -9,6 +9,10 @@ load_dotenv()
 # API Keys
 # ──────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
+if not GROQ_API_KEY:
+    print("[Scalera AI] ⚠️ WARNING: GROQ_API_KEY not found in environment or .env file.")
+else:
+    print(f"[Scalera AI] ✅ GROQ_API_KEY loaded (Starts with: {GROQ_API_KEY[:4]}...)")
 
 # ──────────────────────────────────────────────
 # Clients
