@@ -94,3 +94,12 @@ async def extract(
 @app.get("/")
 def root():
     return {"message": "Scalera AI Backend is running"}
+@app.get("/api/status")
+async def status():
+    from .engine.generator import GROQ_API_KEY, GEMINI_API_KEY
+    return {
+        "groq_loaded": bool(GROQ_API_KEY),
+        "gemini_loaded": bool(GEMINI_API_KEY),
+        "groq_prefix": GROQ_API_KEY[:4] if GROQ_API_KEY else None,
+        "gemini_prefix": GEMINI_API_KEY[:4] if GEMINI_API_KEY else None
+    }

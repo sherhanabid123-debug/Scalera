@@ -9,10 +9,17 @@ load_dotenv()
 # API Keys
 # ──────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+
 if not GROQ_API_KEY:
-    print("[Scalera AI] ⚠️ WARNING: GROQ_API_KEY not found in environment or .env file.")
+    print("[Scalera AI] ⚠️ WARNING: GROQ_API_KEY not found.")
 else:
     print(f"[Scalera AI] ✅ GROQ_API_KEY loaded (Starts with: {GROQ_API_KEY[:4]}...)")
+
+if GEMINI_API_KEY:
+    print(f"[Scalera AI] ✅ GEMINI_API_KEY loaded (Starts with: {GEMINI_API_KEY[:4]}...)")
+    import google.generativeai as genai
+    genai.configure(api_key=GEMINI_API_KEY)
 
 # ──────────────────────────────────────────────
 # Clients
@@ -43,10 +50,15 @@ async def _route_template(chat_history: str) -> str:
     prompt = f"""You are a template router. Based on the conversation below, pick the SINGLE BEST template folder. 
 Available: {', '.join(subfolders)}
 
+GUIDANCE: 
+- For premium, dark, or minimalist personal portfolios, prefer 'sherhan_portfolio'.
+- For standard portfolios, use 'spa' or 'photography'.
+- For business sites, use 'corporate' or 'saas'.
+
 Conversation:
 {chat_history}
 
-Reply with ONLY the folder name, nothing else. Example: corporate"""
+Reply with ONLY the folder name, nothing else. Example: sherhan_portfolio"""
 
     try:
         client = Groq(api_key=GROQ_API_KEY)
@@ -191,7 +203,7 @@ TEMPLATE HTML TO REWRITE:
         print("[Personalise] Sending full HTML to Groq for deep text rewrite...")
         client = Groq(api_key=GROQ_API_KEY)
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=16384,
             temperature=0.6,
@@ -355,7 +367,7 @@ async def chat_with_ai(messages: list) -> dict:
             "Content-Type": "application/json"
         }
         data = {
-            "model": "llama-3.3-70b-versatile",
+            "model": "llama-3.1-8b-instant",
             "messages": formatted_messages,
             "max_tokens": 512,
             "temperature": 0.7,
@@ -383,6 +395,12 @@ async def chat_with_ai(messages: list) -> dict:
             result = json.loads(response.read().decode("utf-8"))
             raw_content = result["choices"][0]["message"]["content"]
             return json.loads(raw_content)
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode("utf-8")
+        return {
+            "reply": f"Groq API 400 Error: {error_body}",
+            "ready_to_generate": False
+        }
     except Exception as e:
         return {
             "reply": f"Debugging: API Key is present (starts with {GROQ_API_KEY[:4]}), but the Groq API call failed: {str(e)}",
@@ -442,7 +460,7 @@ Return a JSON object: {{"html": "...", "css": "..."}}
     }
     
     data = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {"role": "system", "content": system_msg},
             {"role": "user", "content": user_msg}
@@ -519,13 +537,71 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
     text = re.sub(r'\n+', '\n', text) # Remove excessive newlines
     text = re.sub(r' +', ' ', text)   # Remove excessive spaces
 
+    if GEMINI_API_KEY:
+        print("[Extractor] Attempting Gemini 2.0 Flash...")
+        res = await _try_gemini(text, 'gemini-2.0-flash')
+        if "error" not in res: return res
+        
+        print("[Extractor] Gemini 2.0 failed/quota, trying Gemini Flash Latest...")
+        res = await _try_gemini(text, 'gemini-flash-latest')
+        if "error" not in res: return res
+
+    print("[Extractor] Gemini failed or key missing, falling back to Groq...")
     return await _parse_raw_text_to_json(text)
 
+async def _try_gemini(raw_text: str, model_name: str) -> dict:
+    """Helper to try a specific Gemini model."""
+    try:
+        import google.generativeai as genai
+        # Gemini Pro might not support json_object in older versions, but 1.5/2.0 Flash does
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
+        prompt = f"Extract profile data from this resume text into structured JSON. Include: full_name, professional_title, bio, skills[], experience[], projects[], education[].\n\nText:\n{raw_text[:15000]}"
+        response = model.generate_content(prompt)
+        return json.loads(response.text)
+    except Exception as e:
+        print(f"[Extractor] {model_name} failed: {e}")
+        return {"error": str(e)}
+
+
 async def extract_data_from_link(link: str) -> dict:
-    """Processes a link (LinkedIn etc). For now, it just returns the link for future scraping."""
-    # Real LinkedIn scraping is complex, so we'll just return a note to the user
-    # in the structured data for now.
-    return {"linkedin_url": link, "note": "LinkedIn URL detected. Please ensure your profile text is added below if missing."}
+    """Best-effort scraper for public links (LinkedIn/Portfolios)."""
+    print(f"[Extractor] Attempting to scrape link: {link}")
+    
+    try:
+        import urllib.request
+        from bs4 import BeautifulSoup
+        
+        # Stealth headers
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+        }
+        
+        req = urllib.request.Request(link, headers=headers)
+        with urllib.request.urlopen(req, timeout=10) as response:
+            html = response.read().decode('utf-8', errors='ignore')
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            # Extract Meta Tags (LinkedIn uses OpenGraph for public views)
+            meta_title = soup.find('meta', property='og:title')
+            meta_desc = soup.find('meta', property='og:description')
+            
+            title_text = meta_title['content'] if meta_title else soup.title.string if soup.title else ""
+            desc_text = meta_desc['content'] if meta_desc else ""
+            
+            # Use Gemini to clean this up
+            raw_blob = f"Title: {title_text}\nDescription: {desc_text}\nFull Text Snippet: {html[:2000]}"
+            
+            if GEMINI_API_KEY:
+                print("[Extractor] Passing link metadata to Gemini...")
+                return await _try_gemini(raw_blob, 'gemini-2.0-flash')
+            
+            return {"full_name": title_text, "bio": desc_text, "note": "Data extracted from public meta tags."}
+
+    except Exception as e:
+        print(f"[Extractor] Link Scrape Failed: {e}")
+        return {"error": "LinkedIn blocked the automated request. Tip: Save your LinkedIn profile as PDF and upload it for better results!"}
 
 async def _parse_raw_text_to_json(raw_text: str) -> dict:
     """Uses Groq to turn raw resume text into a structured JSON schema."""
@@ -555,7 +631,7 @@ async def _parse_raw_text_to_json(raw_text: str) -> dict:
     }
     
     data = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {"role": "system", "content": system_msg},
             {"role": "user", "content": f"Text to extract:\n{raw_text[:8000]}"}

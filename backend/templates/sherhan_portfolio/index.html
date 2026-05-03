@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ full_name }} | {{ professional_title }}</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">SA.</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <p class="subtitle">Hello, I'm</p>
+                <h1 class="name">{{ full_name }}</h1>
+                <h2 class="typewriter" id="typewriter">{{ professional_title }}</h2>
+                <p class="description">{{ bio }}</p>
+                <div class="hero-btns">
+                    <a href="#contact" class="btn btn-primary">Contact Me</a>
+                    <a href="#work" class="btn btn-secondary">View My Work <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="planet-core"></div>
+                {% for skill in skills[:6] %}
+                <div class="orbit-icon orbit-{{ loop.index }}">
+                    <i class="fas fa-code"></i>
+                    <span>{{ skill }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    {{ bio_detailed or bio }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">My Expertise</h2>
+            <div class="skills-grid">
+                {% for skill in skills %}
+                <div class="skill-tag">{{ skill }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="work">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="project-grid">
+                {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-img">
+                        <div class="overlay">
+                            <a href="{{ project.link or '#' }}" class="visit-btn">Visit Site</a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3>{{ project.name }}</h3>
+                        <p>{{ project.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Work History</h2>
+            <div class="timeline">
+                {% for exp in experience %}
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>{{ exp.title }}</h3>
+                        <h4>{{ exp.company }} | {{ exp.duration }}</h4>
+                        <p>{{ exp.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <h2>Let's Talk</h2>
+            <p>I'm always open to new opportunities and collaborations.</p>
+            <div class="contact-links">
+                <a href="mailto:{{ contact.email }}"><i class="fas fa-envelope"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">&copy; 2026 {{ full_name }}. Built with Scalera AI.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

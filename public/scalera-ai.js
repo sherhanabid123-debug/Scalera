@@ -111,6 +111,9 @@ async function sendToAI(userText) {
                 if (websiteType === 'portfolio') {
                     console.log("[Scalera AI] Portfolio detected. Showing Magic Import options.");
                     magicImportOptions.style.display = 'flex';
+                    magicImportOptions.classList.remove('magic-options-appear');
+                    void magicImportOptions.offsetWidth; // Force reflow
+                    magicImportOptions.classList.add('magic-options-appear');
                 } else {
                     console.log("[Scalera AI] Non-portfolio niche. Hiding Magic Import options.");
                     magicImportOptions.style.display = 'none';
@@ -254,6 +257,9 @@ generateTriggerBtn.addEventListener('click', () => {
 function startGeneration(chatHistoryStr) {
     aiChatBox.style.display = 'none';
     aiGeneratingBox.style.display = 'flex';
+    
+    const tracker = document.querySelector('.process-tracker');
+    if (tracker) tracker.classList.add('animating');
 
     const steps = [
         { id: 'step-1', status: "Analyzing brand identity..." },
@@ -361,6 +367,9 @@ function showResult(htmlOverride, cssOverride, jsOverride) {
 
     aiGeneratingBox.style.display = 'none';
     aiResultBox.style.display = 'flex';
+    
+    const tracker = document.querySelector('.process-tracker');
+    if (tracker) tracker.classList.remove('animating');
 
     // Try to extract a name from conversation if possible, else generic
     let inferredName = 'yourbrand';
