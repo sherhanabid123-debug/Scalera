@@ -555,7 +555,7 @@ async def _parse_raw_text_to_json(raw_text: str) -> dict:
     }
     
     data = {
-        "model": "llama-3.1-8b-instant",
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "system", "content": system_msg},
             {"role": "user", "content": f"Text to extract:\n{raw_text[:8000]}"}
@@ -572,11 +572,17 @@ async def _parse_raw_text_to_json(raw_text: str) -> dict:
             print(f"[Extractor] Groq extraction complete. Structured {len(content)} bytes of JSON.")
             return json.loads(content)
     except urllib.error.HTTPError as e:
-        status_code = e.code
-        print(f"[Extractor] HTTP Error {status_code}: {e.reason}")
-        if status_code in [401, 403]:
-            return {"error": "Invalid Groq API Key. Please check your .env or environment variables."}
-        return {"error": f"Groq API returned error {status_code}. The service might be busy."}
+        error_body = e.read().decode("utf-8")
+        print(f"[Extractor] API Error {e.code}: {error_body}")
+        try:
+            err_json = json.loads(error_body)
+            err_msg = err_json.get("error", {}).get("message", e.reason)
+        except:
+            err_msg = e.reason
+            
+        if e.code in [401, 403]:
+            return {"error": f"Groq Authentication Failed: {err_msg}"}
+        return {"error": f"Groq API Error {e.code}: {err_msg}"}
     except Exception as e:
         print(f"[Extractor] General Error: {e}")
-        return {"error": "AI extraction failed. The file text was too complex or the engine is busy."}
+        return {"error": f"System Error: {str(e)}"}
