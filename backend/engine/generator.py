@@ -251,7 +251,9 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
 
     # 4. Personalise the template with user's business details
     if data:
-        personalisation_prompt = f"User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
+        tone_instruction = f"TONE: {data.get('tone', 'modern')}. " if data.get('tone') else ""
+        type_instruction = f"SITE TYPE: {data.get('site_type', 'website')}. " if data.get('site_type') else ""
+        personalisation_prompt = f"{tone_instruction}{type_instruction}User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
     else:
         personalisation_prompt = chat_history
 
@@ -651,3 +653,58 @@ async def extract_business_data(link: str) -> dict:
     except Exception as e:
         print(f"[Business Extractor] Fatal: {e}")
         return {"error": str(e)}
+
+# ──────────────────────────────────────────────
+# Vision Interpretation — Natural Language to Blueprint
+# ──────────────────────────────────────────────
+async def interpret_vision(description: str) -> dict:
+    """
+    Converts a natural language website description into a structured blueprint.
+    """
+    if not description:
+        return {}
+
+    instruction = f"""You are a senior website architect. Convert the user's natural language description into a structured JSON blueprint for a website.
+
+USER DESCRIPTION:
+{description}
+
+JSON STRUCTURE:
+{{
+  "site_type": "portfolio | restaurant | agency | saas | startup | corporate | dental-clinic | event-planner | photography | fitness | healthcare | hotel | law-firm | mobile-app | non-profit | real-estate | spa | startup | ecommerce | education",
+  "tone": "modern | luxurious | bold | minimal | professional | playful",
+  "business_name": "Name if mentioned, else empty",
+  "sections": ["Hero", "About", "Services", "Portfolio/Work", "Testimonials", "Contact", "FAQ", "Pricing"],
+  "primary_colors": ["color1", "color2"],
+  "key_features": ["feature1", "feature2"]
+}}
+
+RULES:
+1. Be decisive. Pick the best matching 'site_type' from the list provided.
+2. If the user mentiones a specific business name, extract it.
+3. Determine the 'tone' based on keywords (e.g., 'high-end' -> luxurious, 'clean' -> minimal).
+4. List the sections that would make sense for this vision.
+5. Return ONLY raw JSON.
+"""
+
+    try:
+        import google.generativeai as genai
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(instruction)
+        text = response.text.strip()
+        
+        # Clean markdown
+        if text.startswith("```"):
+            text = re.sub(r'^```[a-z]*\n?', '', text)
+            text = re.sub(r'\n?```$', '', text)
+            
+        blueprint = json.loads(text)
+        print(f"[Vision] Blueprint extracted: {blueprint.get('site_type')} | {blueprint.get('tone')}")
+        return blueprint
+    except Exception as e:
+        print(f"[Vision] Error interpreting vision: {e}")
+        return {
+            "site_type": "agency",
+            "tone": "modern",
+            "sections": ["Hero", "About", "Services", "Contact"]
+        }

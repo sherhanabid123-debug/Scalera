@@ -105,6 +105,13 @@ async def extract(
         "data": merged
     }
 
+@app.post("/api/interpret")
+async def interpret(request: dict):
+    from .engine.generator import interpret_vision
+    description = request.get("description")
+    blueprint = await interpret_vision(description)
+    return {"status": "success", "data": blueprint}
+
 @app.get("/")
 def root():
     return {"message": "Scalera AI Backend is running"}

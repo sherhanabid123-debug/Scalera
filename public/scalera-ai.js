@@ -1042,3 +1042,92 @@ function confirmResumeData() {
 function closeResumeModal() {
     document.getElementById('resume-review-modal').style.display = 'none';
 }
+
+// ─────────────────────────────────────────────────
+// Vision (Natural Language) Logic
+// ─────────────────────────────────────────────────
+let currentVisionBlueprint = null;
+
+function showVisionModal() {
+    document.getElementById('vision-modal').style.display = 'flex';
+    document.getElementById('vision-interpretation').style.display = 'none';
+    document.getElementById('vision-analyze-btn').style.display = 'inline-block';
+    document.getElementById('vision-confirm-btn').style.display = 'none';
+    document.getElementById('vision-description').value = '';
+}
+
+function closeVisionModal() {
+    document.getElementById('vision-modal').style.display = 'none';
+}
+
+async function analyzeVision() {
+    const description = document.getElementById('vision-description').value;
+    if (!description) {
+        alert("Please describe your website first!");
+        return;
+    }
+
+    const analyzeBtn = document.getElementById('vision-analyze-btn');
+    analyzeBtn.innerText = "Analyzing Vision...";
+    analyzeBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/interpret', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description })
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            currentVisionBlueprint = result.data;
+            
+            // Show interpretation
+            document.getElementById('vision-type').value = currentVisionBlueprint.site_type || 'General';
+            document.getElementById('vision-tone').value = currentVisionBlueprint.tone || 'Modern';
+            document.getElementById('vision-interpretation').style.display = 'block';
+            
+            // Toggle buttons
+            analyzeBtn.style.display = 'none';
+            document.getElementById('vision-confirm-btn').style.display = 'inline-block';
+        }
+    } catch (err) {
+        console.error("Vision Analysis Error:", err);
+        alert("Couldn't analyze vision. Please try again.");
+    } finally {
+        analyzeBtn.innerText = "Analyze & Prepare ✨";
+        analyzeBtn.disabled = false;
+    }
+}
+
+function confirmVision() {
+    if (!currentVisionBlueprint) return;
+
+    // Use the blueprint as the primary data
+    extractedData = {
+        ...currentVisionBlueprint,
+        business_name: currentVisionBlueprint.business_name || "New Project",
+        source: 'vision_description'
+    };
+
+    closeVisionModal();
+
+    // Unlock button
+    const genBtn = document.getElementById('generate-trigger-btn');
+    if (genBtn) {
+        genBtn.disabled = false;
+        genBtn.style.opacity = '1';
+        genBtn.style.cursor = 'pointer';
+        genBtn.style.boxShadow = "0 0 30px rgba(220, 180, 128, 0.6)";
+    }
+
+    appendAIMessage(`Vision captured! I've planned a **${extractedData.tone} ${extractedData.site_type}** website for you. Click "Generate Website" to bring it to life! 🚀`);
+}
+
+// Add event listener for the vision button
+document.addEventListener('DOMContentLoaded', () => {
+    const visionBtn = document.getElementById('vision-import-btn');
+    if (visionBtn) {
+        visionBtn.addEventListener('click', showVisionModal);
+    }
+});
