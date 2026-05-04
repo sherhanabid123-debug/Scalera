@@ -218,6 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const sectionType = section.dataset.type;
             const content = section.innerHTML;
             
+            console.log(`[Iframe] Edit clicked for section: ${sectionId}`);
+            
             // Post message to parent window (Scalera AI)
             window.parent.postMessage({
                 type: 'OPEN_AI_EDITOR',

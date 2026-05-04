@@ -1160,27 +1160,39 @@ let originalSectionHTML = '';
 
 // Listen for messages from the preview iframe
 window.addEventListener('message', (event) => {
+    console.log("[Dashboard] Message received from iframe:", event.data.type, event.data);
     if (event.data.type === 'OPEN_AI_EDITOR') {
+        console.log("[Dashboard] Triggering Sidebar for section:", event.data.sectionId);
         openSectionEditor(event.data);
     }
 });
 
-function openSectionEditor(data) {
+window.openSectionEditor = function(data) {
     currentEditingSection = data;
     originalSectionHTML = data.content;
     
-    document.getElementById('editing-section-type').innerText = data.sectionType.toUpperCase();
-    document.getElementById('section-editor').style.display = 'block';
+    console.log("[Dashboard] Opening Editor with data:", data);
+    
+    const sidebar = document.getElementById('section-editor');
+    const typeLabel = document.getElementById('editing-section-type');
+    
+    if (sidebar && typeLabel) {
+        typeLabel.innerText = data.sectionType.toUpperCase();
+        sidebar.style.display = 'flex'; // Use flex as defined in CSS
+    } else {
+        console.error("[Dashboard] Editor UI elements not found!");
+    }
+    
     document.getElementById('section-edit-prompt').value = '';
     document.getElementById('section-confirm-actions').style.display = 'none';
     document.getElementById('btn-apply-section').style.display = 'block';
-}
+};
 
-function closeSectionEditor() {
+window.closeSectionEditor = function() {
     document.getElementById('section-editor').style.display = 'none';
-}
+};
 
-async function applySectionEdit() {
+window.applySectionEdit = async function() {
     const prompt = document.getElementById('section-edit-prompt').value;
     if (!prompt) return;
 
@@ -1224,14 +1236,14 @@ async function applySectionEdit() {
         loading.style.display = 'none';
         applyBtn.disabled = false;
     }
-}
+};
 
-function keepSectionEdit() {
+window.keepSectionEdit = function() {
     closeSectionEditor();
     appendAIMessage(`Section updated! The changes have been applied to your live preview. 🪄`);
-}
+};
 
-function discardSectionEdit() {
+window.discardSectionEdit = function() {
     // Tell iframe to revert
     const iframe = document.getElementById('preview-iframe');
     iframe.contentWindow.postMessage({
@@ -1241,9 +1253,9 @@ function discardSectionEdit() {
     }, '*');
     
     closeSectionEditor();
-}
+};
 
-function closePreview() {
+window.closePreview = function() {
     document.getElementById('live-preview-container').style.display = 'none';
     aiChatBox.style.display = 'flex';
-}
+};
