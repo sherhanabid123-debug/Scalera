@@ -1830,5 +1830,5 @@ h3 {
 .preview-iframe {
     flex: 1;
     border: none;
-    background: #fff;
+    background: transparent;
 }

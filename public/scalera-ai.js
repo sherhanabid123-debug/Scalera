@@ -407,9 +407,11 @@ function showResult(htmlOverride, cssOverride, jsOverride) {
     
     if (previewContainer && previewIframe) {
         previewContainer.style.display = 'block';
-        previewIframe.contentWindow.document.open();
-        previewIframe.contentWindow.document.write(compositeHTML);
-        previewIframe.contentWindow.document.close();
+        
+        // Use Blob URL instead of document.write for better reliability
+        const blob = new Blob([compositeHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        previewIframe.src = url;
     }
 
     appendAIMessage("Your premium digital presence is ready! You can now edit any section directly by hovering over it in the preview. ✨");
