@@ -1084,6 +1084,7 @@ async function analyzeVision() {
             currentVisionBlueprint = result.data;
             
             // Show interpretation
+            document.getElementById('vision-name').value = currentVisionBlueprint.business_name || '';
             document.getElementById('vision-type').value = currentVisionBlueprint.site_type || 'General';
             document.getElementById('vision-tone').value = currentVisionBlueprint.tone || 'Modern';
             
@@ -1115,14 +1116,21 @@ async function analyzeVision() {
 function confirmVision() {
     if (!currentVisionBlueprint) return;
 
+    const bizName = document.getElementById('vision-name').value.trim();
+    if (!bizName) {
+        alert("Please enter a Business / Website Name to continue.");
+        return;
+    }
+
     // Capture any manual edits
+    currentVisionBlueprint.business_name = bizName;
     currentVisionBlueprint.site_type = document.getElementById('vision-type').value;
     currentVisionBlueprint.tone = document.getElementById('vision-tone').value;
 
     // Use the blueprint as the primary data
     extractedData = {
         ...currentVisionBlueprint,
-        business_name: currentVisionBlueprint.business_name || "New Project",
+        business_name: currentVisionBlueprint.business_name,
         source: 'vision_description'
     };
 

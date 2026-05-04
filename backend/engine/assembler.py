@@ -1,5 +1,6 @@
 import json
 import re
+import datetime
 from .components.library import COMPONENTS, GLOBAL_STYLES, GLOBAL_JS
 
 async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
@@ -76,12 +77,15 @@ async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
             css_sections.append(section_css)
 
     # Wrap in standard HTML shell
+    biz_display_name = data.get('business_name') or data.get('full_name') or 'Scalera Site'
+    logo_text = biz_display_name.split()[0] if ' ' in biz_display_name else biz_display_name
+    
     full_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{data.get('full_name') or data.get('business_name') or 'Scalera Site'}</title>
+    <title>{biz_display_name}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -91,7 +95,7 @@ async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
 </head>
 <body>
     <nav class="container" style="padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; position: absolute; top: 0; left: 0; right: 0; z-index: 100;">
-        <div class="logo" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-color);">{data.get('full_name', 'Scalera')[0] if data.get('full_name') else 'S'}.</div>
+        <div class="logo" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-color);">{logo_text}.</div>
         <div class="links" style="display: flex; gap: 30px; font-size: 0.9rem; font-weight: 500; opacity: 0.8;">
             <a href="#about" style="color: #fff; text-decoration: none;">About</a>
             <a href="#services" style="color: #fff; text-decoration: none;">Services</a>
@@ -103,7 +107,7 @@ async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
 
     <footer style="padding: 60px 0; border-top: 1px solid var(--glass-border); text-align: center; opacity: 0.6; font-size: 0.8rem;">
         <div class="container">
-            <p>&copy; 2024 {data.get('full_name') or data.get('business_name') or 'Scalera'}. All rights reserved.</p>
+            <p>&copy; {datetime.datetime.now().year} {biz_display_name}. All rights reserved.</p>
         </div>
     </footer>
 

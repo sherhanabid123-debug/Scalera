@@ -123,7 +123,9 @@ async def _personalise_template(template: dict, chat_history: str) -> dict:
     instruction = f"""You are a luxury website content architect. Rewrite the text content of this HTML template to match the user's data.
 
 PRIME DIRECTIVE:
-Your priority #1 is to replace all generic placeholders with the REAL USER DATA provided below. Keeping generic text is a failure.
+Your priority #1 is to replace all generic placeholders with the REAL USER DATA provided below.
+The 'business_name' in the data is your BRAND ANCHOR. Use it for the Logo, Hero Headline, and Footer.
+Keeping generic text like "Your Business" or "Company Name" is a total failure.
 
 USER DATA & REQUIREMENTS:
 {chat_history}
