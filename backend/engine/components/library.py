@@ -167,10 +167,36 @@ body { background: var(--bg-main); color: var(--text-main); font-family: 'Inter'
 .btn-primary:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(var(--accent-rgb), 0.3); }
 
 .section-title { font-size: 3rem; font-weight: 800; margin-bottom: 3rem; letter-spacing: -0.02em; }
+
+/* In-Context Editor Styles */
+.editable-section { position: relative; transition: all 0.3s ease; }
+.editable-section:hover { box-shadow: inset 0 0 50px rgba(var(--accent-rgb), 0.05); }
+.editable-section::after { 
+    content: ''; position: absolute; inset: 0; 
+    border: 1px solid transparent; border-radius: 12px; 
+    pointer-events: none; transition: border-color 0.3s ease; 
+}
+.editable-section:hover::after { border-color: rgba(var(--accent-rgb), 0.2); }
+
+.ai-edit-trigger {
+    position: absolute; top: 20px; right: 20px;
+    z-index: 1000; padding: 8px 16px;
+    background: rgba(var(--accent-rgb), 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
+    border-radius: 100px; color: #fff;
+    font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; opacity: 0; transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex; align-items: center; gap: 6px;
+}
+.editable-section:hover .ai-edit-trigger { opacity: 1; transform: translateY(0); }
+.ai-edit-trigger:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4); }
 """
 
 GLOBAL_JS = """
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Reveal Animations
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -180,5 +206,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // 2. Inject Edit Buttons
+    document.querySelectorAll('.editable-section').forEach(section => {
+        const btn = document.createElement('button');
+        btn.className = 'ai-edit-trigger';
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit with AI`;
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            const sectionId = section.id;
+            const sectionType = section.dataset.type;
+            const content = section.innerHTML;
+            
+            // Post message to parent window (Scalera AI)
+            window.parent.postMessage({
+                type: 'OPEN_AI_EDITOR',
+                sectionId,
+                sectionType,
+                content
+            }, '*');
+        };
+        section.appendChild(btn);
+    });
+
+    // 3. Listen for section updates from Parent (Scalera AI)
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'UPDATE_SECTION_HTML') {
+            const section = document.getElementById(event.data.sectionId);
+            if (section) {
+                // Fade out
+                section.style.opacity = '0';
+                setTimeout(() => {
+                    section.innerHTML = event.data.newHtml;
+                    // Re-inject edit button
+                    const btn = document.createElement('button');
+                    btn.className = 'ai-edit-trigger';
+                    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit with AI`;
+                    btn.onclick = (e) => {
+                        e.stopPropagation();
+                        window.parent.postMessage({
+                            type: 'OPEN_AI_EDITOR',
+                            sectionId: section.id,
+                            sectionType: section.dataset.type,
+                            content: section.innerHTML
+                        }, '*');
+                    };
+                    section.appendChild(btn);
+                    // Fade in
+                    section.style.opacity = '1';
+                }, 300);
+            }
+        }
+    });
 });
 """

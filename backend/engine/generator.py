@@ -730,3 +730,44 @@ RULES:
             "tone": "modern",
             "sections": ["Hero", "About", "Services", "Contact"]
         }
+
+# ──────────────────────────────────────────────
+# Contextual Section Editing
+# ──────────────────────────────────────────────
+async def edit_section_content(section_html: str, instruction: str, section_type: str) -> str:
+    """
+    Rewrites a specific section of the website based on a contextual user prompt.
+    """
+    system_prompt = f"""You are a luxury website editor. You will receive the HTML code for a specific section (type: {section_type}) and a user instruction.
+    
+    YOUR TASK:
+    Rewrite the content (text, icons, etc.) within the provided HTML to match the instruction.
+    
+    RULES:
+    1. DO NOT change the CSS classes or the overall layout structure unless explicitly asked.
+    2. Maintain the premium, glassmorphic aesthetic.
+    3. Return ONLY the updated HTML for that section.
+    4. Do not include any explanation, markdown blocks (like ```html), or pre-amble.
+    
+    USER INSTRUCTION:
+    {instruction}
+    
+    ORIGINAL SECTION HTML:
+    {section_html}
+    """
+
+    try:
+        import google.generativeai as genai
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(system_prompt)
+        new_html = response.text.strip()
+        
+        # Clean markdown
+        if new_html.startswith("```"):
+            new_html = re.sub(r'^```[a-z]*\n?', '', new_html)
+            new_html = re.sub(r'\n?```$', '', new_html)
+            
+        return new_html
+    except Exception as e:
+        print(f"[Editor] Error editing section: {e}")
+        return section_html

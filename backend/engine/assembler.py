@@ -21,7 +21,8 @@ async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
             variant_name = blueprint.get("variants", {}).get(section_key, list(COMPONENTS[section_key].keys())[0])
             component = COMPONENTS[section_key][variant_name]
             
-            section_html = component["html"]
+            # Wrap in identifying container for in-context editing
+            section_html = f'<div id="section-{section_key}" class="editable-section" data-type="{section_key}">{component["html"]}</div>'
             section_css = component["css"]
             
             # ──────────────────────────────────────────────

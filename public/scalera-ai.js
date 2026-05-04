@@ -394,29 +394,25 @@ function showResult(htmlOverride, cssOverride, jsOverride) {
     const tracker = document.querySelector('.process-tracker');
     if (tracker) tracker.classList.remove('animating');
 
-    // Try to extract a name from conversation if possible, else generic
-    let inferredName = 'yourbrand';
-    const nameMatch = messages.find(m => m.role === 'user');
-    if (nameMatch && nameMatch.content.length < 20) inferredName = nameMatch.content;
-    
-    const domainEl = document.getElementById('mockup-domain');
-    domainEl.textContent = inferredName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    // Domain inference
+    let inferredName = extractedData?.business_name || 'yourbrand';
+    const domainEl = document.querySelector('.preview-url');
+    if (domainEl) domainEl.textContent = inferredName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.scalera.ai';
 
     compositeHTML = buildCompositeHTML(html, css, js);
 
-    const mockupContent = document.getElementById('mockup-content');
-    mockupContent.innerHTML = '';
+    // Show in Dashboard Iframe
+    const previewContainer = document.getElementById('live-preview-container');
+    const previewIframe = document.getElementById('preview-iframe');
+    
+    if (previewContainer && previewIframe) {
+        previewContainer.style.display = 'block';
+        previewIframe.contentWindow.document.open();
+        previewIframe.contentWindow.document.write(compositeHTML);
+        previewIframe.contentWindow.document.close();
+    }
 
-    const iframe = document.createElement('iframe');
-    iframe.id = 'preview-iframe';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = 'none';
-    mockupContent.appendChild(iframe);
-
-    iframe.contentWindow.document.open();
-    iframe.contentWindow.document.write(compositeHTML);
-    iframe.contentWindow.document.close();
+    appendAIMessage("Your premium digital presence is ready! You can now edit any section directly by hovering over it in the preview. ✨");
 }
 
 // ─────────────────────────────────────────────────
@@ -1155,3 +1151,99 @@ document.addEventListener('DOMContentLoaded', () => {
         visionBtn.addEventListener('click', showVisionModal);
     }
 });
+
+// ─────────────────────────────────────────────────
+// In-Context Section Editor Logic
+// ─────────────────────────────────────────────────
+let currentEditingSection = null;
+let originalSectionHTML = '';
+
+// Listen for messages from the preview iframe
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'OPEN_AI_EDITOR') {
+        openSectionEditor(event.data);
+    }
+});
+
+function openSectionEditor(data) {
+    currentEditingSection = data;
+    originalSectionHTML = data.content;
+    
+    document.getElementById('editing-section-type').innerText = data.sectionType.toUpperCase();
+    document.getElementById('section-editor').style.display = 'block';
+    document.getElementById('section-edit-prompt').value = '';
+    document.getElementById('section-confirm-actions').style.display = 'none';
+    document.getElementById('btn-apply-section').style.display = 'block';
+}
+
+function closeSectionEditor() {
+    document.getElementById('section-editor').style.display = 'none';
+}
+
+async function applySectionEdit() {
+    const prompt = document.getElementById('section-edit-prompt').value;
+    if (!prompt) return;
+
+    const loading = document.getElementById('section-edit-loading');
+    const applyBtn = document.getElementById('btn-apply-section');
+    
+    loading.style.display = 'block';
+    applyBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/edit-section', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                html: currentEditingSection.content,
+                prompt: prompt,
+                type: currentEditingSection.sectionType
+            })
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            // Update the iframe content dynamically
+            const iframe = document.getElementById('preview-iframe');
+            const sectionId = currentEditingSection.sectionId;
+            
+            // Execute script inside iframe to replace section
+            iframe.contentWindow.postMessage({
+                type: 'UPDATE_SECTION_HTML',
+                sectionId: sectionId,
+                newHtml: result.data
+            }, '*');
+
+            document.getElementById('section-confirm-actions').style.display = 'flex';
+            applyBtn.style.display = 'none';
+        }
+    } catch (err) {
+        console.error("Section Edit Error:", err);
+        alert("Couldn't update section. Please try again.");
+    } finally {
+        loading.style.display = 'none';
+        applyBtn.disabled = false;
+    }
+}
+
+function keepSectionEdit() {
+    closeSectionEditor();
+    appendAIMessage(`Section updated! The changes have been applied to your live preview. 🪄`);
+}
+
+function discardSectionEdit() {
+    // Tell iframe to revert
+    const iframe = document.getElementById('preview-iframe');
+    iframe.contentWindow.postMessage({
+        type: 'UPDATE_SECTION_HTML',
+        sectionId: currentEditingSection.sectionId,
+        newHtml: originalSectionHTML
+    }, '*');
+    
+    closeSectionEditor();
+}
+
+function closePreview() {
+    document.getElementById('live-preview-container').style.display = 'none';
+    aiChatBox.style.display = 'flex';
+}

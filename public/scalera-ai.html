@@ -186,6 +186,43 @@
                 </div>
             </div>
 
+            <!-- Live Preview Container -->
+            <div id="live-preview-container" class="preview-box reveal-init" style="display: none;">
+                <div class="preview-header">
+                    <div class="preview-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="preview-url">your-website.scalera.ai</div>
+                    <button class="btn-preview-close" onclick="closePreview()">Close Preview</button>
+                </div>
+                <iframe id="preview-iframe" class="preview-iframe"></iframe>
+            </div>
+
+            <!-- Section Editor Sidebar -->
+            <div id="section-editor" class="editor-sidebar" style="display: none;">
+                <div class="editor-header">
+                    <h3>Edit <span id="editing-section-type">Section</span></h3>
+                    <button class="close-btn" onclick="closeSectionEditor()">&times;</button>
+                </div>
+                <div class="editor-body">
+                    <div class="form-group">
+                        <label>What would you like to change?</label>
+                        <textarea id="section-edit-prompt" class="premium-input" placeholder="e.g. Make this more professional, or add a booking button..."></textarea>
+                    </div>
+                    <div id="section-edit-loading" style="display: none; text-align: center; margin: 20px 0;">
+                        <div class="mini-orb"></div>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">AI is rewriting section...</p>
+                    </div>
+                </div>
+                <div class="editor-footer">
+                    <button class="btn-primary" id="btn-apply-section" onclick="applySectionEdit()">Apply AI Edit ✨</button>
+                    <div id="section-confirm-actions" style="display: none; gap: 10px; margin-top: 10px;">
+                        <button class="btn-confirm" onclick="keepSectionEdit()">Keep Changes</button>
+                        <button class="btn-secondary" onclick="discardSectionEdit()">Undo</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Result Mockup -->
             <div id="ai-result" class="ai-result-box" style="display: none;">
                 <div class="result-header">

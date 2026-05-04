@@ -112,6 +112,16 @@ async def interpret(request: dict):
     blueprint = await interpret_vision(description)
     return {"status": "success", "data": blueprint}
 
+@app.post("/api/edit-section")
+async def edit_section(request: dict):
+    from .engine.generator import edit_section_content
+    section_html = request.get("html")
+    instruction = request.get("prompt")
+    section_type = request.get("type")
+    
+    new_html = await edit_section_content(section_html, instruction, section_type)
+    return {"status": "success", "data": new_html}
+
 @app.get("/")
 def root():
     return {"message": "Scalera AI Backend is running"}
