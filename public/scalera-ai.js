@@ -260,7 +260,8 @@ window.addEventListener('DOMContentLoaded', () => {
 // Trigger Generation
 // ─────────────────────────────────────────────────
 generateTriggerBtn.addEventListener('click', () => {
-    if (messages.length < 3) {
+    // Allow generation if we have enough messages OR if we have extracted data (Blueprint/Resume)
+    if (messages.length < 3 && !extractedData) {
         alert("Please chat with me a bit more first so I know what to build!");
         return;
     }
