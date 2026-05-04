@@ -1085,6 +1085,17 @@ async function analyzeVision() {
             // Show interpretation
             document.getElementById('vision-type').value = currentVisionBlueprint.site_type || 'General';
             document.getElementById('vision-tone').value = currentVisionBlueprint.tone || 'Modern';
+            
+            const sectionsList = document.getElementById('vision-sections-list');
+            sectionsList.innerHTML = '';
+            (currentVisionBlueprint.sections || []).forEach(section => {
+                const chip = document.createElement('div');
+                chip.className = 'section-chip';
+                chip.style = 'padding: 6px 12px; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 100px; font-size: 0.8rem; color: #fff;';
+                chip.innerText = section;
+                sectionsList.appendChild(chip);
+            });
+
             document.getElementById('vision-interpretation').style.display = 'block';
             
             // Toggle buttons
@@ -1102,6 +1113,10 @@ async function analyzeVision() {
 
 function confirmVision() {
     if (!currentVisionBlueprint) return;
+
+    // Capture any manual edits
+    currentVisionBlueprint.site_type = document.getElementById('vision-type').value;
+    currentVisionBlueprint.tone = document.getElementById('vision-tone').value;
 
     // Use the blueprint as the primary data
     extractedData = {

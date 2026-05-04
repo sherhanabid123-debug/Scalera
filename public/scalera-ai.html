@@ -110,14 +110,20 @@
                         </div>
                         <div id="vision-interpretation" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
                             <h4 style="margin-bottom: 10px; font-size: 0.9rem; color: var(--accent-color);">AI Interpretation</h4>
-                            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
                                 <div class="form-group">
                                     <label>Type</label>
-                                    <input type="text" id="vision-type" class="premium-input" readonly>
+                                    <input type="text" id="vision-type" class="premium-input">
                                 </div>
                                 <div class="form-group">
                                     <label>Tone</label>
-                                    <input type="text" id="vision-tone" class="premium-input" readonly>
+                                    <input type="text" id="vision-tone" class="premium-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Planned Sections</label>
+                                <div id="vision-sections-list" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px;">
+                                    <!-- Chips injected by JS -->
                                 </div>
                             </div>
                         </div>

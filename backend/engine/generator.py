@@ -225,8 +225,28 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
             "js": "",
         }
 
-    # 1. Route to the best template
-    # If we have structured data, we can use the 'professional_title' to help routing
+    # Prepare personalisation prompt
+    if data:
+        tone_instruction = f"TONE: {data.get('tone', 'modern')}. " if data.get('tone') else ""
+        type_instruction = f"SITE TYPE: {data.get('site_type', 'website')}. " if data.get('site_type') else ""
+        personalisation_prompt = f"{tone_instruction}{type_instruction}User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
+    else:
+        personalisation_prompt = chat_history
+
+    # 2. Check if we should use the Modular Assembler
+    # If the user has a specific vision/blueprint, we use the atomic system
+    if data and data.get("sections"):
+        from .assembler import assemble_modular_site
+        print(f"[Generator] 🛠️ Building MODULAR site based on blueprint: {data.get('site_type')}")
+        result = await assemble_modular_site(data, data) # Data contains the blueprint
+        
+        # Still run personalisation for deep text polishing if needed
+        # (Though assembler does a lot, Gemini 2.0 can polish the flow)
+        result = await _personalise_template(result, personalisation_prompt)
+        print(f"[Generator] ✅ Modular Website generated successfully.")
+        return result
+
+    # 3. Traditional Template Routing (Fallback)
     routing_context = chat_history
     if data and data.get("professional_title"):
         routing_context += f"\nProfessional Title: {data['professional_title']}"
