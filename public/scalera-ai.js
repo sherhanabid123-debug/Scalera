@@ -1229,14 +1229,6 @@ function confirmVision() {
     appendAIMessage(`Vision captured! I've planned a **${extractedData.tone} ${extractedData.site_type}** website for you. Click "Generate Website" to bring it to life! 🚀`);
 }
 
-// Add event listener for the vision button
-document.addEventListener('DOMContentLoaded', () => {
-    const visionBtn = document.getElementById('vision-import-btn');
-    if (visionBtn) {
-        visionBtn.addEventListener('click', showVisionModal);
-    }
-});
-
 // ─────────────────────────────────────────────────
 // In-Context Section Editor Logic
 // ─────────────────────────────────────────────────
