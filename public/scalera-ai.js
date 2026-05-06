@@ -9,6 +9,7 @@ const generateTriggerBtn = document.getElementById('generate-trigger-btn');
 
 // Conversation State
 let messages = [];
+let shouldSpeakNextResponse = false;
 
 // Stores the three generated file contents
 let generatedHTML = '';
@@ -41,8 +42,11 @@ function appendAIMessage(text) {
     chatHistory.insertAdjacentHTML('beforeend', msgHTML);
     scrollToBottom();
     
-    // Speak response if not muted
-    speakText(text);
+    // Speak response ONLY if triggered by voice
+    if (shouldSpeakNextResponse) {
+        speakText(text);
+        shouldSpeakNextResponse = false; // Reset
+    }
 }
 
 function scrollToBottom() {
@@ -198,6 +202,10 @@ aiForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const val = aiInput.value.trim();
     if (!val) return;
+
+    // Reset voice flag and cancel ongoing speech for manual typing
+    shouldSpeakNextResponse = false;
+    window.speechSynthesis.cancel();
 
     appendUserMessage(val);
     messages.push({ role: "user", content: val });
@@ -1284,6 +1292,10 @@ window.applySectionEdit = async function() {
     const prompt = document.getElementById('section-edit-prompt').value;
     if (!prompt) return;
 
+    // Reset voice flag for manual editing
+    shouldSpeakNextResponse = false;
+    window.speechSynthesis.cancel();
+
     const loading = document.getElementById('section-edit-loading');
     const applyBtn = document.getElementById('btn-apply-section');
     
@@ -1371,6 +1383,10 @@ window.handleAssistantSubmit = async function() {
     const input = document.getElementById('assistant-input');
     const userText = input.value.trim();
     if (!userText) return;
+
+    // Manual typing in assistant sidebar
+    shouldSpeakNextResponse = false;
+    window.speechSynthesis.cancel();
 
     input.value = '';
     appendAssistantMessage('user', userText);
@@ -1482,6 +1498,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
 
     recognition.onstart = () => {
         isVoiceActive = true;
+        shouldSpeakNextResponse = true; // Voice triggered, allow speaking response
         btnTalk.classList.add('listening');
         voiceStatus.style.display = 'block';
         voiceTranscript.innerText = "Listening to your vision...";
