@@ -21,7 +21,6 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     messages: list
-    context: Optional[dict] = None
 
 class GenerateRequest(BaseModel):
     chat_history: str
@@ -35,7 +34,7 @@ class EditRequest(BaseModel):
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     from .engine.generator import chat_with_ai
-    response = await chat_with_ai(request.messages, request.context)
+    response = await chat_with_ai(request.messages)
     return {"status": "success", "reply": response}
 
 @app.post("/api/generate")

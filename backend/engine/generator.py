@@ -214,11 +214,9 @@ TEMPLATE TO REWRITE:
 async def generate_website(chat_history: str, data: dict = None) -> dict:
     """
     Generates a website by:
-    1. Routing to the best matching template
-    2. Reading the actual template files (HTML/CSS/JS)
-    3. Personalising text content via lightweight Groq call
-    
-    Returns a dict: {"html": str, "css": str, "js": str}
+    1. Extracting/Refining blueprint from chat if needed
+    2. Building a custom modular site using the Atomic Engine
+    3. Personalising content for deep flow
     """
     def error_result(msg: str) -> dict:
         return {
@@ -227,26 +225,38 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
             "js": "",
         }
 
-    # Prepare personalisation prompt
-    if data:
-        tone_instruction = f"TONE: {data.get('tone', 'modern')}. " if data.get('tone') else ""
-        type_instruction = f"SITE TYPE: {data.get('site_type', 'website')}. " if data.get('site_type') else ""
-        personalisation_prompt = f"{tone_instruction}{type_instruction}User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
-    else:
-        personalisation_prompt = chat_history
-
-    # 2. Check if we should use the Modular Assembler
-    # If the user has a specific vision/blueprint, we use the atomic system
-    if data and data.get("sections"):
-        from .assembler import assemble_modular_site
-        print(f"[Generator] 🛠️ Building MODULAR site based on blueprint: {data.get('site_type')}")
-        result = await assemble_modular_site(data, data) # Data contains the blueprint
+    # 1. If data is missing sections, we MUST extract them from chat history first
+    # This avoids the "random template" fallback and ensures a custom modular build.
+    if not data or not data.get("sections"):
+        print("[Generator] 🧠 No blueprint found. Extracting from chat history...")
         
-        # Still run personalisation for deep text polishing if needed
-        # (Though assembler does a lot, Gemini 2.0 can polish the flow)
-        result = await _personalise_template(result, personalisation_prompt)
-        print(f"[Generator] ✅ Modular Website generated successfully.")
-        return result
+        # We use a summarized version of the chat for extraction
+        interpretation = await interpret_vision(chat_history)
+        if interpretation.get("status") == "success":
+            data = interpretation.get("data")
+            print(f"[Generator] ✨ Extracted Vision: {data.get('business_name')} ({data.get('site_type')})")
+        else:
+            # Absolute fallback: generic but modular
+            data = {
+                "business_name": "Scalera Site",
+                "site_type": "Modern Business",
+                "sections": ["Hero", "About", "Services", "Contact"],
+                "tone": "Premium"
+            }
+
+    # 2. Build the site using the Modular Assembler (The Atomic System)
+    from .assembler import assemble_modular_site
+    print(f"[Generator] 🛠️ Building CUSTOM MODULAR site for: {data.get('business_name')}")
+    
+    # We pass both the blueprint and the chat history for deep context
+    result = await assemble_modular_site(data, data)
+    
+    # 3. Final Personalisation for deep text flow
+    personalisation_prompt = f"Business: {data.get('business_name')}\nType: {data.get('site_type')}\nVision: {chat_history}"
+    result = await _personalise_template(result, personalisation_prompt)
+    
+    print(f"[Generator] ✅ Custom Website generated successfully.")
+    return result
 
     # 3. Traditional Template Routing (Fallback)
     routing_context = chat_history
@@ -272,65 +282,48 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     template['html'] = processed_html
 
     # 4. Personalise the template with user's business details
+    if data:
+        tone_instruction = f"TONE: {data.get('tone', 'modern')}. " if data.get('tone') else ""
+        type_instruction = f"SITE TYPE: {data.get('site_type', 'website')}. " if data.get('site_type') else ""
+        personalisation_prompt = f"{tone_instruction}{type_instruction}User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
+    else:
+        personalisation_prompt = chat_history
+
     result = await _personalise_template(template, personalisation_prompt)
     print(f"[Generator] ✅ Website generated using '{folder}' template with deep injection.")
     return result
 
 
 # ──────────────────────────────────────────────
-# Chat function
+# Chat function (unchanged)
 # ──────────────────────────────────────────────
-async def chat_with_ai(messages: list, context: dict = None) -> dict:
+async def chat_with_ai(messages: list) -> dict:
     """
     Converses with the user to figure out what kind of website they want to build.
     Returns a dict with 'reply' and 'ready_to_generate' flag.
     """
     system_prompt = {
         "role": "system",
-        "content": f"""You are the Scalera AI Architect, a premium website design consultant. 
+        "content": """You are Scalera AI, a premium and friendly conversational assistant for a high-end website builder. 
         
-        Your mission is to guide users through an intentional 'Blueprint First' workflow. 
-        DO NOT generate a website immediately. Instead, move through these stages:
-        1. ONBOARDING: Understand the business and intent.
-        2. PLANNING: Architect a structured website plan (Blueprint).
-        3. CONFIRMATION: Present the blueprint for user approval.
+        Your tone should be expert, welcoming, and intuitive. 
+        - Acknowledge greetings! If the user says "hi", "hello", or "hey", respond with a warm greeting before diving into questions.
+        - Your ultimate goal is to identify:
+            1. Business Name
+            2. Industry/Niche
+            3. Design Style (e.g., minimalist, bold, dark, elegant)
+            
+        Be conversational but don't waste time. Ask one question at a time.
         
-        CORE PRINCIPLES:
-        - NEVER generate a website until you have a complete 'website_plan'.
-        - Set 'ready_to_generate' to true ONLY when the blueprint is fully architected and the user is ready to confirm.
-        - Be a creative consultant. If details are missing (e.g. sections or branding), ask concise, expert questions.
-        
-        WEBSITE PLAN STRUCTURE:
-        - websiteType: (e.g., Portfolio, SaaS, Restaurant)
-        - style: (e.g., Dark Minimalist, Vibrant Modern, Elegant Corporate)
-        - tone: (e.g., Professional, Bold, Friendly)
-        - sections: (A list of 5-7 specific sections planned for the site)
-        - purpose: (The primary goal of the website)
-        
-        RESPONSE FORMAT (Strict JSON):
-        {{
-          "reply": "Your concise architect response",
+        CRITICAL: You must return your response in a JSON format like this:
+        {
+          "reply": "Your conversational response here",
           "ready_to_generate": true/false,
-          "website_type": "portfolio" | "business" | "restaurant" | "other",
-          "website_plan": {{
-             "type": "...",
-             "style": "...",
-             "tone": "...",
-             "sections": ["...", "..."],
-             "purpose": "..."
-          }},
-          "detected_intent": "upload_resume" | "import_google" | "standard_chat" | "none",
-          "extracted_info": {{
-             "business_name": "...",
-             "industry": "..."
-          }}
-        }}
+          "website_type": "portfolio" | "business" | "restaurant" | "other"
+        }
         
-        Keep your 'reply' under 2 sentences. Focus on architecting the plan.
-        
-        CURRENT_STATE:
-        {json.dumps(context or {}, indent=2)}
-        """
+        Set "ready_to_generate" to true ONLY if you have identified all key pieces of information. 
+        Set "website_type" based on the user's niche. If they want a portfolio or personal site, set it to "portfolio"."""
     }
 
     formatted_messages = [system_prompt] + messages
