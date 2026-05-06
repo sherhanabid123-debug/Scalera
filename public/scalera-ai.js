@@ -89,17 +89,22 @@ async function sendToAI(userText) {
     aiInput.disabled = true;
     
     try {
+        // Check for Vision intent
         const visionKeywords = ['build', 'create', 'website', 'portfolio', 'site', 'landing page', 'for my', 'want a'];
         const isVisionDescription = visionKeywords.some(k => userText.toLowerCase().includes(k));
 
-        if (isVisionDescription && messages.length < 5) {
+        if (isVisionDescription && messages.length < 5 && !extractedData) {
             await analyzeVision(userText);
         }
 
+        // Include site context for the AI
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: messages })
+            body: JSON.stringify({ 
+                messages: messages,
+                site_context: extractedData // This is our source of truth for the AI
+            })
         });
         
         const data = await response.json();
@@ -1343,4 +1348,128 @@ window.discardSectionEdit = function() {
 window.closePreview = function() {
     document.getElementById('live-preview-container').style.display = 'none';
     aiChatBox.style.display = 'flex';
+};
+
+// ─────────────────────────────────────────────────
+// Unified Assistant (Talk to Scalera AI)
+// ─────────────────────────────────────────────────
+let assistantHistory = [];
+let pendingChanges = null;
+
+window.toggleAssistant = function() {
+    const sidebar = document.getElementById('ai-assistant-sidebar');
+    if (!sidebar) return;
+    const isVisible = sidebar.style.display === 'flex';
+    sidebar.style.display = isVisible ? 'none' : 'flex';
+    if (!isVisible) document.getElementById('assistant-input').focus();
+};
+
+window.submitAssistantAction = function(text) {
+    document.getElementById('assistant-input').value = text;
+    handleAssistantSubmit();
+};
+
+window.handleAssistantSubmit = async function() {
+    const input = document.getElementById('assistant-input');
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    input.value = '';
+    appendAssistantMessage('user', userText);
+
+    // Build Context
+    const context = {
+        site_name: (typeof extractedData !== 'undefined') ? extractedData.business_name : 'Generic',
+        site_type: (typeof extractedData !== 'undefined') ? extractedData.site_type : 'Business',
+        current_html: generatedHTML,
+        current_css: generatedCSS,
+        chat_history: messages.map(m => m.content).join("\n")
+    };
+
+    showAssistantTyping();
+
+    try {
+        const response = await fetch('/api/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                html: generatedHTML,
+                css: generatedCSS,
+                prompt: userText,
+                context: context
+            })
+        });
+        const result = await response.json();
+        hideAssistantTyping();
+
+        if (result.status === 'success') {
+            pendingChanges = { html: result.html, css: result.css };
+            appendAssistantMessage('ai', "I've architected some improvements to your site! Take a look at the preview and click 'Apply' if you like the changes. ✨");
+            
+            // Show preview in iframe
+            const previewIframe = document.getElementById('preview-iframe');
+            if (previewIframe) {
+                const composite = buildCompositeHTML(result.html, result.css, generatedJS);
+                const blob = new Blob([composite], { type: 'text/html' });
+                previewIframe.src = URL.createObjectURL(blob);
+            }
+            
+            document.getElementById('assistant-action-confirm').style.display = 'block';
+        }
+    } catch (err) {
+        console.error("Assistant Error:", err);
+        hideAssistantTyping();
+        appendAssistantMessage('ai', "I ran into a snag while updating the site. Mind trying again?");
+    }
+};
+
+function appendAssistantMessage(role, text) {
+    const history = document.getElementById('assistant-chat-history');
+    if (!history) return;
+    const msg = document.createElement('div');
+    msg.className = `chat-message ${role === 'ai' ? 'ai-message' : 'user-message'}`;
+    msg.innerHTML = `
+        ${role === 'ai' ? '<div class="message-avatar">S.</div>' : ''}
+        <div class="message-content"><p>${text}</p></div>
+    `;
+    history.appendChild(msg);
+    history.scrollTop = history.scrollHeight;
+}
+
+function showAssistantTyping() {
+    const history = document.getElementById('assistant-chat-history');
+    if (!history) return;
+    const typing = document.createElement('div');
+    typing.id = 'assistant-typing';
+    typing.className = 'chat-message ai-message';
+    typing.innerHTML = '<div class="message-avatar">S.</div><div class="message-content"><p>Thinking...</p></div>';
+    history.appendChild(typing);
+    history.scrollTop = history.scrollHeight;
+}
+
+function hideAssistantTyping() {
+    const typing = document.getElementById('assistant-typing');
+    if (typing) typing.remove();
+}
+
+window.applyAssistantChanges = function() {
+    if (pendingChanges) {
+        generatedHTML = pendingChanges.html;
+        generatedCSS = pendingChanges.css;
+        document.getElementById('assistant-action-confirm').style.display = 'none';
+        appendAssistantMessage('ai', "Changes applied permanently! What else should we improve? 🥂");
+    }
+};
+
+window.discardAssistantChanges = function() {
+    // Revert iframe
+    const previewIframe = document.getElementById('preview-iframe');
+    if (previewIframe) {
+        const composite = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
+        const blob = new Blob([composite], { type: 'text/html' });
+        previewIframe.src = URL.createObjectURL(blob);
+    }
+    
+    document.getElementById('assistant-action-confirm').style.display = 'none';
+    pendingChanges = null;
 };

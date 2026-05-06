@@ -676,6 +676,59 @@ async def extract_business_data(link: str) -> dict:
         print(f"[Business Extractor] Fatal: {e}")
         return {"error": str(e)}
 
+async def chat_with_ai(messages: list, site_context: dict = None) -> dict:
+    """
+    Conversational AI assistant that understands website context and triggers actions.
+    """
+    system_prompt = """You are 'Talk to Scalera AI', a world-class AI Web Designer.
+    Your goal is to help the user build, edit, and perfect their website through natural conversation.
+
+    CONTEXT AWARENESS:
+    - You know the current website state (Brand, Sections, Style).
+    - You can trigger ACTION COMMANDS to modify the site.
+
+    ACTION COMMANDS (Use these at the end of your response if applicable):
+    - [GENERATE_SITE]: If user is ready to build the initial vision.
+    - [EDIT_SECTION: section_id]: If user wants to change a specific part.
+    - [ADD_SECTION: type]: If user wants to insert a new section (e.g. Testimonials).
+    - [CHANGE_THEME: style]: If user wants a new color palette or tone.
+
+    STYLE:
+    - Premium, concise, and helpful. 
+    - Don't just chat; suggest improvements!
+
+    CURRENT SITE CONTEXT:
+    {context_str}
+    """
+    
+    context_str = "No website generated yet."
+    if site_context:
+        context_str = f"Brand: {site_context.get('business_name')}, Type: {site_context.get('site_type')}, Sections: {site_context.get('sections')}"
+
+    try:
+        import google.generativeai as genai
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        # Prepare messages with system prompt
+        full_messages = [{"role": "user", "parts": [system_prompt.format(context_str=context_str)]}]
+        for m in messages:
+            full_messages.append({"role": m["role"], "parts": [m["content"]]})
+            
+        response = model.generate_content(full_messages)
+        text = response.text.strip()
+        
+        # Parse potential actions
+        actions = []
+        if "[GENERATE_SITE]" in text: actions.append("GENERATE_SITE")
+        if "[ADD_SECTION:" in text: 
+            match = re.search(r"\[ADD_SECTION: (.*?)\]", text)
+            if match: actions.append({"type": "ADD_SECTION", "val": match.group(1)})
+            
+        return {"reply": text, "actions": actions}
+    except Exception as e:
+        print(f"[Chat] Error: {e}")
+        return {"reply": "I'm having a bit of trouble connecting. Let's try again!", "actions": []}
+
 # ──────────────────────────────────────────────
 # Vision Interpretation — Natural Language to Blueprint
 # ──────────────────────────────────────────────

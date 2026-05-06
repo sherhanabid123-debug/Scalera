@@ -36,15 +36,20 @@
             <!-- Chat Interface -->
             <div id="ai-chat" class="ai-chat-box reveal-init">
                 <div class="chat-header">
-                    <div class="status-dot pulsing"></div>
-                    <span>Scalera AI is active</span>
+                    <div class="status-dot pulsing" style="background: #10b981;"></div>
+                    <span>Talk to Scalera AI <span class="beta-badge">Pro</span></span>
                 </div>
                 <div class="chat-history" id="chat-history">
                     <div class="chat-message ai-message animate-message">
                         <div class="message-avatar">S.</div>
                         <div class="message-content">
-                            <p>Hello! I am Scalera AI. I'll help you build a premium digital presence in minutes.</p>
-                            <p>First, what is the name of your business or project?</p>
+                            <p>Hello! I am **Talk to Scalera AI**. I'm here to help you architect, build, and perfect your premium website.</p>
+                            <p>What should we work on today?</p>
+                            <div class="quick-action-chips" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                                <button class="chip-btn" onclick="aiInput.value='Create a modern website for...'; aiInput.focus();">✨ Build New Site</button>
+                                <button class="chip-btn" onclick="aiInput.value='Make my current section more premium'; aiInput.focus();">🪄 Improve Design</button>
+                                <button class="chip-btn" onclick="aiInput.value='Add a testimonials section'; aiInput.focus();">➕ Add Section</button>
+                            </div>
                         </div>
                     </div>
                     <div id="typing-indicator" class="chat-message ai-message" style="display: none;">

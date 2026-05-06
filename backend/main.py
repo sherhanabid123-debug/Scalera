@@ -32,10 +32,13 @@ class EditRequest(BaseModel):
     prompt: str
 
 @app.post("/api/chat")
-async def chat(request: ChatRequest):
+async def chat(request: dict):
     from .engine.generator import chat_with_ai
-    response = await chat_with_ai(request.messages)
-    return {"status": "success", "reply": response}
+    messages = request.get("messages", [])
+    context = request.get("site_context", {})
+    
+    result = await chat_with_ai(messages, site_context=context)
+    return {"status": "success", "reply": result["reply"], "actions": result["actions"]}
 
 @app.post("/api/generate")
 async def generate(request: GenerateRequest):
