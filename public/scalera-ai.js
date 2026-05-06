@@ -1554,43 +1554,68 @@ function stopListening() {
     if (recognition) recognition.stop();
 }
 
-function speakText(text) {
+let voicesLoaded = false;
+
+// Robust voice pre-loading
+function loadVoices() {
+    return new Promise((resolve) => {
+        let voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            voicesLoaded = true;
+            resolve(voices);
+        } else {
+            window.speechSynthesis.onvoiceschanged = () => {
+                voices = window.speechSynthesis.getVoices();
+                voicesLoaded = true;
+                resolve(voices);
+            };
+        }
+    });
+}
+
+async function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     
-    // Cancel any ongoing speech to prevent overlap
+    // Ensure voices are loaded before trying to speak
+    if (!voicesLoaded) await loadVoices();
+    
+    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
 
     // Clean text from emojis/markdown
     const cleanText = text.replace(/[*_#`]/g, '').replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.05; // Slightly faster for a modern feel
+    utterance.rate = 1.0;
     utterance.pitch = 1.0;
     
-    // Priority list for the best female voices
     const voices = window.speechSynthesis.getVoices();
-    const priorityVoices = [
-        "Ava (Premium)",
-        "Ava",
-        "Samantha (Enhanced)",
-        "Samantha",
-        "Google US English",
-        "Siri",
-        "Victoria"
+    
+    // Most natural female voices keywords in priority
+    const premiumKeywords = [
+        "Premium", "Enhanced", "Natural", "Neural", "Google US English", "Ava", "Samantha", "Siri", "Victoria"
     ];
 
-    let selectedVoice = null;
-    for (const name of priorityVoices) {
-        selectedVoice = voices.find(v => v.name.includes(name) && v.lang.includes('en'));
-        if (selectedVoice) break;
+    let bestVoice = null;
+    for (const key of premiumKeywords) {
+        bestVoice = voices.find(v => v.name.includes(key) && v.lang.startsWith('en'));
+        if (bestVoice) break;
     }
 
-    if (selectedVoice) {
-        utterance.voice = selectedVoice;
+    if (bestVoice) {
+        utterance.voice = bestVoice;
+        console.log("[Scalera AI] High-fidelity voice selected:", bestVoice.name);
+    } else {
+        // Fallback to any English female voice
+        bestVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Susan')));
+        if (bestVoice) utterance.voice = bestVoice;
     }
 
     window.speechSynthesis.speak(utterance);
 }
+
+// Initial load attempt
+loadVoices();
 
 // ─────────────────────────────────────────────────
 // Entrance Animations (GSAP)
@@ -1606,11 +1631,3 @@ document.addEventListener('DOMContentLoaded', () => {
         delay: 0.5
     });
 });
-
-// Initial voice load and auto-refresh
-if ('speechSynthesis' in window) {
-    window.speechSynthesis.getVoices();
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-    }
-}
