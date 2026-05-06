@@ -2158,3 +2158,97 @@ h3 {
     line-height: 1.4;
     font-style: italic;
 }
+
+/* ─────────────────────────────────────────────────
+   INTEGRATED VOICE UI
+   ───────────────────────────────────────────────── */
+.input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 99px;
+    padding: 2px 5px;
+    transition: var(--transition-smooth);
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.1);
+}
+
+.btn-mic-integrated {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+
+.btn-mic-integrated:hover {
+    color: var(--accent-primary);
+    transform: scale(1.1);
+}
+
+.mic-glow {
+    position: absolute;
+    inset: 5px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    filter: blur(8px);
+    opacity: 0;
+    z-index: -1;
+    transition: var(--transition-smooth);
+}
+
+.btn-mic-integrated.listening {
+    color: var(--accent-primary);
+}
+
+.btn-mic-integrated.listening .mic-glow {
+    opacity: 0.4;
+    animation: micPulse 1.5s infinite;
+}
+
+@keyframes micPulse {
+    0% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.5); opacity: 0.2; }
+    100% { transform: scale(1); opacity: 0.4; }
+}
+
+.ai-input-form input {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.voice-status-overlay {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(var(--accent-rgb), 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
+    border-radius: 20px;
+    padding: 15px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    animation: overlaySlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes overlaySlideUp {
+    from { transform: translate(-50%, 20px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}

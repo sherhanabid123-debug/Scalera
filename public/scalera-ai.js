@@ -1469,7 +1469,6 @@ window.applyAssistantChanges = function() {
 // ─────────────────────────────────────────────────
 let isVoiceActive = false;
 let recognition = null;
-const voiceHub = document.getElementById('voice-assistant-hub');
 const btnTalk = document.getElementById('btn-talk-ai');
 const voiceStatus = document.getElementById('voice-status-panel');
 const voiceTranscript = document.getElementById('voice-transcript');

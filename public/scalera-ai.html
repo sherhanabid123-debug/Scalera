@@ -58,13 +58,27 @@
                 </div>
                 <div class="chat-input-area">
                     <form id="ai-form" class="ai-input-form">
-                        <input type="text" id="ai-input" placeholder="Type your answer here..." autocomplete="off" required>
+                        <div class="input-wrapper">
+                            <button type="button" id="btn-talk-ai" class="btn-mic-integrated" title="Talk to Scalera AI">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                                <div class="mic-glow"></div>
+                            </button>
+                            <input type="text" id="ai-input" placeholder="Type or speak your vision..." autocomplete="off" required>
+                        </div>
                         <button type="submit" class="ai-submit-btn" aria-label="Send">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor"/>
                             </svg>
                         </button>
                     </form>
+                    
+                    <!-- Voice Active Overlay -->
+                    <div id="voice-status-panel" class="voice-status-overlay" style="display: none;">
+                        <div class="voice-wave-container">
+                            <div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div>
+                        </div>
+                        <p id="voice-transcript" class="transcript-preview">Listening...</p>
+                    </div>
                     <div id="magic-import-options" style="display: none; justify-content: flex-end; gap: 10px; margin-top: 1rem; align-items: center;">
                         <button id="magic-import-btn" class="btn-magic-import" title="Generate from Resume">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
@@ -92,21 +106,6 @@
                 </div>
             </div>
 
-            <!-- Floating Voice Button -->
-            <div id="voice-assistant-hub" class="voice-hub reveal-init">
-                <button id="btn-talk-ai" class="btn-voice-main" title="Talk to Scalera AI">
-                    <div class="voice-icon-container">
-                        <svg class="mic-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-                        <div class="voice-pulse"></div>
-                    </div>
-                    <span class="voice-text">Talk to Scalera AI</span>
-                </button>
-                <div id="voice-status-panel" class="voice-status-card" style="display: none;">
-                    <div class="voice-wave-container">
-                        <div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div>
-                    </div>
-                    <p id="voice-transcript" class="transcript-preview">Listening to your vision...</p>
-                </div>
             </div>
 
             <!-- Vision Modal -->
