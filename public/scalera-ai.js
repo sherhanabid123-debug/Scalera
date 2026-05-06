@@ -1557,17 +1557,37 @@ function stopListening() {
 function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     
-    // Clean text from emojis/markdown for cleaner voice
+    // Cancel any ongoing speech to prevent overlap
+    window.speechSynthesis.cancel();
+
+    // Clean text from emojis/markdown
     const cleanText = text.replace(/[*_#`]/g, '').replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
+    utterance.rate = 1.05; // Slightly faster for a modern feel
     utterance.pitch = 1.0;
     
-    // Prefer a premium sounding voice if available
+    // Priority list for the best female voices
     const voices = window.speechSynthesis.getVoices();
-    const premiumVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Premium'));
-    if (premiumVoice) utterance.voice = premiumVoice;
+    const priorityVoices = [
+        "Ava (Premium)",
+        "Ava",
+        "Samantha (Enhanced)",
+        "Samantha",
+        "Google US English",
+        "Siri",
+        "Victoria"
+    ];
+
+    let selectedVoice = null;
+    for (const name of priorityVoices) {
+        selectedVoice = voices.find(v => v.name.includes(name) && v.lang.includes('en'));
+        if (selectedVoice) break;
+    }
+
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
 
     window.speechSynthesis.speak(utterance);
 }
@@ -1587,7 +1607,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Initial voice load
+// Initial voice load and auto-refresh
 if ('speechSynthesis' in window) {
     window.speechSynthesis.getVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
 }
