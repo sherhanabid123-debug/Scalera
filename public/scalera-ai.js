@@ -31,7 +31,7 @@ function appendUserMessage(text) {
     scrollToBottom();
 }
 
-function appendAIMessage(text) {
+function appendAIMessage(text, plan = null) {
     // Basic Markdown to HTML (bold)
     const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
     const msgHTML = `
@@ -40,6 +40,11 @@ function appendAIMessage(text) {
             <div class="message-content"><p>${formattedText}</p></div>
         </div>`;
     chatHistory.insertAdjacentHTML('beforeend', msgHTML);
+    
+    if (plan) {
+        renderWebsiteBlueprint(plan);
+    }
+    
     scrollToBottom();
     
     // Speak response ONLY if triggered by voice
@@ -49,23 +54,45 @@ function appendAIMessage(text) {
     }
 }
 
-function scrollToBottom() {
-    chatHistory.scrollTop = chatHistory.scrollHeight;
+function renderWebsiteBlueprint(plan) {
+    if (!plan) return;
+    
+    const blueprintHTML = `
+        <div class="blueprint-card animate-message">
+            <div class="blueprint-header">
+                <i class="fas fa-project-diagram"></i>
+                <h3>Website Blueprint</h3>
+            </div>
+            <div class="blueprint-body">
+                <div class="blueprint-grid">
+                    <div class="blueprint-item"><span>TYPE</span> <p>${plan.type || 'Standard'}</p></div>
+                    <div class="blueprint-item"><span>STYLE</span> <p>${plan.style || 'Modern'}</p></div>
+                    <div class="blueprint-item"><span>TONE</span> <p>${plan.tone || 'Professional'}</p></div>
+                </div>
+                <div class="blueprint-purpose">
+                    <span>PURPOSE</span>
+                    <p>${plan.purpose || 'Digital Presence'}</p>
+                </div>
+                <div class="blueprint-sections">
+                    <span>ARCHITECTURE</span>
+                    <ul>
+                        ${plan.sections.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            <button class="btn-confirm-blueprint" onclick="startGenerationFromBlueprint()">
+                START ARCHITECTURE <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    `;
+    chatHistory.insertAdjacentHTML('beforeend', blueprintHTML);
+    scrollToBottom();
 }
 
-function showTypingIndicator() {
-    const indicator = document.getElementById('typing-indicator');
-    if (indicator) {
-        indicator.style.display = 'flex';
-        chatHistory.appendChild(indicator);
-        scrollToBottom();
-    }
-}
-
-function hideTypingIndicator() {
-    const indicator = document.getElementById('typing-indicator');
-    if (indicator) indicator.style.display = 'none';
-}
+window.startGenerationFromBlueprint = function() {
+    const chatHistoryStr = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
+    startGeneration(chatHistoryStr);
+};
 
 function showQuickReplies(replies) {
     quickReplies.innerHTML = '';
@@ -96,13 +123,6 @@ async function sendToAI(userText) {
     aiInput.disabled = true;
     
     try {
-        const visionKeywords = ['build', 'create', 'website', 'portfolio', 'site', 'landing page', 'for my', 'want a'];
-        const isVisionDescription = visionKeywords.some(k => userText.toLowerCase().includes(k));
-
-        if (isVisionDescription && messages.length < 5) {
-            await analyzeVision(userText);
-        }
-
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -123,26 +143,19 @@ async function sendToAI(userText) {
             const aiResponse = typeof data.reply === 'object' ? data.reply : JSON.parse(data.reply);
             const aiReply = aiResponse.reply;
             const isReady = aiResponse.ready_to_generate;
-            const websiteType = aiResponse.website_type;
             const intent = aiResponse.detected_intent;
             const info = aiResponse.extracted_info;
+            const plan = aiResponse.website_plan;
 
-            // Store extracted info globally for context
+            // Store extracted info globally
             if (info) {
                 if (!window.extractedData) window.extractedData = {};
                 Object.assign(window.extractedData, info);
             }
 
-            const magicImportOptions = document.getElementById('magic-import-options');
-            const resumeBtn = document.getElementById('magic-import-btn');
-            const linkedinBtn = document.getElementById('linkedin-import-btn');
-            const googleBtn = document.getElementById('google-business-btn');
-
             // --- INTENT AUTOMATION ---
             if (intent === 'upload_resume') {
-                setTimeout(() => {
-                    document.getElementById('resume-upload').click();
-                }, 1000);
+                setTimeout(() => { document.getElementById('resume-upload').click(); }, 1000);
             } else if (intent === 'import_google') {
                 setTimeout(() => {
                     const link = prompt("Please enter your Google Business profile link:");
@@ -150,42 +163,10 @@ async function sendToAI(userText) {
                 }, 1000);
             }
 
-            if (magicImportOptions) {
-                if (websiteType === 'portfolio') {
-                    magicImportOptions.style.display = 'flex';
-                    resumeBtn.style.display = 'inline-flex';
-                    linkedinBtn.style.display = 'inline-flex';
-                    googleBtn.style.display = 'none';
-                    
-                    magicImportOptions.classList.remove('magic-options-appear');
-                    void magicImportOptions.offsetWidth;
-                    magicImportOptions.classList.add('magic-options-appear');
-                } else if (['business', 'restaurant', 'service'].includes(websiteType)) {
-                    magicImportOptions.style.display = 'flex';
-                    resumeBtn.style.display = 'none';
-                    linkedinBtn.style.display = 'none';
-                    googleBtn.style.display = 'inline-flex';
-                    
-                    // Lock the generate button until data is fetched
-                    const genBtn = document.getElementById('generate-trigger-btn');
-                    if (genBtn && !window.extractedData?.business_name) {
-                        genBtn.disabled = true;
-                        genBtn.style.opacity = '0.5';
-                        genBtn.style.cursor = 'not-allowed';
-                        genBtn.title = "Please import your Google Business details first.";
-                    }
-
-                    magicImportOptions.classList.remove('magic-options-appear');
-                    void magicImportOptions.offsetWidth;
-                    magicImportOptions.classList.add('magic-options-appear');
-                } else {
-                    magicImportOptions.style.display = 'none';
-                }
-            }
-
+            // Append response and handle blueprint
+            appendAIMessage(aiReply, isReady ? plan : null);
             messages.push({ role: "assistant", content: aiReply });
-            appendAIMessage(aiReply);
-
+            
             if (isReady && !modalShown) {
                 showReadyModal();
             }
