@@ -97,48 +97,41 @@
             </div>
 
             <!-- Vision Modal -->
-            <div id="vision-modal" class="modal-overlay" style="display: none;">
-                <div class="modal-content glass-card animate-modal" style="max-width: 600px;">
-                    <div class="modal-header">
-                        <h3>Describe Your Website Vision</h3>
-                        <p>Speak naturally. Tell me what you need, and I'll build the structure.</p>
+            <!-- Vision Card Template (Hidden, Injected into Chat) -->
+            <template id="vision-card-template">
+                <div class="vision-card glass-card" style="margin-top: 15px; padding: 20px; border: 1px solid rgba(var(--accent-rgb), 0.3);">
+                    <h4 style="margin-bottom: 12px; font-size: 1rem; color: var(--accent-color); display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        Proposed Website Blueprint
+                    </h4>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6;">Business Name</label>
+                        <input type="text" class="v-name premium-input" placeholder="e.g. Scalera Innovations" style="background: rgba(255,255,255,0.02);">
                     </div>
-                    <div class="modal-body">
+                    
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
                         <div class="form-group">
-                            <label>Your Vision</label>
-                            <textarea id="vision-description" class="premium-input" style="height: 120px;" placeholder="Example: A modern restaurant website with a dark theme, a seasonal menu, and a booking section."></textarea>
+                            <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6;">Style</label>
+                            <input type="text" class="v-tone premium-input" style="background: rgba(255,255,255,0.02);">
                         </div>
-                        <div id="vision-interpretation" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
-                            <h4 style="margin-bottom: 10px; font-size: 0.9rem; color: var(--accent-color);">AI Interpretation</h4>
-                            <div class="form-group" style="margin-bottom: 15px;">
-                                <label>Business / Website Name <span style="color: #ff6b6b;">*</span></label>
-                                <input type="text" id="vision-name" class="premium-input" placeholder="e.g. Scalera Innovations" required>
-                            </div>
-                            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-                                <div class="form-group">
-                                    <label>Type</label>
-                                    <input type="text" id="vision-type" class="premium-input">
-                                </div>
-                                <div class="form-group">
-                                    <label>Tone</label>
-                                    <input type="text" id="vision-tone" class="premium-input">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Planned Sections</label>
-                                <div id="vision-sections-list" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px;">
-                                    <!-- Chips injected by JS -->
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6;">Industry</label>
+                            <input type="text" class="v-type premium-input" style="background: rgba(255,255,255,0.02);">
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn-secondary" onclick="closeVisionModal()">Cancel</button>
-                        <button id="vision-analyze-btn" class="btn-primary" onclick="analyzeVision()">Analyze & Prepare ✨</button>
-                        <button id="vision-confirm-btn" class="btn-primary" style="display: none;" onclick="confirmVision()">Confirm & Generate 🚀</button>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6;">Architecture</label>
+                        <div class="v-sections-list" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-confirm-vision btn-primary" style="flex: 1; padding: 12px;">Confirm & Build 🚀</button>
+                        <button class="btn-cancel-vision btn-secondary" style="padding: 12px 20px;">Edit Vision</button>
                     </div>
                 </div>
-            </div>
+            </template>
 
             <!-- Magic Import Data Review Modal -->
 

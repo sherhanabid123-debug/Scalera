@@ -89,6 +89,13 @@ async function sendToAI(userText) {
     aiInput.disabled = true;
     
     try {
+        const visionKeywords = ['build', 'create', 'website', 'portfolio', 'site', 'landing page', 'for my', 'want a'];
+        const isVisionDescription = visionKeywords.some(k => userText.toLowerCase().includes(k));
+
+        if (isVisionDescription && messages.length < 5) {
+            await analyzeVision(userText);
+        }
+
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -990,6 +997,95 @@ function confirmBusinessDataAndUnlock() {
     appendAIMessage(`Great! I've loaded your business data for **${data.business_name}**. Click "Generate Website" to build your site with this data! 🚀`);
 }
 
+// ─────────────────────────────────────────────────
+// Integrated Vision Logic
+// ─────────────────────────────────────────────────
+function openVisionModal() {
+    // Instead of a modal, we just guide the user to chat
+    aiInput.value = "I want to build a website for ";
+    aiInput.focus();
+    appendAIMessage("Tell me about your business or project! For example: 'A modern sushi restaurant with a dark theme and a booking section.'");
+}
+
+async function analyzeVision(description) {
+    showTypingIndicator();
+    try {
+        const response = await fetch('/api/interpret', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description })
+        });
+        const result = await response.json();
+        hideTypingIndicator();
+
+        if (result.status === 'success') {
+            renderVisionCard(result.data);
+        }
+    } catch (err) {
+        console.error("Interpretation Error:", err);
+        hideTypingIndicator();
+    }
+}
+
+function renderVisionCard(blueprint) {
+    const template = document.getElementById('vision-card-template');
+    const card = template.content.cloneNode(true).querySelector('.vision-card');
+    
+    // Fill data
+    card.querySelector('.v-name').value = blueprint.business_name || '';
+    card.querySelector('.v-tone').value = blueprint.tone || 'Modern';
+    card.querySelector('.v-type').value = blueprint.site_type || 'Business';
+    
+    const sectionsList = card.querySelector('.v-sections-list');
+    (blueprint.sections || []).forEach(section => {
+        const chip = document.createElement('div');
+        chip.className = 'section-chip';
+        chip.style = 'padding: 6px 12px; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 100px; font-size: 0.8rem; color: #fff;';
+        chip.innerText = section;
+        sectionsList.appendChild(chip);
+    });
+
+    // Handle Confirm
+    card.querySelector('.btn-confirm-vision').onclick = () => {
+        const bizName = card.querySelector('.v-name').value.trim();
+        if (!bizName) {
+            alert("Please enter a Business Name to continue.");
+            return;
+        }
+        
+        extractedData = {
+            ...blueprint,
+            business_name: bizName,
+            tone: card.querySelector('.v-tone').value,
+            site_type: card.querySelector('.v-type').value,
+            source: 'vision_description'
+        };
+        
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+        appendAIMessage(`Blueprint confirmed for **${bizName}**! Initializing the Scalera engine... 🚀`);
+        
+        // Trigger generation
+        const chatHistoryStr = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
+        startGeneration(chatHistoryStr);
+    };
+
+    // Handle Edit/Cancel
+    card.querySelector('.btn-cancel-vision').onclick = () => {
+        aiInput.focus();
+        appendAIMessage("No problem! Tell me what you'd like to change or add to the vision.");
+    };
+
+    // Append to chat
+    const msgContainer = document.createElement('div');
+    msgContainer.className = 'chat-message ai-message animate-message';
+    msgContainer.innerHTML = `<div class="message-avatar">S.</div><div class="message-content"></div>`;
+    msgContainer.querySelector('.message-content').appendChild(card);
+    
+    chatHistory.appendChild(msgContainer);
+    scrollToBottom();
+}
+
 function closeBusinessModal() {
     document.getElementById('business-review-modal').style.display = 'none';
 }
@@ -1040,19 +1136,6 @@ function confirmResumeData() {
 
 function closeResumeModal() {
     document.getElementById('resume-review-modal').style.display = 'none';
-}
-
-// ─────────────────────────────────────────────────
-// Vision (Natural Language) Logic
-// ─────────────────────────────────────────────────
-let currentVisionBlueprint = null;
-
-function showVisionModal() {
-    document.getElementById('vision-modal').style.display = 'flex';
-    document.getElementById('vision-interpretation').style.display = 'none';
-    document.getElementById('vision-analyze-btn').style.display = 'inline-block';
-    document.getElementById('vision-confirm-btn').style.display = 'none';
-    document.getElementById('vision-description').value = '';
 }
 
 function closeVisionModal() {
