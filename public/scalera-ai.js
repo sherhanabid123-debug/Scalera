@@ -1621,19 +1621,21 @@ async function speakText(text) {
     const cleanText = text.replace(/[*_#`]/g, '').replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
+    utterance.rate = 0.95; // Slightly slower for Moira's natural rhythm
     utterance.pitch = 1.0;
     
     const voices = window.speechSynthesis.getVoices();
-    let selectedVoice = null;
+    
+    // Target 'Moira' specifically
+    let selectedVoice = voices.find(v => v.name.includes('Moira'));
 
-    if (userSelectedVoiceName) {
+    // Fallback logic if Moira is missing
+    if (!selectedVoice && userSelectedVoiceName) {
         selectedVoice = voices.find(v => v.name === userSelectedVoiceName);
     }
 
     if (!selectedVoice) {
-        // Default priority logic if none selected
-        const premiumKeywords = ["Premium", "Enhanced", "Natural", "Neural", "Google US English", "Ava", "Samantha"];
+        const premiumKeywords = ["Moira", "Premium", "Natural", "Neural", "Google US English", "Samantha"];
         for (const key of premiumKeywords) {
             selectedVoice = voices.find(v => v.name.includes(key) && v.lang.startsWith('en'));
             if (selectedVoice) break;
@@ -1642,6 +1644,7 @@ async function speakText(text) {
 
     if (selectedVoice) {
         utterance.voice = selectedVoice;
+        console.log("[Scalera AI] Voice locked to:", selectedVoice.name);
     }
 
     window.speechSynthesis.speak(utterance);
