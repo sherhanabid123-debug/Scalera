@@ -1573,5 +1573,22 @@ function speakText(text) {
     window.speechSynthesis.speak(utterance);
 }
 
+// ─────────────────────────────────────────────────
+// Entrance Animations (GSAP)
+// ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Reveal initial elements
+    gsap.to('.reveal-init', {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power4.out',
+        delay: 0.5
+    });
+});
+
 // Initial voice load
-window.speechSynthesis.getVoices();
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+}
