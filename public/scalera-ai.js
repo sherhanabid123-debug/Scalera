@@ -136,48 +136,55 @@ async function sendToAI(userText) {
         
         const data = await response.json();
         hideTypingIndicator();
-        aiInput.disabled = false;
-        aiInput.focus();
         
         if (data.status === 'success' && data.reply) {
-            const aiResponse = typeof data.reply === 'object' ? data.reply : JSON.parse(data.reply);
-            const aiReply = aiResponse.reply;
-            const isReady = aiResponse.ready_to_generate;
-            const intent = aiResponse.detected_intent;
-            const info = aiResponse.extracted_info;
-            const plan = aiResponse.website_plan;
+            try {
+                const aiResponse = typeof data.reply === 'object' ? data.reply : JSON.parse(data.reply);
+                const aiReply = aiResponse.reply || "I've architected a plan for your vision.";
+                const isReady = aiResponse.ready_to_generate;
+                const intent = aiResponse.detected_intent;
+                const info = aiResponse.extracted_info;
+                const plan = aiResponse.website_plan;
 
-            // Store extracted info globally
-            if (info) {
-                if (!window.extractedData) window.extractedData = {};
-                Object.assign(window.extractedData, info);
-            }
+                // Store extracted info globally
+                if (info) {
+                    if (!window.extractedData) window.extractedData = {};
+                    Object.assign(window.extractedData, info);
+                }
 
-            // --- INTENT AUTOMATION ---
-            if (intent === 'upload_resume') {
-                setTimeout(() => { document.getElementById('resume-upload').click(); }, 1000);
-            } else if (intent === 'import_google') {
-                setTimeout(() => {
-                    const link = prompt("Please enter your Google Business profile link:");
-                    if (link) importGoogleData(link);
-                }, 1000);
-            }
+                // --- INTENT AUTOMATION ---
+                if (intent === 'upload_resume') {
+                    setTimeout(() => { document.getElementById('resume-upload').click(); }, 1000);
+                } else if (intent === 'import_google') {
+                    setTimeout(() => {
+                        const link = prompt("Please enter your Google Business profile link:");
+                        if (link) importGoogleData(link);
+                    }, 1000);
+                }
 
-            // Append response and handle blueprint
-            appendAIMessage(aiReply, isReady ? plan : null);
-            messages.push({ role: "assistant", content: aiReply });
-            
-            if (isReady && !modalShown) {
-                showReadyModal();
+                // Append response and handle blueprint
+                appendAIMessage(aiReply, isReady ? plan : null);
+                messages.push({ role: "assistant", content: aiReply });
+                
+                if (shouldSpeakNextResponse) {
+                    speakText(aiReply);
+                    shouldSpeakNextResponse = false;
+                }
+            } catch (parseErr) {
+                console.error("AI Response Parse Error:", parseErr);
+                appendAIMessage("I've analyzed your vision, but I hit a snag in the planning. Could you clarify your business type again?");
             }
         } else {
             appendAIMessage("I'm having trouble connecting to my servers right now.");
         }
     } catch (e) {
-        console.error(e);
+        console.error("Chat Error:", e);
         hideTypingIndicator();
+        appendAIMessage("Error connecting to Scalera AI engine. Please try again in a moment.");
+    } finally {
+        // ONLY unlock after everything is finished
         aiInput.disabled = false;
-        appendAIMessage("Error connecting to Scalera AI engine. Is the backend running?");
+        aiInput.focus();
     }
 }
 
