@@ -278,18 +278,10 @@ window.addEventListener('DOMContentLoaded', () => {
 // Trigger Generation
 // ─────────────────────────────────────────────────
 generateTriggerBtn.addEventListener('click', () => {
-    // CRITICAL: Prevent generation if we don't have a confirmed vision/blueprint
+    // DIRECT GUARDRAIL: No vision = No generation.
     if (!extractedData || !extractedData.business_name || !extractedData.sections) {
-        // If we don't have structured data, check if the chat history is rich enough to interpret
-        if (messages.length >= 2) {
-            appendAIMessage("I'm almost ready to build! But I need to confirm your vision first. Let me summarize what I've heard so far...");
-            // Force a vision interpretation from the current chat
-            const lastMessage = messages[messages.length - 1].content;
-            analyzeVision(lastMessage);
-        } else {
-            appendAIMessage("I'd love to start building for you! Could you tell me the name of your business and what kind of website you're looking for?");
-            aiInput.focus();
-        }
+        appendAIMessage("I don't have enough information about your site to generate. Please tell me about your business or project first!");
+        aiInput.focus();
         return;
     }
     
