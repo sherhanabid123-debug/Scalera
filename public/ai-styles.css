@@ -2409,3 +2409,137 @@ h3 {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.3);
 }
+
+/* ─────────────────────────────────────────────────
+   REVAMP UI STYLES
+   ───────────────────────────────────────────────── */
+.revamp-input-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 1rem 0;
+    animation: slideInUp 0.4s ease-out;
+}
+
+.revamp-header h3 {
+    margin: 0;
+    color: var(--accent-primary);
+    font-size: 1.5rem;
+}
+
+.revamp-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0.5rem 0 1.5rem 0;
+}
+
+.revamp-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.revamp-url-field {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #fff;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.revamp-url-field:focus {
+    border-color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-revamp-start {
+    background: var(--accent-primary);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 0 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-revamp-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.3);
+}
+
+.revamp-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.report-section h5 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.report-list li {
+    padding: 8px 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.report-list.green li::before { content: "✓ "; color: #4ade80; }
+.report-list.amber li::before { content: "⚠ "; color: #fbbf24; }
+
+.archetype-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.archetype-card {
+    cursor: pointer;
+    position: relative;
+}
+
+.archetype-card input {
+    display: none;
+}
+
+.archetype-card span {
+    display: block;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    transition: var(--transition-smooth);
+}
+
+.archetype-card input:checked + span {
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}

@@ -134,3 +134,12 @@ app.mount("/", StaticFiles(directory="public", html=True), name="public")
 @app.get("/")
 def root():
     return FileResponse("public/index.html")
+
+class RevampRequest(BaseModel):
+    url: str
+
+@app.post("/api/revamp-audit")
+async def revamp_audit(request: RevampRequest):
+    from .engine.generator import audit_website
+    result = await audit_website(request.url)
+    return {"status": "success", "data": result}

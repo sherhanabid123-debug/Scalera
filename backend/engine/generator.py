@@ -251,8 +251,19 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     # We pass both the blueprint and the chat history for deep context
     result = await assemble_modular_site(data, data)
     
-    # 3. Final Personalisation for deep text flow
-    personalisation_prompt = f"Business: {data.get('business_name')}\nType: {data.get('site_type')}\nVision: {chat_history}"
+    # 3. Final Personalisation for deep text flow & style alignment
+    personalisation_prompt = f"""
+    BUSINESS: {data.get('business_name')}
+    TYPE: {data.get('site_type')}
+    STYLE ARCHETYPE: {data.get('style_archetype', 'Modern')}
+    STRATEGIC IMPROVEMENTS TO APPLY: {", ".join(data.get('improvements', []))}
+    
+    ORIGINAL CONTEXT: {chat_history}
+    
+    INSTRUCTION: Rewrite the text content to be premium and align with the STYLE ARCHETYPE. 
+    Ensure the IMPROVEMENTS mentioned are visually and textually addressed.
+    """
+    
     result = await _personalise_template(result, personalisation_prompt)
     
     print(f"[Generator] ✅ Custom Website generated successfully.")
@@ -781,3 +792,78 @@ async def edit_section_content(section_html: str, instruction: str, section_type
     except Exception as e:
         print(f"[Editor] Error editing section: {e}")
         return section_html
+
+# ──────────────────────────────────────────────
+# Website Audit Engine (Revamp)
+# ──────────────────────────────────────────────
+async def audit_website(url: str) -> dict:
+    """Scrapes a URL and uses AI to perform a creative audit and redesign plan."""
+    import httpx
+    from bs4 import BeautifulSoup
+    
+    print(f"[Audit] Scanning: {url}")
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+            response = await client.get(url)
+            html = response.text
+    except Exception as e:
+        print(f"[Audit] Fetch Error: {e}")
+        return {"error": "Could not access website"}
+
+    soup = BeautifulSoup(html, "html.parser")
+    
+    # Extract data for AI analysis
+    title = soup.title.string if soup.title else "Unknown"
+    h1s = [h.get_text() for h in soup.find_all('h1')][:2]
+    h2s = [h.get_text() for h in soup.find_all('h2')][:5]
+    text_sample = soup.get_text()[:1000] # First 1000 chars for tone/niche
+    
+    # Analyze layout (roughly)
+    has_nav = bool(soup.find('nav') or soup.find(id='nav'))
+    has_footer = bool(soup.find('footer') or soup.find(id='footer'))
+    sections_count = len(soup.find_all(['section', 'article', 'div'])) # Very rough
+    
+    prompt = f"""You are a High-End Creative Director and UX Strategist. 
+Analyze this website data and create a REDESIGN STRATEGY.
+
+TITLE: {title}
+HEADLINES: {h1s} | {h2s}
+STRUCTURE: Nav: {has_nav}, Footer: {has_footer}, Rough Sections: {sections_count}
+TEXT SAMPLE: {text_sample}
+
+GOAL: Prepare a revamp plan that modernizes and improves the site.
+RULES: 
+- Identify business niche and name.
+- List 3 current strengths.
+- List 5 strategic improvements.
+- List the recommended 6 sections for the new modular layout.
+
+REPLY ONLY IN JSON:
+{{
+  "business_name": "",
+  "site_type": "",
+  "tone": "",
+  "strengths": [],
+  "improvements": [],
+  "sections": ["Hero", "About", "Services", "...", "Contact"]
+}}"""
+
+    try:
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
+            model="llama-3.1-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            response_format={ "type": "json_object" }
+        )
+        audit_data = json.loads(response.choices[0].message.content)
+        return audit_data
+    except Exception as e:
+        print(f"[Audit] AI Error: {e}")
+        return {{
+            "business_name": title,
+            "site_type": "Website",
+            "strengths": ["Clear domain presence", "Existing content structure"],
+            "improvements": ["Outdated UI", "Weak CTAs", "Mobile responsiveness"],
+            "sections": ["Hero", "Features", "About", "Contact"]
+        }}

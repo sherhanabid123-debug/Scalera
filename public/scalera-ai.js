@@ -1685,3 +1685,157 @@ document.addEventListener('DOMContentLoaded', () => {
         delay: 0.5
     });
 });
+
+// ─────────────────────────────────────────────────
+// Revamp Website Flow
+// ─────────────────────────────────────────────────
+window.startRevampFlow = function() {
+    document.getElementById('quick-replies').style.display = 'none';
+    document.getElementById('revamp-input-area').style.display = 'block';
+    appendAIMessage("Excellent! A revamp is a great way to breathe new life into your digital presence. Please provide the URL of your current website.");
+}
+
+window.closeRevampFlow = function() {
+    document.getElementById('revamp-input-area').style.display = 'none';
+    document.getElementById('quick-replies').style.display = 'flex';
+}
+
+window.analyzeWebsite = async function() {
+    const url = document.getElementById('revamp-url-input').value.trim();
+    if (!url) {
+        alert("Please enter a valid URL.");
+        return;
+    }
+
+    showTypingIndicator();
+    document.getElementById('revamp-input-area').style.display = 'none';
+    appendUserMessage(`Please revamp: ${url}`);
+
+    try {
+        const response = await fetch('/api/revamp-audit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
+        const result = await response.json();
+        hideTypingIndicator();
+
+        if (result.status === 'success') {
+            renderRevampReport(result.data);
+        } else {
+            appendAIMessage("I couldn't access that website. Please ensure the URL is correct and public.");
+        }
+    } catch (err) {
+        console.error("Audit Error:", err);
+        hideTypingIndicator();
+        appendAIMessage("There was an error connecting to the audit engine. Please try again.");
+    }
+}
+
+function renderRevampReport(audit) {
+    const template = document.getElementById('revamp-report-template');
+    const card = template.content.cloneNode(true).querySelector('.revamp-card');
+    
+    card.querySelector('.v-site-name').innerText = `Analysis for ${audit.business_name || 'Your Website'}`;
+    
+    const strengthsList = card.querySelector('.v-strengths-list');
+    (audit.strengths || []).forEach(s => {
+        const li = document.createElement('li');
+        li.innerText = s;
+        strengthsList.appendChild(li);
+    });
+
+    const improvementsList = card.querySelector('.v-improvements-list');
+    (audit.improvements || []).forEach(i => {
+        const li = document.createElement('li');
+        li.innerText = i;
+        improvementsList.appendChild(li);
+    });
+
+    // Handle Confirm
+    card.querySelector('.btn-confirm-revamp').onclick = () => {
+        const selectedArchetype = card.querySelector('input[name="archetype"]:checked').value;
+        
+        extractedData = {
+            ...audit,
+            style_archetype: selectedArchetype,
+            source: 'revamp_audit'
+        };
+        
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+        appendAIMessage(`Strategy confirmed! I'm applying the **${selectedArchetype}** redesign direction now... 🚀`);
+        
+        // Trigger generation
+        const chatHistoryStr = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
+        startGeneration(chatHistoryStr);
+    };
+
+    card.querySelector('.btn-cancel-revamp').onclick = () => {
+        document.getElementById('revamp-input-area').style.display = 'block';
+    };
+
+    // Append to chat
+    const msgContainer = document.createElement('div');
+    msgContainer.className = 'chat-message ai-message animate-message';
+    msgContainer.innerHTML = `<div class="message-avatar">S.</div><div class="message-content"></div>`;
+    msgContainer.querySelector('.message-content').appendChild(card);
+    
+    chatHistory.appendChild(msgContainer);
+    scrollToBottom();
+}
+
+// ─────────────────────────────────────────────────
+// Comparison Mode (Before vs After)
+// ─────────────────────────────────────────────────
+let isCompareMode = false;
+let originalURL = '';
+
+window.toggleCompareMode = function() {
+    isCompareMode = !isCompareMode;
+    const mockupContent = document.getElementById('mockup-content');
+    const compareBtn = document.getElementById('btn-compare-revamp');
+    
+    if (isCompareMode) {
+        compareBtn.innerText = "Back to Redesign 🏗️";
+        mockupContent.innerHTML = `
+            <div class="compare-container" style="display: flex; gap: 2px; height: 100%; background: #000;">
+                <div class="compare-pane" style="flex: 1; position: relative;">
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; z-index: 10;">ORIGINAL SITE</div>
+                    <iframe src="${originalURL}" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+                <div class="compare-pane" style="flex: 1; position: relative; border-left: 1px solid var(--accent-primary);">
+                    <div style="position: absolute; top: 10px; left: 10px; background: var(--accent-primary); color: #000; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; z-index: 10;">SCALERA REVAMP</div>
+                    <iframe id="preview-iframe-compare" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+            </div>
+        `;
+        // Inject current generated HTML into the comparison iframe
+        setTimeout(() => {
+            const compareIframe = document.getElementById('preview-iframe-compare');
+            if (compareIframe) {
+                const doc = compareIframe.contentWindow.document;
+                doc.open();
+                doc.write(compositeHTML);
+                doc.close();
+            }
+        }, 100);
+    } else {
+        compareBtn.innerText = "Compare Transformation 🆚";
+        showResult(); // Re-render normal view
+    }
+}
+
+// Intercept showResult to handle revamp context
+const originalShowResult = window.showResult;
+window.showResult = function(customHTML, customCSS, customJS) {
+    if (originalShowResult) originalShowResult(customHTML, customCSS, customJS);
+    
+    const compareBtn = document.getElementById('btn-compare-revamp');
+    if (extractedData && extractedData.source === 'revamp_audit' && extractedData.url) {
+        compareBtn.style.display = 'inline-flex';
+        originalURL = extractedData.url;
+    } else {
+        compareBtn.style.display = 'none';
+    }
+}
