@@ -36,20 +36,15 @@
             <!-- Chat Interface -->
             <div id="ai-chat" class="ai-chat-box reveal-init">
                 <div class="chat-header">
-                    <div class="status-dot pulsing" style="background: #10b981;"></div>
-                    <span>Talk to Scalera AI <span class="beta-badge">Pro</span></span>
+                    <div class="status-dot pulsing"></div>
+                    <span>Scalera AI is active</span>
                 </div>
                 <div class="chat-history" id="chat-history">
                     <div class="chat-message ai-message animate-message">
                         <div class="message-avatar">S.</div>
                         <div class="message-content">
-                            <p>Hello! I am **Talk to Scalera AI**. I'm here to help you architect, build, and perfect your premium website.</p>
-                            <p>What should we work on today?</p>
-                            <div class="quick-action-chips" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                                <button class="chip-btn" onclick="aiInput.value='Create a modern website for...'; aiInput.focus();">✨ Build New Site</button>
-                                <button class="chip-btn" onclick="aiInput.value='Make my current section more premium'; aiInput.focus();">🪄 Improve Design</button>
-                                <button class="chip-btn" onclick="aiInput.value='Add a testimonials section'; aiInput.focus();">➕ Add Section</button>
-                            </div>
+                            <p>Hello! I am Scalera AI. I'll help you build a premium digital presence in minutes.</p>
+                            <p>First, what is the name of your business or project?</p>
                         </div>
                     </div>
                     <div id="typing-indicator" class="chat-message ai-message" style="display: none;">
@@ -94,6 +89,23 @@
                     <div class="quick-replies" id="quick-replies" style="display: none;">
                         <!-- Injected by JS -->
                     </div>
+                </div>
+            </div>
+
+            <!-- Floating Voice Button -->
+            <div id="voice-assistant-hub" class="voice-hub reveal-init">
+                <button id="btn-talk-ai" class="btn-voice-main" title="Talk to Scalera AI">
+                    <div class="voice-icon-container">
+                        <svg class="mic-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                        <div class="voice-pulse"></div>
+                    </div>
+                    <span class="voice-text">Talk to Scalera AI</span>
+                </button>
+                <div id="voice-status-panel" class="voice-status-card" style="display: none;">
+                    <div class="voice-wave-container">
+                        <div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div>
+                    </div>
+                    <p id="voice-transcript" class="transcript-preview">Listening to your vision...</p>
                 </div>
             </div>
 

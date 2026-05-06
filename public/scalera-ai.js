@@ -40,6 +40,9 @@ function appendAIMessage(text) {
         </div>`;
     chatHistory.insertAdjacentHTML('beforeend', msgHTML);
     scrollToBottom();
+    
+    // Speak response if not muted
+    speakText(text);
 }
 
 function scrollToBottom() {
@@ -89,22 +92,17 @@ async function sendToAI(userText) {
     aiInput.disabled = true;
     
     try {
-        // Check for Vision intent
         const visionKeywords = ['build', 'create', 'website', 'portfolio', 'site', 'landing page', 'for my', 'want a'];
         const isVisionDescription = visionKeywords.some(k => userText.toLowerCase().includes(k));
 
-        if (isVisionDescription && messages.length < 5 && !extractedData) {
+        if (isVisionDescription && messages.length < 5) {
             await analyzeVision(userText);
         }
 
-        // Include site context for the AI
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                messages: messages,
-                site_context: extractedData // This is our source of truth for the AI
-            })
+            body: JSON.stringify({ messages: messages })
         });
         
         const data = await response.json();
@@ -1434,6 +1432,10 @@ function appendAssistantMessage(role, text) {
     `;
     history.appendChild(msg);
     history.scrollTop = history.scrollHeight;
+
+    if (role === 'ai') {
+        speakText(text);
+    }
 }
 
 function showAssistantTyping() {
@@ -1461,15 +1463,115 @@ window.applyAssistantChanges = function() {
     }
 };
 
-window.discardAssistantChanges = function() {
-    // Revert iframe
-    const previewIframe = document.getElementById('preview-iframe');
-    if (previewIframe) {
-        const composite = buildCompositeHTML(generatedHTML, generatedCSS, generatedJS);
-        const blob = new Blob([composite], { type: 'text/html' });
-        previewIframe.src = URL.createObjectURL(blob);
+
+// ─────────────────────────────────────────────────
+// Talk to Scalera AI (Voice Engine)
+// ─────────────────────────────────────────────────
+let isVoiceActive = false;
+let recognition = null;
+const voiceHub = document.getElementById('voice-assistant-hub');
+const btnTalk = document.getElementById('btn-talk-ai');
+const voiceStatus = document.getElementById('voice-status-panel');
+const voiceTranscript = document.getElementById('voice-transcript');
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+        isVoiceActive = true;
+        btnTalk.classList.add('listening');
+        voiceStatus.style.display = 'block';
+        voiceTranscript.innerText = "Listening to your vision...";
+    };
+
+    recognition.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                const finalTranscript = event.results[i][0].transcript;
+                aiInput.value = finalTranscript;
+                voiceTranscript.innerText = `"${finalTranscript}"`;
+                
+                // If assistant is open, use assistant input
+                const assistantInput = document.getElementById('ai-editor-input');
+                if (document.getElementById('ai-editor-panel').style.display !== 'none') {
+                    assistantInput.value = finalTranscript;
+                }
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+                voiceTranscript.innerText = `"${interimTranscript}..."`;
+            }
+        }
+    };
+
+    recognition.onend = () => {
+        isVoiceActive = false;
+        btnTalk.classList.remove('listening');
+        
+        // Auto-submit after a brief pause if we have text
+        setTimeout(() => {
+            voiceStatus.style.display = 'none';
+            if (aiInput.value.trim()) {
+                const form = document.getElementById('ai-form');
+                form.dispatchEvent(new Event('submit'));
+            } else {
+                const assistantInput = document.getElementById('ai-editor-input');
+                if (assistantInput && assistantInput.value.trim()) {
+                    handleAIEditSubmit();
+                }
+            }
+        }, 1500);
+    };
+
+    recognition.onerror = (event) => {
+        console.error("Speech Recognition Error:", event.error);
+        stopListening();
+    };
+}
+
+btnTalk.onclick = () => {
+    if (isVoiceActive) {
+        stopListening();
+    } else {
+        startListening();
     }
-    
-    document.getElementById('assistant-action-confirm').style.display = 'none';
-    pendingChanges = null;
 };
+
+function startListening() {
+    if (!recognition) {
+        alert("Speech recognition is not supported in this browser.");
+        return;
+    }
+    // Cancel any current speech
+    window.speechSynthesis.cancel();
+    recognition.start();
+}
+
+function stopListening() {
+    if (recognition) recognition.stop();
+}
+
+function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    
+    // Clean text from emojis/markdown for cleaner voice
+    const cleanText = text.replace(/[*_#`]/g, '').replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    
+    // Prefer a premium sounding voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const premiumVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Premium'));
+    if (premiumVoice) utterance.voice = premiumVoice;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Initial voice load
+window.speechSynthesis.getVoices();
