@@ -272,48 +272,53 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     template['html'] = processed_html
 
     # 4. Personalise the template with user's business details
-    if data:
-        tone_instruction = f"TONE: {data.get('tone', 'modern')}. " if data.get('tone') else ""
-        type_instruction = f"SITE TYPE: {data.get('site_type', 'website')}. " if data.get('site_type') else ""
-        personalisation_prompt = f"{tone_instruction}{type_instruction}User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
-    else:
-        personalisation_prompt = chat_history
-
     result = await _personalise_template(template, personalisation_prompt)
     print(f"[Generator] ✅ Website generated using '{folder}' template with deep injection.")
     return result
 
 
 # ──────────────────────────────────────────────
-# Chat function (unchanged)
+# Chat function
 # ──────────────────────────────────────────────
-async def chat_with_ai(messages: list) -> dict:
+async def chat_with_ai(messages: list, context: dict = None) -> dict:
     """
     Converses with the user to figure out what kind of website they want to build.
     Returns a dict with 'reply' and 'ready_to_generate' flag.
     """
     system_prompt = {
         "role": "system",
-        "content": """You are Scalera AI, a premium and friendly conversational assistant for a high-end website builder. 
+        "content": """You are the Scalera AI Architect, a world-class website design consultant. 
         
-        Your tone should be expert, welcoming, and intuitive. 
-        - Acknowledge greetings! If the user says "hi", "hello", or "hey", respond with a warm greeting before diving into questions.
-        - Your ultimate goal is to identify:
-            1. Business Name
-            2. Industry/Niche
-            3. Design Style (e.g., minimalist, bold, dark, elegant)
-            
-        Be conversational but don't waste time. Ask one question at a time.
+        Your mission is to guide users from a simple idea to a high-fidelity website blueprint with zero friction.
         
-        CRITICAL: You must return your response in a JSON format like this:
+        CORE PRINCIPLES:
+        1. INTENT FIRST: If the user mentions a portfolio, resume, or personal site, immediately shift to the 'portfolio' flow. If they mention a business or link, shift to the 'business' flow.
+        2. NO REPETITION: Never ask for information the user has already provided or hinted at.
+        3. ACTION OVER CHAT: Guide users to ACTIONS (e.g., "Upload your resume", "Confirm these details") rather than just asking questions.
+        4. BE AN ARCHITECT: Use confident, professional language. "I'm architecting your digital presence," not "I can help you build a site."
+        
+        DYNAMIC FLOWS:
+        - Portfolio/Personal: If intent is portfolio/resume, say: "Perfect. Upload your resume or share your LinkedIn, and I'll architect a personalized portfolio using your professional history."
+        - Business/Service: If intent is a company, say: "Excellent. Give me your business name or a Google Maps link, and I'll analyze your details to build your site."
+        
+        RESPONSE FORMAT (Strict JSON):
         {
-          "reply": "Your conversational response here",
+          "reply": "Your concise, action-oriented architect response",
           "ready_to_generate": true/false,
-          "website_type": "portfolio" | "business" | "restaurant" | "other"
+          "website_type": "portfolio" | "business" | "restaurant" | "other",
+          "detected_intent": "upload_resume" | "import_google" | "standard_chat" | "none",
+          "extracted_info": {
+             "business_name": "...",
+             "industry": "...",
+             "style": "..."
+          }
         }
         
-        Set "ready_to_generate" to true ONLY if you have identified all key pieces of information. 
-        Set "website_type" based on the user's niche. If they want a portfolio or personal site, set it to "portfolio"."""
+        Keep your "reply" under 2 sentences. Be fast. Be premium.
+        
+        CURRENT_STATE:
+        {json.dumps(context or {}, indent=2)}
+        """
     }
 
     formatted_messages = [system_prompt] + messages

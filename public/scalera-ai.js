@@ -106,7 +106,12 @@ async function sendToAI(userText) {
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: messages })
+            body: JSON.stringify({ 
+                messages: messages,
+                context: {
+                    extracted_info: window.extractedData || {}
+                }
+            })
         });
         
         const data = await response.json();
@@ -115,14 +120,35 @@ async function sendToAI(userText) {
         aiInput.focus();
         
         if (data.status === 'success' && data.reply) {
-            const aiReply = typeof data.reply === 'string' ? data.reply : data.reply.reply;
-            const isReady = typeof data.reply === 'object' && data.reply.ready_to_generate;
-            const websiteType = typeof data.reply === 'object' ? data.reply.website_type : 'other';
+            const aiResponse = typeof data.reply === 'object' ? data.reply : JSON.parse(data.reply);
+            const aiReply = aiResponse.reply;
+            const isReady = aiResponse.ready_to_generate;
+            const websiteType = aiResponse.website_type;
+            const intent = aiResponse.detected_intent;
+            const info = aiResponse.extracted_info;
+
+            // Store extracted info globally for context
+            if (info) {
+                if (!window.extractedData) window.extractedData = {};
+                Object.assign(window.extractedData, info);
+            }
 
             const magicImportOptions = document.getElementById('magic-import-options');
             const resumeBtn = document.getElementById('magic-import-btn');
             const linkedinBtn = document.getElementById('linkedin-import-btn');
             const googleBtn = document.getElementById('google-business-btn');
+
+            // --- INTENT AUTOMATION ---
+            if (intent === 'upload_resume') {
+                setTimeout(() => {
+                    document.getElementById('resume-upload').click();
+                }, 1000);
+            } else if (intent === 'import_google') {
+                setTimeout(() => {
+                    const link = prompt("Please enter your Google Business profile link:");
+                    if (link) importGoogleData(link);
+                }, 1000);
+            }
 
             if (magicImportOptions) {
                 if (websiteType === 'portfolio') {
@@ -142,7 +168,7 @@ async function sendToAI(userText) {
                     
                     // Lock the generate button until data is fetched
                     const genBtn = document.getElementById('generate-trigger-btn');
-                    if (genBtn && !extractedData) {
+                    if (genBtn && !window.extractedData?.business_name) {
                         genBtn.disabled = true;
                         genBtn.style.opacity = '0.5';
                         genBtn.style.cursor = 'not-allowed';
