@@ -2252,3 +2252,29 @@ h3 {
     from { transform: translate(-50%, 20px); opacity: 0; }
     to { transform: translate(-50%, 0); opacity: 1; }
 }
+
+/* ─────────────────────────────────────────────────
+   VOICE PICKER UI
+   ───────────────────────────────────────────────── */
+.voice-picker-mini {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.premium-select-mini {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+
+.premium-select-mini option {
+    background: #111;
+    color: #fff;
+}

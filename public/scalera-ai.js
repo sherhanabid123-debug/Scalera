@@ -1555,6 +1555,7 @@ function stopListening() {
 }
 
 let voicesLoaded = false;
+let userSelectedVoiceName = localStorage.getItem('scalera_preferred_voice');
 
 // Robust voice pre-loading
 function loadVoices() {
@@ -1562,27 +1563,61 @@ function loadVoices() {
         let voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
             voicesLoaded = true;
+            populateVoiceList(voices);
             resolve(voices);
         } else {
             window.speechSynthesis.onvoiceschanged = () => {
                 voices = window.speechSynthesis.getVoices();
                 voicesLoaded = true;
+                populateVoiceList(voices);
                 resolve(voices);
             };
         }
     });
 }
 
+function populateVoiceList(voices) {
+    const voiceSelect = document.getElementById('voice-select');
+    if (!voiceSelect) return;
+
+    voiceSelect.innerHTML = '';
+    
+    // Sort: Premium/Natural voices first, then English, then others
+    const sortedVoices = voices.sort((a, b) => {
+        const isPremiumA = a.name.includes('Premium') || a.name.includes('Natural') || a.name.includes('Neural') || a.name.includes('Enhanced');
+        const isPremiumB = b.name.includes('Premium') || b.name.includes('Natural') || b.name.includes('Neural') || b.name.includes('Enhanced');
+        if (isPremiumA && !isPremiumB) return -1;
+        if (!isPremiumA && isPremiumB) return 1;
+        return a.name.localeCompare(b.name);
+    });
+
+    sortedVoices.forEach(voice => {
+        if (voice.lang.startsWith('en')) {
+            const option = document.createElement('option');
+            option.textContent = `${voice.name} (${voice.lang})${voice.name.includes('Premium') ? ' ✨' : ''}`;
+            option.value = voice.name;
+            if (voice.name === userSelectedVoiceName) option.selected = true;
+            voiceSelect.appendChild(option);
+        }
+    });
+
+    if (voiceSelect.innerHTML === '') {
+        voiceSelect.innerHTML = '<option value="">No English voices found</option>';
+    }
+}
+
+document.getElementById('voice-select').onchange = (e) => {
+    userSelectedVoiceName = e.target.value;
+    localStorage.setItem('scalera_preferred_voice', userSelectedVoiceName);
+    speakText("How does this voice sound to you?");
+};
+
 async function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     
-    // Ensure voices are loaded before trying to speak
     if (!voicesLoaded) await loadVoices();
-    
-    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
 
-    // Clean text from emojis/markdown
     const cleanText = text.replace(/[*_#`]/g, '').replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
@@ -1590,25 +1625,23 @@ async function speakText(text) {
     utterance.pitch = 1.0;
     
     const voices = window.speechSynthesis.getVoices();
-    
-    // Most natural female voices keywords in priority
-    const premiumKeywords = [
-        "Premium", "Enhanced", "Natural", "Neural", "Google US English", "Ava", "Samantha", "Siri", "Victoria"
-    ];
+    let selectedVoice = null;
 
-    let bestVoice = null;
-    for (const key of premiumKeywords) {
-        bestVoice = voices.find(v => v.name.includes(key) && v.lang.startsWith('en'));
-        if (bestVoice) break;
+    if (userSelectedVoiceName) {
+        selectedVoice = voices.find(v => v.name === userSelectedVoiceName);
     }
 
-    if (bestVoice) {
-        utterance.voice = bestVoice;
-        console.log("[Scalera AI] High-fidelity voice selected:", bestVoice.name);
-    } else {
-        // Fallback to any English female voice
-        bestVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Susan')));
-        if (bestVoice) utterance.voice = bestVoice;
+    if (!selectedVoice) {
+        // Default priority logic if none selected
+        const premiumKeywords = ["Premium", "Enhanced", "Natural", "Neural", "Google US English", "Ava", "Samantha"];
+        for (const key of premiumKeywords) {
+            selectedVoice = voices.find(v => v.name.includes(key) && v.lang.startsWith('en'));
+            if (selectedVoice) break;
+        }
+    }
+
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
     }
 
     window.speechSynthesis.speak(utterance);
