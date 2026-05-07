@@ -198,12 +198,11 @@ document.getElementById('modal-continue-btn')?.addEventListener('click', () => {
     aiInput.focus();
 });
 
-aiForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+window.submitManualChat = () => {
     const val = aiInput.value.trim();
     if (!val) return;
 
-    // Reset voice flag and cancel ongoing speech for manual typing
+    // Manual typing: Reset voice flag and silence
     shouldSpeakNextResponse = false;
     window.speechSynthesis.cancel();
 
@@ -213,6 +212,26 @@ aiForm.addEventListener('submit', (e) => {
     quickReplies.style.display = 'none';
 
     sendToAI(val);
+};
+
+window.submitVoiceChat = () => {
+    const val = aiInput.value.trim();
+    if (!val) return;
+
+    // Voice triggered: ensure flag is TRUE
+    shouldSpeakNextResponse = true;
+
+    appendUserMessage(val);
+    messages.push({ role: "user", content: val });
+    aiInput.value = '';
+    quickReplies.style.display = 'none';
+
+    sendToAI(val);
+};
+
+aiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    submitManualChat();
 });
 
 // Initialize first message and entrance animations
@@ -1385,14 +1404,26 @@ window.handleAssistantSubmit = async function() {
     const userText = input.value.trim();
     if (!userText) return;
 
-    // Manual typing in assistant sidebar
+    // Manual typing: Reset voice flag and silence
     shouldSpeakNextResponse = false;
     window.speechSynthesis.cancel();
 
     input.value = '';
-    appendAssistantMessage('user', userText);
+    await processAssistantAction(userText);
+};
 
-    // Build Context
+window.handleAssistantVoiceSubmit = async function(text) {
+    if (!text) return;
+
+    // Voice triggered: ensure flag is TRUE
+    shouldSpeakNextResponse = true;
+
+    await processAssistantAction(text);
+};
+
+async function processAssistantAction(text) {
+    appendAssistantMessage('user', text);
+    
     const context = {
         site_name: (typeof extractedData !== 'undefined') ? extractedData.business_name : 'Generic',
         site_type: (typeof extractedData !== 'undefined') ? extractedData.site_type : 'Business',
@@ -1410,7 +1441,7 @@ window.handleAssistantSubmit = async function() {
             body: JSON.stringify({
                 html: generatedHTML,
                 css: generatedCSS,
-                prompt: userText,
+                prompt: text,
                 context: context
             })
         });
@@ -1436,7 +1467,7 @@ window.handleAssistantSubmit = async function() {
         hideAssistantTyping();
         appendAssistantMessage('ai', "I ran into a snag while updating the site. Mind trying again?");
     }
-};
+}
 
 function appendAssistantMessage(role, text) {
     const history = document.getElementById('assistant-chat-history');
@@ -1450,8 +1481,9 @@ function appendAssistantMessage(role, text) {
     history.appendChild(msg);
     history.scrollTop = history.scrollHeight;
 
-    if (role === 'ai') {
+    if (role === 'ai' && shouldSpeakNextResponse) {
         speakText(text);
+        shouldSpeakNextResponse = false; // Reset
     }
 }
 
@@ -1532,9 +1564,16 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         // Auto-submit after a brief pause if we have text
         setTimeout(() => {
             voiceStatus.style.display = 'none';
-            if (aiInput.value.trim()) {
-                const form = document.getElementById('ai-form');
-                form.dispatchEvent(new Event('submit'));
+            const transcript = aiInput.value.trim();
+            if (transcript) {
+                // If assistant is open, route to assistant voice submit
+                const sidebar = document.getElementById('ai-assistant-sidebar');
+                if (sidebar && sidebar.style.display === 'flex') {
+                    handleAssistantVoiceSubmit(transcript);
+                    aiInput.value = ''; // clear main input
+                } else {
+                    submitVoiceChat();
+                }
             } else {
                 const assistantInput = document.getElementById('ai-editor-input');
                 if (assistantInput && assistantInput.value.trim()) {
