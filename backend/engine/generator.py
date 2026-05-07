@@ -168,18 +168,14 @@ TEMPLATE TO REWRITE:
                     "js": template["js"],
                 }
         except Exception as e:
-            err = str(e)
-            if "429" in err or "rate_limit" in err.lower():
-                print(f"[Personalise] Rate limited on 70b, trying 8b instant fallback...")
-            else:
-                print(f"[Personalise] Error with 70b: {e}, trying 8b fallback...")
+            print(f"[Personalise] Gemini failed: {e}, trying Groq fallback...")
 
-    # Fallback to Groq Llama 3.1 8b
+    # Fallback to Groq Llama 3.3 70b or 3.1 8b
     try:
-        print("[Personalise] Using Groq fallback...")
+        print("[Personalise] Using Groq fallback (llama-3.3-70b-versatile)...")
         client = Groq(api_key=GROQ_API_KEY)
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": instruction}],
             max_tokens=16384,
             temperature=0.5,
@@ -226,17 +222,13 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
         }
 
     # 1. If data is missing sections, we MUST extract them from chat history first
-    # This avoids the "random template" fallback and ensures a custom modular build.
     if not data or not data.get("sections"):
         print("[Generator] 🧠 No blueprint found. Extracting from chat history...")
-        
-        # We use a summarized version of the chat for extraction
         interpretation = await interpret_vision(chat_history)
         if interpretation.get("status") == "success":
             data = interpretation.get("data")
             print(f"[Generator] ✨ Extracted Vision: {data.get('business_name')} ({data.get('site_type')})")
         else:
-            # Absolute fallback: generic but modular
             data = {
                 "business_name": "Scalera Site",
                 "site_type": "Modern Business",
@@ -248,10 +240,9 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     from .assembler import assemble_modular_site
     print(f"[Generator] 🛠️ Building CUSTOM MODULAR site for: {data.get('business_name')}")
     
-    # We pass both the blueprint and the chat history for deep context
     result = await assemble_modular_site(data, data)
     
-    # 3. Final Personalisation for deep text flow & style alignment
+    # 3. Final Personalisation
     personalisation_prompt = f"""
     BUSINESS: {data.get('business_name')}
     TYPE: {data.get('site_type')}
@@ -259,9 +250,6 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     STRATEGIC IMPROVEMENTS TO APPLY: {", ".join(data.get('improvements', []))}
     
     ORIGINAL CONTEXT: {chat_history}
-    
-    INSTRUCTION: Rewrite the text content to be premium and align with the STYLE ARCHETYPE. 
-    Ensure the IMPROVEMENTS mentioned are visually and textually addressed.
     """
     
     result = await _personalise_template(result, personalisation_prompt)
@@ -269,44 +257,9 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     print(f"[Generator] ✅ Custom Website generated successfully.")
     return result
 
-    # 3. Traditional Template Routing (Fallback)
-    routing_context = chat_history
-    if data and data.get("professional_title"):
-        routing_context += f"\nProfessional Title: {data['professional_title']}"
-        if data.get("bio"):
-            routing_context += f"\nBio: {data['bio']}"
-
-    folder = await _route_template(routing_context)
-    if not folder:
-        return error_result("⚠️ No templates found. Please add templates to the /templates directory.")
-
-    # 2. Read the actual template files
-    template = _read_template(folder)
-    if not template["html"]:
-        return error_result(f"⚠️ Template '{folder}' is missing index.html.")
-
-    print(f"[Generator] Loaded template: {folder} (HTML: {len(template['html'])} bytes, CSS: {len(template['css'])} bytes, JS: {len(template['js'])} bytes)")
-
-    # 3. Pre-process template (optional but helpful for AI)
-    # We can inject a small hint into the HTML to help the AI identify placeholders
-    processed_html = template['html'].replace("hello@example.com", "[USER_EMAIL_HERE]")
-    template['html'] = processed_html
-
-    # 4. Personalise the template with user's business details
-    if data:
-        tone_instruction = f"TONE: {data.get('tone', 'modern')}. " if data.get('tone') else ""
-        type_instruction = f"SITE TYPE: {data.get('site_type', 'website')}. " if data.get('site_type') else ""
-        personalisation_prompt = f"{tone_instruction}{type_instruction}User Data: {json.dumps(data)}\n\nAdditional Instructions: {chat_history}"
-    else:
-        personalisation_prompt = chat_history
-
-    result = await _personalise_template(template, personalisation_prompt)
-    print(f"[Generator] ✅ Website generated using '{folder}' template with deep injection.")
-    return result
-
 
 # ──────────────────────────────────────────────
-# Chat function (unchanged)
+# Chat function (Refactored to use Groq Client)
 # ──────────────────────────────────────────────
 async def chat_with_ai(messages: list) -> dict:
     """
@@ -339,54 +292,27 @@ async def chat_with_ai(messages: list) -> dict:
 
     formatted_messages = [system_prompt] + messages
 
-    if GROQ_API_KEY and GROQ_API_KEY != "PASTE_YOUR_GROQ_KEY_HERE":
-        import urllib.request
-        import urllib.error
-        import json
-        
-        url = "https://api.groq.com/openai/v1/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {GROQ_API_KEY}",
-            "Content-Type": "application/json"
-        }
-        data = {
-            "model": "llama-3.1-8b-instant",
-            "messages": formatted_messages,
-            "max_tokens": 512,
-            "temperature": 0.7,
-            "response_format": {"type": "json_object"}
-        }
-        
     if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
         return {
-            "reply": "Debugging: I cannot see the GROQ_API_KEY in Vercel. Please make sure you added it to the *Scalera* project in Vercel, and that it is applied to the Production environment.",
+            "reply": "Error: GROQ_API_KEY is missing. Please add it to your .env file in the root directory.",
             "ready_to_generate": False
         }
 
     try:
-        # Scrub any literal backslash-n or actual newlines just in case
-        clean_key = GROQ_API_KEY.replace('\\n', '').replace('\n', '').strip()
-        
-        headers = {
-            "Authorization": f"Bearer {clean_key}",
-            "Content-Type": "application/json",
-            "User-Agent": "ScaleraAI/1.0 (Mozilla/5.0; Vercel)"
-        }
-        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-        
-        with urllib.request.urlopen(req, timeout=15) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            raw_content = result["choices"][0]["message"]["content"]
-            return json.loads(raw_content)
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode("utf-8")
-        return {
-            "reply": f"Groq API 400 Error: {error_body}",
-            "ready_to_generate": False
-        }
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=formatted_messages,
+            max_tokens=512,
+            temperature=0.7,
+            response_format={"type": "json_object"}
+        )
+        raw_content = response.choices[0].message.content
+        return json.loads(raw_content)
     except Exception as e:
+        error_msg = str(e)
         return {
-            "reply": f"Debugging: API Key is present (starts with {GROQ_API_KEY[:4]}), but the Groq API call failed: {str(e)}",
+            "reply": f"Groq API Error: {error_msg}. Please check if your API key is valid and has sufficient quota.",
             "ready_to_generate": False
         }
 
@@ -410,12 +336,9 @@ SURGICAL RULES:
 3. If the user asks for a text change, DO NOT touch the CSS.
 4. If the user asks for a design change (colors, etc.), ONLY touch the relevant CSS rules.
 5. KEEP all existing classes, IDs, and structure perfectly intact.
-6. Return the FULL updated code as JSON (the frontend needs the full string to re-render), but ensure only the target content has changed."""
+6. Return the FULL updated code as JSON."""
 
     user_msg = f"""
-[CONTEXT]
-We are editing a generated website. You must be non-destructive.
-
 [HTML]
 {html}
 [/HTML]
@@ -429,47 +352,27 @@ We are editing a generated website. You must be non-destructive.
 
 Return a JSON object: {{"html": "...", "css": "..."}}
 """
-
-    import urllib.request
-    import urllib.error
-    import json
-    
-    url = "https://api.groq.com/openai/v1/chat/completions"
-    clean_key = GROQ_API_KEY.replace('\\n', '').replace('\n', '').strip()
-    headers = {
-        "Authorization": f"Bearer {clean_key}",
-        "Content-Type": "application/json",
-        "User-Agent": "ScaleraAI/1.0"
-    }
-    
-    data = {
-        "model": "llama-3.1-8b-instant",
-        "messages": [
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": user_msg}
-        ],
-        "response_format": {"type": "json_object"},
-        "temperature": 0.2
-    }
-    
     try:
-        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=30) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            raw_content = result["choices"][0]["message"]["content"]
-            parsed = json.loads(raw_content)
-            
-            # Ensure keys exist
-            final_html = parsed.get("html", html)
-            final_css = parsed.get("css", css)
-            
-            return {
-                "html": final_html,
-                "css": final_css
-            }
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": user_msg}
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.2
+        )
+        raw_content = response.choices[0].message.content
+        parsed = json.loads(raw_content)
+        return {
+            "html": parsed.get("html", html),
+            "css": parsed.get("css", css)
+        }
     except Exception as e:
         print(f"[AI Editor] Error: {e}")
-        return {"html": html, "css": css} # Return original on failure
+        return {"html": html, "css": css}
+
 
 # ──────────────────────────────────────────────
 # Data Extraction — Resume & Links
@@ -490,46 +393,26 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
                 page_text = page.extract_text()
                 if page_text:
                     text += page_text + "\n"
-            print(f"[Extractor] PDF parsed. Extracted {len(text)} characters.")
             
         elif ext in ["docx", "doc"]:
             import mammoth
             result = mammoth.extract_raw_text(io.BytesIO(content))
             text = result.value
-            print(f"[Extractor] DOCX parsed. Extracted {len(text)} characters.")
             
         else:
-            # Fallback for plain text
             text = content.decode("utf-8", errors="ignore")
-            print(f"[Extractor] Plain text/fallback used. Extracted {len(text)} characters.")
 
     except Exception as e:
-        print(f"[Extractor] Critical Parsing Error: {e}")
+        print(f"[Extractor] Parsing Error: {e}")
         return {"error": f"Failed to parse {ext} file: {str(e)}"}
 
-    # Validation: Is the text empty?
     if not text.strip():
-        print("[Extractor] ❌ Parsing failed: No text content found.")
-        return {"error": "The file appears to be a scanned image or empty. Please use a text-based PDF or DOCX file."}
-
-    # Debug Log: Sample of extracted text
-    print(f"[Extractor] Raw text sample (first 300 chars):\n{text[:300]}...")
-
-    # Cleaning text
-    import re
-    text = re.sub(r'\n+', '\n', text) # Remove excessive newlines
-    text = re.sub(r' +', ' ', text)   # Remove excessive spaces
+        return {"error": "The file appears to be empty."}
 
     if GEMINI_API_KEY:
-        print("[Extractor] Attempting Gemini 2.0 Flash...")
         res = await _try_gemini(text, 'gemini-2.0-flash')
         if "error" not in res: return res
-        
-        print("[Extractor] Gemini 2.0 failed/quota, trying Gemini Flash Latest...")
-        res = await _try_gemini(text, 'gemini-flash-latest')
-        if "error" not in res: return res
 
-    print("[Extractor] Gemini failed or key missing, falling back to Groq...")
     return await _parse_raw_text_to_json(text)
 
 async def _try_gemini(raw_text: str, model_name: str, custom_prompt: str = None) -> dict:
@@ -546,49 +429,36 @@ async def _try_gemini(raw_text: str, model_name: str, custom_prompt: str = None)
         response = model.generate_content(prompt)
         return json.loads(response.text)
     except Exception as e:
-        print(f"[Extractor] {model_name} failed: {e}")
         return {"error": str(e)}
 
 
 async def extract_data_from_link(link: str) -> dict:
     """Best-effort scraper for public links (LinkedIn/Portfolios)."""
-    print(f"[Extractor] Attempting to scrape link: {link}")
-    
     try:
         import urllib.request
         from bs4 import BeautifulSoup
         
-        # Stealth headers
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-        }
-        
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'}
         req = urllib.request.Request(link, headers=headers)
         with urllib.request.urlopen(req, timeout=10) as response:
             html = response.read().decode('utf-8', errors='ignore')
             soup = BeautifulSoup(html, 'html.parser')
             
-            # Extract Meta Tags (LinkedIn uses OpenGraph for public views)
             meta_title = soup.find('meta', property='og:title')
             meta_desc = soup.find('meta', property='og:description')
             
             title_text = meta_title['content'] if meta_title else soup.title.string if soup.title else ""
             desc_text = meta_desc['content'] if meta_desc else ""
             
-            # Use Gemini to clean this up
-            raw_blob = f"Title: {title_text}\nDescription: {desc_text}\nFull Text Snippet: {html[:2000]}"
+            raw_blob = f"Title: {title_text}\nDescription: {desc_text}\nSnippet: {html[:2000]}"
             
             if GEMINI_API_KEY:
-                print("[Extractor] Passing link metadata to Gemini...")
                 return await _try_gemini(raw_blob, 'gemini-2.0-flash')
             
-            return {"full_name": title_text, "bio": desc_text, "note": "Data extracted from public meta tags."}
+            return {"full_name": title_text, "bio": desc_text}
 
     except Exception as e:
-        print(f"[Extractor] Link Scrape Failed: {e}")
-        return {"error": "LinkedIn blocked the automated request. Tip: Save your LinkedIn profile as PDF and upload it for better results!"}
+        return {"error": "LinkedIn blocked the request. Try uploading a PDF resume instead."}
 
 async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict:
     """Uses Groq to turn raw text into a structured JSON schema."""
@@ -596,66 +466,25 @@ async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict
         return {"raw_text": raw_text[:500]}
 
     if not system_msg:
-        system_msg = """You are a precision profile data extractor. Extract information from the provided text into a clean JSON object. 
-        STRICT RULES:
-        1. Use 'full_name' for the person's name.
-        2. Use 'professional_title' for their current role or headline.
-        3. Use 'bio' for a short, professional summary.
-        4. Use 'skills' (list of tags).
-        5. Use 'experience' (list of: company, role, duration, description).
-        6. Use 'projects' (list of: title, description).
-        7. Use 'education' (list of: institution, degree, year).
-        8. CLEANING: Fix capitalization, remove redundant text, and ensure professional tone.
-        
-        Output ONLY valid JSON."""
+        system_msg = """Extract information into JSON: full_name, professional_title, bio, skills, experience, projects, education."""
 
-    import urllib.request
-    import json
-    
-    url = "https://api.groq.com/openai/v1/chat/completions"
-    clean_key = GROQ_API_KEY.replace('\\n', '').replace('\n', '').strip()
-    headers = {
-        "Authorization": f"Bearer {clean_key}",
-        "Content-Type": "application/json"
-    }
-    
-    data = {
-        "model": "llama-3.1-8b-instant",
-        "messages": [
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": f"Text to extract:\n{raw_text[:8000]}"}
-        ],
-        "response_format": {"type": "json_object"},
-        "temperature": 0.0
-    }
-    
     try:
-        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=45) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            content = result["choices"][0]["message"]["content"]
-            print(f"[Extractor] Groq extraction complete. Structured {len(content)} bytes of JSON.")
-            return json.loads(content)
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode("utf-8")
-        print(f"[Extractor] API Error {e.code}: {error_body}")
-        try:
-            err_json = json.loads(error_body)
-            err_msg = err_json.get("error", {}).get("message", e.reason)
-        except:
-            err_msg = e.reason
-            
-        if e.code in [401, 403]:
-            return {"error": f"Groq Authentication Failed: {err_msg}"}
-        return {"error": f"Groq API Error {e.code}: {err_msg}"}
+        client = Groq(api_key=GROQ_API_KEY)
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": f"Text:\n{raw_text[:8000]}"}
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.0
+        )
+        return json.loads(response.choices[0].message.content)
     except Exception as e:
-        print(f"[Extractor] General Error: {e}")
-        return {"error": f"System Error: {str(e)}"}
+        return {"error": str(e)}
 
 async def extract_business_data(link: str) -> dict:
-    """Robust extraction from a Google Maps link with multi-model waterfall."""
-    print(f"[Business Extractor] Analyzing: {link}")
-    
+    """Robust extraction from a Google Maps link."""
     try:
         import urllib.request
         from bs4 import BeautifulSoup
@@ -666,204 +495,40 @@ async def extract_business_data(link: str) -> dict:
         with urllib.request.urlopen(req, timeout=10) as response:
             html = response.read().decode('utf-8', errors='ignore')
             soup = BeautifulSoup(html, 'html.parser')
-            
             meta_title = soup.find('meta', property='og:title')
-            meta_desc = soup.find('meta', property='og:description')
-            
             title_text = meta_title['content'] if meta_title else ""
-            desc_text = meta_desc['content'] if meta_desc else ""
-            raw_blob = f"Business: {title_text}\nInfo: {desc_text}\nSnippet: {html[:4000]}"
             
-            biz_prompt = """Extract these fields into JSON: business_name, business_type, address, rating, description, highlight_review. 
-            Ensure 'rating' is a number."""
-
-            # 1. Try Gemini 2.0
+            biz_prompt = "Extract business JSON: name, type, address, rating, description."
             if GEMINI_API_KEY:
-                res = await _try_gemini(raw_blob, 'gemini-2.0-flash', biz_prompt)
-                if "error" not in res: return res
-                
-                # 2. Try Gemini Flash Latest
-                res = await _try_gemini(raw_blob, 'gemini-flash-latest', biz_prompt)
-                if "error" not in res: return res
-
-            # 3. Final Fallback: Groq
-            if GROQ_API_KEY:
-                print("[Business Extractor] Gemini failed/limited. Falling back to Groq...")
-                return await _parse_raw_text_to_json(raw_blob, system_msg=f"System: Business Expert. {biz_prompt}")
-
-            return {"business_name": title_text, "description": desc_text}
-
+                return await _try_gemini(html[:4000], 'gemini-2.0-flash', biz_prompt)
+            return await _parse_raw_text_to_json(html[:4000], system_msg=biz_prompt)
     except Exception as e:
-        print(f"[Business Extractor] Fatal: {e}")
         return {"error": str(e)}
 
 # ──────────────────────────────────────────────
 # Vision Interpretation — Natural Language to Blueprint
 # ──────────────────────────────────────────────
 async def interpret_vision(description: str) -> dict:
-    """
-    Converts a natural language website description into a structured blueprint.
-    """
-    if not description:
-        return {}
-
-    instruction = f"""You are a senior website architect. Convert the user's natural language description into a structured JSON blueprint for a website.
-
-USER DESCRIPTION:
-{description}
-
-JSON STRUCTURE:
-{{
-  "site_type": "portfolio | restaurant | agency | saas | startup | corporate | dental-clinic | event-planner | photography | fitness | healthcare | hotel | law-firm | mobile-app | non-profit | real-estate | spa | startup | ecommerce | education",
-  "tone": "modern | luxurious | bold | minimal | professional | playful",
-  "business_name": "Name if mentioned, else empty",
-  "sections": ["Hero", "About", "Services", "Portfolio/Work", "Testimonials", "Contact", "FAQ", "Pricing"],
-  "primary_colors": ["color1", "color2"],
-  "key_features": ["feature1", "feature2"]
-}}
-
-RULES:
-1. Be decisive. Pick the best matching 'site_type' from the list provided.
-2. If the user mentiones a specific business name, extract it.
-3. Determine the 'tone' based on keywords (e.g., 'high-end' -> luxurious, 'clean' -> minimal).
-4. List the sections that would make sense for this vision.
-5. Return ONLY raw JSON.
-"""
-
+    """Converts natural language description into a structured JSON blueprint."""
+    instruction = f"Convert this website vision into JSON: {description}"
     try:
         import google.generativeai as genai
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(instruction)
-        text = response.text.strip()
-        
-        # Clean markdown
-        if text.startswith("```"):
-            text = re.sub(r'^```[a-z]*\n?', '', text)
-            text = re.sub(r'\n?```$', '', text)
-            
-        blueprint = json.loads(text)
-        print(f"[Vision] Blueprint extracted: {blueprint.get('site_type')} | {blueprint.get('tone')}")
-        return blueprint
-    except Exception as e:
-        print(f"[Vision] Error interpreting vision: {e}")
-        return {
-            "site_type": "agency",
-            "tone": "modern",
-            "sections": ["Hero", "About", "Services", "Contact"]
-        }
+        return json.loads(response.text.strip())
+    except:
+        return {"site_type": "agency", "tone": "modern", "sections": ["Hero", "About", "Services", "Contact"]}
 
 # ──────────────────────────────────────────────
 # Contextual Section Editing
 # ──────────────────────────────────────────────
 async def edit_section_content(section_html: str, instruction: str, section_type: str) -> str:
-    """
-    Rewrites a specific section of the website based on a contextual user prompt.
-    """
-    system_prompt = f"""You are a luxury website editor. You will receive the HTML code for a specific section (type: {section_type}) and a user instruction.
-    
-    YOUR TASK:
-    Rewrite the content (text, icons, etc.) within the provided HTML to match the instruction.
-    
-    RULES:
-    1. DO NOT change the CSS classes or the overall layout structure unless explicitly asked.
-    2. Maintain the premium, glassmorphic aesthetic.
-    3. Return ONLY the updated HTML for that section.
-    4. Do not include any explanation, markdown blocks (like ```html), or pre-amble.
-    
-    USER INSTRUCTION:
-    {instruction}
-    
-    ORIGINAL SECTION HTML:
-    {section_html}
-    """
-
+    """Rewrites a specific section of the website."""
+    system_prompt = f"Edit this HTML section ({section_type}) based on: {instruction}\n\nHTML:\n{section_html}"
     try:
         import google.generativeai as genai
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(system_prompt)
-        new_html = response.text.strip()
-        
-        # Clean markdown
-        if new_html.startswith("```"):
-            new_html = re.sub(r'^```[a-z]*\n?', '', new_html)
-            new_html = re.sub(r'\n?```$', '', new_html)
-            
-        return new_html
-    except Exception as e:
-        print(f"[Editor] Error editing section: {e}")
+        return response.text.strip()
+    except:
         return section_html
-
-# ──────────────────────────────────────────────
-# Website Audit Engine (Revamp)
-# ──────────────────────────────────────────────
-async def audit_website(url: str) -> dict:
-    """Scrapes a URL and uses AI to perform a creative audit and redesign plan."""
-    import httpx
-    from bs4 import BeautifulSoup
-    
-    print(f"[Audit] Scanning: {url}")
-    
-    try:
-        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            response = await client.get(url)
-            html = response.text
-    except Exception as e:
-        print(f"[Audit] Fetch Error: {e}")
-        return {"error": "Could not access website"}
-
-    soup = BeautifulSoup(html, "html.parser")
-    
-    # Extract data for AI analysis
-    title = soup.title.string if soup.title else "Unknown"
-    h1s = [h.get_text() for h in soup.find_all('h1')][:2]
-    h2s = [h.get_text() for h in soup.find_all('h2')][:5]
-    text_sample = soup.get_text()[:1000] # First 1000 chars for tone/niche
-    
-    # Analyze layout (roughly)
-    has_nav = bool(soup.find('nav') or soup.find(id='nav'))
-    has_footer = bool(soup.find('footer') or soup.find(id='footer'))
-    sections_count = len(soup.find_all(['section', 'article', 'div'])) # Very rough
-    
-    prompt = f"""You are a High-End Creative Director and UX Strategist. 
-Analyze this website data and create a REDESIGN STRATEGY.
-
-TITLE: {title}
-HEADLINES: {h1s} | {h2s}
-STRUCTURE: Nav: {has_nav}, Footer: {has_footer}, Rough Sections: {sections_count}
-TEXT SAMPLE: {text_sample}
-
-GOAL: Prepare a revamp plan that modernizes and improves the site.
-RULES: 
-- Identify business niche and name.
-- List 3 current strengths.
-- List 5 strategic improvements.
-- List the recommended 6 sections for the new modular layout.
-
-REPLY ONLY IN JSON:
-{{
-  "business_name": "",
-  "site_type": "",
-  "tone": "",
-  "strengths": [],
-  "improvements": [],
-  "sections": ["Hero", "About", "Services", "...", "Contact"]
-}}"""
-
-    try:
-        client = Groq(api_key=GROQ_API_KEY)
-        response = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            response_format={ "type": "json_object" }
-        )
-        audit_data = json.loads(response.choices[0].message.content)
-        return audit_data
-    except Exception as e:
-        print(f"[Audit] AI Error: {e}")
-        return {{
-            "business_name": title,
-            "site_type": "Website",
-            "strengths": ["Clear domain presence", "Existing content structure"],
-            "improvements": ["Outdated UI", "Weak CTAs", "Mobile responsiveness"],
-            "sections": ["Hero", "Features", "About", "Contact"]
-        }}

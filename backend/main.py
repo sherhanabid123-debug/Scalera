@@ -2,10 +2,14 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional
+import json
+
 from .engine.generator import generate_website
 
 app = FastAPI()
@@ -78,9 +82,6 @@ async def edit(request: EditRequest):
         "css": result["css"]
     }
 
-from fastapi import UploadFile, File, Form
-from typing import Optional
-
 @app.post("/api/extract")
 async def extract(
     file: Optional[UploadFile] = File(None),
@@ -97,7 +98,6 @@ async def extract(
     if link:
         link_data = await extract_data_from_link(link)
         
-    # Merge data (basic merge for now)
     merged = {**resume_data, **link_data}
     
     return {
@@ -121,9 +121,6 @@ async def edit_section(request: dict):
     
     new_html = await edit_section_content(section_html, instruction, section_type)
     return {"status": "success", "data": new_html}
-
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 
 @app.get("/scalera-ai")
 async def serve_dashboard():
