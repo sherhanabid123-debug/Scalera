@@ -36,30 +36,51 @@ function App() {
       touchMultiplier: 2,
     });
 
-    // Sync Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
     gsap.ticker.lagSmoothing(0);
 
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: () => setLoading(false)
+    });
 
-    // Stagger in the letters of "SCALERA"
-    tl.fromTo('.preloader-char',
-      { y: 80, opacity: 0, rotationX: -50 },
-      { y: 0, opacity: 1, rotationX: 0, duration: 0.2, stagger: 0.015, ease: 'power2.out' }
+    // Rockstar-style cinematic intro
+    tl.fromTo('.preloader-logo',
+      { 
+        scale: 2.5, 
+        opacity: 0, 
+        filter: 'blur(20px)' 
+      },
+      { 
+        scale: 1.5, 
+        opacity: 1, 
+        filter: 'blur(0px)', 
+        duration: 1.2, 
+        ease: 'expo.out' 
+      }
     )
-      // Stagger out the letters almost instantly after
-      .to('.preloader-char', {
-        y: -50, opacity: 0, duration: 0.15, stagger: 0.01, ease: 'power3.in', delay: 0.02
-      })
-      // Simulate load time, then curtain raise the preloader fast
-      .to('.preloader', {
-        yPercent: -100,
-        duration: 0.4,
-        ease: 'expo.inOut'
-      }).add(() => setLoading(false));
+    .to('.preloader-logo', {
+      scale: 1.2,
+      duration: 2,
+      ease: 'linear'
+    }, '-=0.5')
+    .to('.preloader-logo', {
+      top: '32px',
+      left: '5%',
+      xPercent: 0,
+      yPercent: 0,
+      scale: 1,
+      opacity: 0, // Fade out as it overlaps
+      duration: 1,
+      ease: 'expo.inOut'
+    })
+    .to('.preloader', {
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    }, '-=0.5');
 
     return () => {
       lenis.destroy();
@@ -113,26 +134,24 @@ function App() {
           style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
             backgroundColor: '#0a0a0a', zIndex: 10000,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column'
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}
         >
-          <div style={{ perspective: '1000px', display: 'flex', overflow: 'hidden', padding: '10px' }}>
-            {"SCALERA".split('').map((char, index) => (
-              <span
-                key={index}
-                className="preloader-char text-gradient-accent"
-                style={{
-                  display: 'inline-block',
-                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                  fontWeight: 800,
-                  letterSpacing: '0.2em',
-                  marginRight: index === "SCALERA".length - 1 ? '0' : '0.1em'
-                }}
-              >
-                {char}
-              </span>
-            ))}
+          <div 
+            className="preloader-logo"
+            style={{ 
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                fontWeight: 700, 
+                fontSize: '1.5rem', 
+                letterSpacing: '-0.03em', 
+                color: 'var(--text-primary)',
+                pointerEvents: 'none'
+            }}
+          >
+            Scalera<span style={{ color: 'var(--accent-color)' }}>.</span>
           </div>
         </div>
       )}
