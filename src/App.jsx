@@ -43,44 +43,57 @@ function App() {
     gsap.ticker.lagSmoothing(0);
 
     const tl = gsap.timeline({
-      onComplete: () => setLoading(false)
+      onComplete: () => setLoading(false),
+      delay: 0.2 // Slight delay to ensure DOM is ready for measurement
     });
 
-    // Rockstar-style cinematic intro
+    // Rockstar-style cinematic intro - Refined & Snappier
     tl.fromTo('.preloader-logo',
       { 
-        scale: 2.5, 
+        scale: 2.2, 
         opacity: 0, 
-        filter: 'blur(20px)' 
+        filter: 'blur(15px)',
+        xPercent: -50,
+        yPercent: -50,
+        left: '50%',
+        top: '50%'
       },
       { 
-        scale: 1.5, 
+        scale: 1.3, 
         opacity: 1, 
         filter: 'blur(0px)', 
-        duration: 1.2, 
-        ease: 'expo.out' 
+        duration: 0.8, 
+        ease: 'power4.out' 
       }
     )
     .to('.preloader-logo', {
-      scale: 1.2,
-      duration: 2,
-      ease: 'linear'
-    }, '-=0.5')
-    .to('.preloader-logo', {
-      top: '32px',
-      left: '5%',
-      xPercent: 0,
-      yPercent: 0,
-      scale: 1,
-      opacity: 0, // Fade out as it overlaps
-      duration: 1,
-      ease: 'expo.inOut'
+      scale: 1.15,
+      duration: 0.6,
+      ease: 'power2.inOut'
+    }, '-=0.2')
+    .add(() => {
+        // Dynamic measurement for perfect overlap on all devices
+        const target = document.getElementById('navbar-logo-target');
+        if (target) {
+            const rect = target.getBoundingClientRect();
+            gsap.to('.preloader-logo', {
+                top: rect.top + (rect.height / 2),
+                left: rect.left + (rect.width / 2),
+                scale: 1,
+                duration: 0.7,
+                ease: 'expo.inOut',
+                onComplete: () => {
+                    // Snap! Make the real navbar logo visible and the preloader logo disappear
+                    gsap.set(target, { opacity: 1 });
+                }
+            });
+        }
     })
     .to('.preloader', {
       opacity: 0,
-      duration: 0.8,
+      duration: 0.4,
       ease: 'power2.inOut'
-    }, '-=0.5');
+    }, '+=0.3'); // Wait for the "land" to finish
 
     return () => {
       lenis.destroy();

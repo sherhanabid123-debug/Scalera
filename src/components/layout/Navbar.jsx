@@ -64,7 +64,8 @@ const Navbar = () => {
                 background: !scrolled ? 'transparent' : undefined,
             }}>
                 <div
-                    style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102 }}
+                    id="navbar-logo-target"
+                    style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102, opacity: 0 }}
                     onClick={() => {
                         if (isOpen) setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
