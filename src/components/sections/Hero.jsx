@@ -55,14 +55,14 @@ const Hero = () => {
             <div className="hero-content" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', paddingLeft: '5%', maxWidth: '1400px' }}>
                 <h1 style={{ fontSize: 'clamp(3rem, 7vw, 9rem)', fontWeight: 300, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: '2.5rem', display: 'flex', flexDirection: 'column', textTransform: 'uppercase' }}>
                     <div style={{ overflow: 'hidden', paddingBottom: '0.5rem' }}>
-                        <span className="hero-word" style={{ display: 'inline-block' }}>Developing</span>
+                        <span className="hero-word" style={{ display: 'inline-block' }}>Defining The</span>
                     </div>
                     <div style={{ overflow: 'hidden', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '3vw' }}>
-                        <span className="hero-word" style={{ display: 'inline-block', fontWeight: 600 }}>High-Tech Solutions</span>
+                        <span className="hero-word" style={{ display: 'inline-block', fontWeight: 600 }}>Next Standard</span>
                         <div className="hero-line" style={{ flexGrow: 1, height: '1px', background: 'var(--border-subtle)', marginTop: '2vw' }} />
                     </div>
                     <div style={{ overflow: 'hidden', paddingBottom: '0.5rem' }}>
-                        <span className="hero-word" style={{ display: 'inline-block', color: 'var(--text-secondary)' }}>For High-Tech Individuals.</span>
+                        <span className="hero-word" style={{ display: 'inline-block', color: 'var(--text-secondary)' }}>In Digital Scale.</span>
                     </div>
                 </h1>
 
