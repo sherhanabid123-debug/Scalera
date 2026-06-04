@@ -1,3 +1,4 @@
+# Trigger Vercel rebuild
 import sys
 import traceback
 from fastapi import FastAPI
