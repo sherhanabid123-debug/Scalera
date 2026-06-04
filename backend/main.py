@@ -126,7 +126,8 @@ async def edit_section(request: dict):
 async def serve_dashboard():
     return FileResponse("public/scalera-ai.html")
 
-app.mount("/", StaticFiles(directory="public", html=True), name="public")
+if os.path.exists("public"):
+    app.mount("/", StaticFiles(directory="public", html=True), name="public")
 
 @app.get("/")
 def root():
