@@ -1,42 +1,20 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/index.py"
-    },
-    {
-      "source": "/",
-      "destination": "/public/index.html"
-    },
-    {
-      "source": "/scalera-ai",
-      "destination": "/public/scalera-ai.html"
-    },
-    {
-      "source": "/scalera-ai.js",
-      "destination": "/public/scalera-ai.js"
-    },
-    {
-      "source": "/preview",
-      "destination": "/public/preview.html"
-    },
-    {
-      "source": "/ai-styles.css",
-      "destination": "/public/ai-styles.css"
-    },
-    {
-      "source": "/favicon.svg",
-      "destination": "/public/favicon.svg"
-    },
-    {
-      "source": "/vite.svg",
-      "destination": "/public/vite.svg"
-    },
-    {
-      "source": "/assets/(.*)",
-      "destination": "/public/assets/$1"
     }
   ]
 }
