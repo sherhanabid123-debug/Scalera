@@ -14,18 +14,21 @@ from .engine.generator import generate_website
 
 app = FastAPI()
 
-@app.middleware("http")
-async def strip_vercel_prefix(request: Request, call_next):
-    # Print path for debugging in Vercel logs
-    print(f"[Middleware] Original path: {request.url.path}")
-    # If the path starts with /api/index.py, strip it
-    if request.url.path.startswith("/api/index.py"):
-        new_path = request.url.path.replace("/api/index.py", "", 1)
-        if not new_path.startswith("/"):
-            new_path = "/" + new_path
-        request.scope["path"] = new_path
-        print(f"[Middleware] Rewritten path: {request.scope['path']}")
-    return await call_next(request)
+class VercelPathMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http":
+            path = scope.get("path", "")
+            if path.startswith("/api/index.py"):
+                new_path = path.replace("/api/index.py", "", 1)
+                if not new_path.startswith("/"):
+                    new_path = "/" + new_path
+                scope["path"] = new_path
+        await self.app(scope, receive, send)
+
+app.add_middleware(VercelPathMiddleware)
 
 # Allow frontend to access the backend
 app.add_middleware(
