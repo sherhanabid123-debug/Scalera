@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -13,6 +13,19 @@ import json
 from .engine.generator import generate_website
 
 app = FastAPI()
+
+@app.middleware("http")
+async def strip_vercel_prefix(request: Request, call_next):
+    # Print path for debugging in Vercel logs
+    print(f"[Middleware] Original path: {request.url.path}")
+    # If the path starts with /api/index.py, strip it
+    if request.url.path.startswith("/api/index.py"):
+        new_path = request.url.path.replace("/api/index.py", "", 1)
+        if not new_path.startswith("/"):
+            new_path = "/" + new_path
+        request.scope["path"] = new_path
+        print(f"[Middleware] Rewritten path: {request.scope['path']}")
+    return await call_next(request)
 
 # Allow frontend to access the backend
 app.add_middleware(
