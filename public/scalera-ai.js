@@ -1173,7 +1173,7 @@ function closeVisionModal() {
     document.getElementById('vision-modal').style.display = 'none';
 }
 
-async function analyzeVision() {
+async function analyzeVisionModal() {
     const description = document.getElementById('vision-description').value;
     if (!description) {
         alert("Please describe your website first!");

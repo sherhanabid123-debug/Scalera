@@ -3,151 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumiere | Professional Photography</title>
+    <title>Aether | Minimalist Fine Art Photography</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <!-- Header Navbar -->
     <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">LUMIERE</a>
+        <div class="container nav-container">
+            <a href="#" class="logo">Aether</a>
             <div class="nav-links">
-                <a href="#portfolio">Portfolio</a>
+                <a href="#work">Selected Work</a>
                 <a href="#about">About</a>
-                <a href="#services">Services</a>
+                <a href="#contact">Contact</a>
             </div>
-            <a href="#contact" class="btn btn-outline">Book a Session</a>
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Hero / Title -->
     <header class="hero">
-        <div class="hero-content text-center">
-            <h1 class="reveal" style="transition-delay: 0.2s;">Capturing <em>fleeting</em> moments<br>with timeless elegance.</h1>
-            <p class="reveal lead-text" style="transition-delay: 0.4s;">Specializing in fine art portraiture, editorial fashion, and luxury weddings.</p>
-            <div class="reveal mt-4" style="transition-delay: 0.6s;">
-                <a href="#portfolio" class="btn btn-primary">View Gallery</a>
-            </div>
-        </div>
-        <div class="hero-bg reveal" style="transition-delay: 0.8s;">
-            <img src="https://images.unsplash.com/photo-1551316679-9c6ae9dec224?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Hero Photography">
+        <div class="container">
+            <span class="hero-eyebrow">Visual Director & Photographer</span>
+            <h1 class="hero-title">Capturing raw form <br>and <em>silent light</em></h1>
         </div>
     </header>
 
-    <section id="portfolio" class="section">
+    <!-- Portfolio Grid with Filters -->
+    <section id="work" class="section work-section">
         <div class="container">
-            <div class="text-center mb-4 reveal">
-                <p class="eyebrow">Selected Works</p>
-                <h2>The Gallery</h2>
+            <!-- Filter Bar -->
+            <div class="work-filters">
+                <button class="filter-btn active" data-filter="all">All Works</button>
+                <button class="filter-btn" data-filter="portrait">Portrait</button>
+                <button class="filter-btn" data-filter="landscape">Landscape</button>
+                <button class="filter-btn" data-filter="editorial">Editorial</button>
             </div>
-            
-            <div class="masonry-gallery">
-                <div class="gallery-item reveal">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Portrait">
-                    <div class="gallery-overlay">
-                        <h3>Portraiture</h3>
+
+            <!-- Masonry Grid -->
+            <div class="gallery-grid">
+                <!-- Item 1 -->
+                <div class="gallery-item portrait" data-category="portrait">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Symmetric Portrait Study" class="gallery-img">
+                    <div class="item-overlay">
+                        <span>Portrait Study &bull; 01</span>
                     </div>
                 </div>
-                <div class="gallery-item reveal" style="transition-delay: 0.1s;">
-                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wedding">
-                    <div class="gallery-overlay">
-                        <h3>Weddings</h3>
+
+                <!-- Item 2 -->
+                <div class="gallery-item landscape" data-category="landscape">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Golden Shoreline Vista" class="gallery-img">
+                    <div class="item-overlay">
+                        <span>Coastal Horizon &bull; 02</span>
                     </div>
                 </div>
-                <div class="gallery-item reveal" style="transition-delay: 0.2s;">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Editorial">
-                    <div class="gallery-overlay">
-                        <h3>Editorial</h3>
+
+                <!-- Item 3 -->
+                <div class="gallery-item editorial" data-category="editorial">
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="High Fashion Structural Silhouette" class="gallery-img">
+                    <div class="item-overlay">
+                        <span>Structural Form &bull; 03</span>
                     </div>
                 </div>
-                <div class="gallery-item reveal">
-                    <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fashion">
-                    <div class="gallery-overlay">
-                        <h3>Fashion</h3>
+
+                <!-- Item 4 -->
+                <div class="gallery-item portrait" data-category="portrait">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Monochrome Expressionist Portrait" class="gallery-img">
+                    <div class="item-overlay">
+                        <span>Shadow Profiles &bull; 04</span>
                     </div>
                 </div>
-                <div class="gallery-item reveal" style="transition-delay: 0.1s;">
-                    <img src="https://images.unsplash.com/photo-1509967419530-da38b4704bc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Commercial">
-                    <div class="gallery-overlay">
-                        <h3>Commercial</h3>
-                    </div>
-                </div>
-                <div class="gallery-item reveal" style="transition-delay: 0.2s;">
-                    <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fine Art">
-                    <div class="gallery-overlay">
-                        <h3>Fine Art</h3>
+
+                <!-- Item 5 -->
+                <div class="gallery-item landscape" data-category="landscape">
+                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mist Covered Forest Peaks" class="gallery-img">
+                    <div class="item-overlay">
+                        <span>Atmosphere Vistas &bull; 05</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="about" class="section bg-light text-dark">
-        <div class="container container-sm text-center">
-            <div class="reveal">
-                <p class="eyebrow">The Artist</p>
-                <h2>Behind the Lens</h2>
-                <p class="lead-text mt-2">With over a decade of experience, we focus on the raw, authentic emotions that make your story unique. Our approach is non-intrusive, allowing natural moments to unfold while capturing them with an editorial eye.</p>
-                <img src="https://images.unsplash.com/photo-1554048667-73b320d77d70?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Photographer" class="about-img mt-4">
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="container container-sm">
+            <span class="section-eyebrow">The Director</span>
+            <h2 class="section-title">Minimalist fine art expressionism</h2>
+            <div class="about-desc">
+                <p>Aether is the experimental studio of Christian Vance, a visual artist and fashion director working out of Copenhagen. Specializing in high-contrast analog monochrome photography and landscape topography.</p>
+                <p>His work challenges the boundaries between physical shapes and negative space. Selected editorials have been featured in Vogue Italia, Kinfolk, and Wallpaper* magazine.</p>
             </div>
         </div>
     </section>
 
-    <section id="services" class="section">
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox-modal">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" alt="Lightbox Image Details">
+        <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+
+    <!-- Contact / Footer -->
+    <footer id="contact" class="footer">
         <div class="container">
-            <div class="text-center mb-4 reveal">
-                <p class="eyebrow">Offerings</p>
-                <h2>Our Services</h2>
-            </div>
-            <div class="services-grid">
-                <div class="service-card reveal">
-                    <h3>Portraits</h3>
-                    <p>Professional headshots, personal branding, and creative portraiture tailored to your personality.</p>
-                    <span class="price">From $400</span>
+            <div class="footer-top">
+                <div class="footer-cta">
+                    <h2>Let's build a visual narrative together.</h2>
+                    <a href="mailto:inquire@aetherphoto.com" class="email-cta">inquire@aetherphoto.com</a>
                 </div>
-                <div class="service-card reveal" style="transition-delay: 0.1s;">
-                    <h3>Weddings</h3>
-                    <p>Comprehensive wedding day coverage, engagement sessions, and heirloom quality albums.</p>
-                    <span class="price">From $3,500</span>
-                </div>
-                <div class="service-card reveal" style="transition-delay: 0.2s;">
-                    <h3>Commercial</h3>
-                    <p>High-end product photography, fashion campaigns, and architectural shoots for brands.</p>
-                    <span class="price">Custom Quote</span>
+                <div class="footer-details">
+                    <p><strong>Exhibition Rep:</strong> Gallerie d'Art, Paris</p>
+                    <p><strong>Studio:</strong> Copenhagen, Denmark</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section bg-dark">
-        <div class="container container-sm text-center reveal">
-            <h2>Ready to tell your story?</h2>
-            <p class="lead-text mb-4">Let's create beautiful imagery together. Reach out to discuss your vision.</p>
-            <form class="contact-form">
-                <div class="form-group">
-                    <input type="text" placeholder="Your Name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" placeholder="Your Email" required>
-                </div>
-                <div class="form-group">
-                    <textarea placeholder="Tell us about your project or event..." rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Send Inquiry</button>
-            </form>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container text-center">
-            <h2 class="logo mb-2">LUMIERE</h2>
-            <div class="footer-links">
-                <a href="#">Instagram</a>
-                <a href="#">Pinterest</a>
-                <a href="#">Journal</a>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Aether Studio. All rights reserved.</p>
             </div>
-            <p class="copyright">&copy; 2024 Lumiere Photography. All rights reserved.</p>
         </div>
     </footer>
 

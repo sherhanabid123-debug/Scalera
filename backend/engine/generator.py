@@ -9,17 +9,13 @@ load_dotenv()
 # API Keys
 # ──────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+# Force Gemini to be disabled as per user request to only use Groq
+GEMINI_API_KEY = ""
 
 if not GROQ_API_KEY:
     print("[Scalera AI] ⚠️ WARNING: GROQ_API_KEY not found.")
 else:
     print(f"[Scalera AI] ✅ GROQ_API_KEY loaded (Starts with: {GROQ_API_KEY[:4]}...)")
-
-if GEMINI_API_KEY:
-    print(f"[Scalera AI] ✅ GEMINI_API_KEY loaded (Starts with: {GEMINI_API_KEY[:4]}...)")
-    import google.generativeai as genai
-    genai.configure(api_key=GEMINI_API_KEY)
 
 # ──────────────────────────────────────────────
 # Clients
@@ -89,6 +85,7 @@ Reply with ONLY the folder name, nothing else. Example: sherhan_portfolio"""
         return subfolders[0]
 
 
+
 # ──────────────────────────────────────────────
 # Template Loader — reads the actual files
 # ──────────────────────────────────────────────
@@ -115,7 +112,7 @@ def _read_template(folder_name: str) -> dict:
 # ──────────────────────────────────────────────
 async def _personalise_template(template: dict, chat_history: str) -> dict:
     """
-    Rewrites the HTML template using Gemini 2.0 for high-fidelity data injection.
+    Rewrites the HTML template using Groq for high-fidelity data injection.
     """
     html = template["html"]
     
@@ -124,6 +121,8 @@ async def _personalise_template(template: dict, chat_history: str) -> dict:
 
 PRIME DIRECTIVE:
 Your priority #1 is to replace all generic placeholders with the REAL USER DATA provided below.
+CRITICAL: You MUST use the existing template layout and structure. ONLY change text features, content, and very few minor UI features (like duplicating existing cards/lists) based on the user's prompts. Do NOT invent new sections or alter the core design architecture.
+ONLY the text on the website is supposed to be changed by you. You must NOT change HTML tags, class attributes, id attributes, or structural styling.
 The 'business_name' in the data is your BRAND ANCHOR. Use it for the Logo, Hero Headline, and Footer.
 Keeping generic text like "Your Business" or "Company Name" is a total failure.
 
@@ -139,40 +138,16 @@ MAPPING RULES:
 
 STRICT TECHNICAL RULES:
 - Output ONLY the raw HTML starting with <!DOCTYPE html>.
-- PRESERVE all classes and IDs.
-- REPEATING ELEMENTS: If the template has repeating elements (like 'Experience cards' or 'Service blocks'), you MUST duplicate or remove them to match the number of items in the user's data.
+- PRESERVE all classes, IDs, structural tags, script links, stylesheet links, and existing structure exactly. Do NOT change them.
+- REPEATING ELEMENTS: If the template has repeating elements (like 'Experience cards' or 'Service blocks'), you MUST duplicate or remove them to match the number of items in the user's data, without changing the underlying UI structure.
 - If data is provided, the original template text MUST be gone.
 
 TEMPLATE TO REWRITE:
 {html}"""
 
-    # Try Gemini 2.0 first for best quality
-    if GEMINI_API_KEY:
-        try:
-            print("[Personalise] Sending HTML to Gemini 2.0 for deep injection...")
-            import google.generativeai as genai
-            model = genai.GenerativeModel('gemini-2.0-flash')
-            response = model.generate_content(instruction)
-            result_html = response.text.strip()
-            
-            # Clean markdown code blocks if present
-            if result_html.startswith("```"):
-                result_html = re.sub(r'^```[a-z]*\n?', '', result_html)
-                result_html = re.sub(r'\n?```$', '', result_html)
-                
-            if "<!DOCTYPE" in result_html.upper() and "</html>" in result_html.lower():
-                print(f"[Personalise] ✅ Gemini rewrite successful ({len(result_html)} bytes)")
-                return {
-                    "html": result_html,
-                    "css": template["css"],
-                    "js": template["js"],
-                }
-        except Exception as e:
-            print(f"[Personalise] Gemini failed: {e}, trying Groq fallback...")
-
-    # Fallback to Groq Llama 3.3 70b or 3.1 8b
+    # Use Groq llama-3.3-70b-versatile
     try:
-        print("[Personalise] Using Groq fallback (llama-3.3-70b-versatile)...")
+        print("[Personalise] Customising template text using Groq (llama-3.3-70b-versatile)...")
         client = Groq(api_key=GROQ_API_KEY)
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -187,17 +162,17 @@ TEMPLATE TO REWRITE:
             result_html = re.sub(r'\n?```$', '', result_html)
 
         if "<html" in result_html.lower() and "<nav" in result_html:
-            print(f"[Personalise] ✅ Fallback rewrite successful ({len(result_html)} bytes)")
+            print(f"[Personalise] ✅ Personalisation successful ({len(result_html)} bytes)")
             return {
                 "html": result_html,
                 "css": template["css"],
                 "js": template["js"],
             }
         else:
-            print("[Personalise] ⚠️ Fallback output invalid, returning template as-is")
+            print("[Personalise] ⚠️ Personalised output invalid, returning template as-is")
 
-    except Exception as e2:
-        print(f"[Personalise] Fallback also failed: {e2}")
+    except Exception as e:
+        print(f"[Personalise] Groq personalisation failed: {e}")
 
     # ── Last resort: return the template with no personalisation ──
     print("[Personalise] Returning raw template (no text changes)")
@@ -209,52 +184,167 @@ TEMPLATE TO REWRITE:
 # ──────────────────────────────────────────────
 async def generate_website(chat_history: str, data: dict = None) -> dict:
     """
-    Generates a website by:
-    1. Extracting/Refining blueprint from chat if needed
-    2. Building a custom modular site using the Atomic Engine
-    3. Personalising content for deep flow
+    Generates a premium website from niche-specific templates:
+    1. Routes to the best matching premium template folder based on user niche.
+    2. Loads index.html, styles.css, and script.js from the selected template.
+    3. Injects glassmorphic in-context AI editing styles and JS script triggers.
+    4. Personalises the copy, sections, and values based on the conversation log.
     """
-    def error_result(msg: str) -> dict:
-        return {
-            "html": f"<h3 style='font-family:sans-serif;padding:2rem;color:#ff6b6b'>{msg}</h3>",
-            "css": "body { font-family: sans-serif; background: #0a0a0a; color: #fff; }",
-            "js": "",
-        }
+    # 1. Ensure we have data dictionary
+    if not data:
+        data = {}
+    
+    # 2. Route to the best premium template folder based on user niche
+    folder_name = await _route_template(chat_history)
+    print(f"[Generator] 🛠️ Routed to premium template: {folder_name}")
+    
+    # 3. Read template files
+    template_data = _read_template(folder_name)
+    html_content = template_data.get("html", "")
+    css_content = template_data.get("css", "")
+    js_content = template_data.get("js", "")
+    
+    if not html_content:
+        # Fallback to corporate if directory is empty or read failed
+        print(f"[Generator] ⚠️ Template {folder_name} empty or missing, falling back to corporate.")
+        template_data = _read_template("corporate")
+        html_content = template_data.get("html", "")
+        css_content = template_data.get("css", "")
+        js_content = template_data.get("js", "")
 
-    # 1. If data is missing sections, we MUST extract them from chat history first
-    if not data or not data.get("sections"):
-        print("[Generator] 🧠 No blueprint found. Extracting from chat history...")
-        interpretation = await interpret_vision(chat_history)
-        if interpretation.get("status") == "success":
-            data = interpretation.get("data")
-            print(f"[Generator] ✨ Extracted Vision: {data.get('business_name')} ({data.get('site_type')})")
-        else:
-            data = {
-                "business_name": "Scalera Site",
-                "site_type": "Modern Business",
-                "sections": ["Hero", "About", "Services", "Contact"],
-                "tone": "Premium"
+    # Add standard CSS for the in-context editing hooks
+    css_content += "\n" + """
+    /* In-Context Editor Styles */
+    .editable-section { position: relative; transition: all 0.3s ease; }
+    .editable-section:hover { box-shadow: inset 0 0 50px rgba(220, 180, 128, 0.05); }
+    .editable-section::after { 
+        content: ''; position: absolute; inset: 0; 
+        border: 1px solid transparent; border-radius: 12px; 
+        pointer-events: none; transition: border-color 0.3s ease; 
+    }
+    .editable-section:hover::after { border-color: rgba(220, 180, 128, 0.2); }
+    
+    .ai-edit-trigger {
+        position: absolute; top: 20px; right: 20px;
+        z-index: 1000; padding: 8px 16px;
+        background: rgba(220, 180, 128, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(220, 180, 128, 0.3);
+        border-radius: 100px; color: #fff;
+        font-size: 0.75rem; font-weight: 600;
+        cursor: pointer; opacity: 0; transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        display: flex; align-items: center; gap: 6px;
+    }
+    .editable-section:hover .ai-edit-trigger { opacity: 1; transform: translateY(0); }
+    .ai-edit-trigger:hover { background: #dcb480; color: #000; box-shadow: 0 0 20px rgba(220, 180, 128, 0.4); }
+    """
+    
+    # Inject CSS into HTML head
+    if "<head>" in html_content:
+        html_content = html_content.replace("<head>", f"<head>\n<style>\n{css_content}\n</style>")
+    else:
+        html_content = f"<style>\n{css_content}\n</style>\n" + html_content
+        
+    # Inject JS scripts for scrolling reveal animations & postMessage event handlers
+    js_inject = js_content + "\n" + """
+    document.addEventListener('DOMContentLoaded', () => {
+        // Reveal Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Inject Edit Buttons into major block-level containers or sections
+        const blockElements = document.querySelectorAll('header, section, footer, .hero, .features, .pricing, .about, .contact, .services');
+        blockElements.forEach((section, idx) => {
+            if (section.id || section.className) {
+                section.classList.add('editable-section');
+                if (!section.id) {
+                    section.id = `section-block-${idx}`;
+                }
+                section.setAttribute('data-type', section.tagName.toLowerCase());
+                
+                const btn = document.createElement('button');
+                btn.className = 'ai-edit-trigger';
+                btn.type = 'button';
+                btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit with AI`;
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    window.parent.postMessage({
+                        type: 'OPEN_AI_EDITOR',
+                        sectionId: section.id,
+                        sectionType: section.tagName.toLowerCase(),
+                        content: section.innerHTML
+                    }, '*');
+                };
+                section.appendChild(btn);
             }
+        });
 
-    # 2. Build the site using the Modular Assembler (The Atomic System)
-    from .assembler import assemble_modular_site
-    print(f"[Generator] 🛠️ Building CUSTOM MODULAR site for: {data.get('business_name')}")
-    
-    result = await assemble_modular_site(data, data)
-    
-    # 3. Final Personalisation
-    personalisation_prompt = f"""
-    BUSINESS: {data.get('business_name')}
-    TYPE: {data.get('site_type')}
-    STYLE ARCHETYPE: {data.get('style_archetype', 'Modern')}
-    STRATEGIC IMPROVEMENTS TO APPLY: {", ".join(data.get('improvements', []))}
-    
-    ORIGINAL CONTEXT: {chat_history}
+        // Listen for section updates from Parent (Scalera AI)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'UPDATE_SECTION_HTML') {
+                const section = document.getElementById(event.data.sectionId);
+                if (section) {
+                    section.style.opacity = '0';
+                    setTimeout(() => {
+                        section.innerHTML = event.data.newHtml;
+                        // Re-inject edit button
+                        const btn = document.createElement('button');
+                        btn.className = 'ai-edit-trigger';
+                        btn.type = 'button';
+                        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit with AI`;
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            window.parent.postMessage({
+                                type: 'OPEN_AI_EDITOR',
+                                sectionId: section.id,
+                                sectionType: section.tagName.toLowerCase(),
+                                content: section.innerHTML
+                            }, '*');
+                        };
+                        section.appendChild(btn);
+                        section.style.opacity = '1';
+                    }, 300);
+                }
+            }
+        });
+    });
     """
     
-    result = await _personalise_template(result, personalisation_prompt)
+    if "</body>" in html_content:
+        html_content = html_content.replace("</body>", f"<script>\n{js_inject}\n</script>\n</body>")
+    else:
+        html_content = html_content + f"\n<script>\n{js_inject}\n</script>"
+        
+    # Remove link/script tag references to avoid browser 404 console errors
+    html_content = re.sub(r'<link[^>]*href=["\']styles\.css["\'][^>]*>', '', html_content)
+    html_content = re.sub(r'<script[^>]*src=["\']script\.js["\'][^>]*>\s*</script>', '', html_content)
+
+    # 4. Final text rewrite via LLM personalisation
+    personalisation_prompt = f"""
+    BUSINESS_NAME: {data.get('business_name') or 'Generic Business'}
+    SITE_TYPE: {data.get('site_type') or 'Professional Business'}
+    BIO: {data.get('bio') or data.get('description') or ''}
+    TONE: {data.get('tone') or 'Premium & Elegant'}
+    LOCATION: {data.get('address') or ''}
+    RATING: {data.get('rating') or ''}
     
-    print(f"[Generator] ✅ Custom Website generated successfully.")
+    ORIGINAL CONTEXT:
+    {chat_history}
+    """
+    
+    result = await _personalise_template(
+        {"html": html_content, "css": "", "js": ""},
+        personalisation_prompt
+    )
+    
+    print(f"[Generator] ✅ Premium Website generated successfully from template '{folder_name}'.")
     return result
 
 
@@ -294,7 +384,7 @@ async def chat_with_ai(messages: list) -> dict:
 
     if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
         return {
-            "reply": "Error: GROQ_API_KEY is missing. Please add it to your .env file in the root directory.",
+            "reply": "Error: GROQ_API_KEY is missing. Please add your Groq API key to your .env file in the root directory.",
             "ready_to_generate": False
         }
 
@@ -316,46 +406,44 @@ async def chat_with_ai(messages: list) -> dict:
             "ready_to_generate": False
         }
 
+
 # ──────────────────────────────────────────────
 # AI Editor — Targeted updates
 # ──────────────────────────────────────────────
 async def edit_website(html: str, css: str, prompt: str) -> dict:
     """
     Takes the current HTML/CSS and a user's natural language edit prompt,
-    and returns the modified HTML and CSS.
+    and returns the modified HTML (text only changed) and unchanged CSS.
     """
-    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
-        return {"html": html, "css": css} # Fallback
-
-    system_msg = """You are Scalera AI, a surgical front-end developer.
-Your task is to modify the provided HTML and CSS based on the user's prompt.
+    system_msg = """You are Scalera AI, a surgical text editor.
+Your task is to modify the text content in the provided HTML based on the user's prompt.
 
 SURGICAL RULES:
-1. ONLY change the specific sections or text mentioned by the user.
-2. DO NOT rewrite the entire page structure.
-3. If the user asks for a text change, DO NOT touch the CSS.
-4. If the user asks for a design change (colors, etc.), ONLY touch the relevant CSS rules.
-5. KEEP all existing classes, IDs, and structure perfectly intact.
-6. Return the FULL updated code as JSON."""
+1. ONLY change the specific text content (e.g. text inside tags, headings, paragraphs, button labels, list items) mentioned by the user.
+2. DO NOT change, add, or remove any HTML tags, structures, class names, or IDs.
+3. DO NOT change the CSS rules or layout.
+4. KEEP all existing classes, IDs, structure, scripts, and styling links perfectly intact.
+5. Return the FULL updated HTML code. The CSS value in your JSON reply should just be an empty string, as you are not allowed to edit CSS."""
 
     user_msg = f"""
 [HTML]
 {html}
 [/HTML]
 
-[CSS]
-{css}
-[/CSS]
-
 [USER REQUEST]
 {prompt}
 
-Return a JSON object: {{"html": "...", "css": "..."}}
+Return a JSON object: {{"html": "...", "css": ""}}
 """
+
+    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
+        return {"html": html, "css": css}
+
     try:
+        print("[AI Editor] Surgical text edit using Groq (llama-3.3-70b-versatile)...")
         client = Groq(api_key=GROQ_API_KEY)
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": system_msg},
                 {"role": "user", "content": user_msg}
@@ -367,11 +455,12 @@ Return a JSON object: {{"html": "...", "css": "..."}}
         parsed = json.loads(raw_content)
         return {
             "html": parsed.get("html", html),
-            "css": parsed.get("css", css)
+            "css": css # Keep original CSS completely intact
         }
     except Exception as e:
         print(f"[AI Editor] Error: {e}")
         return {"html": html, "css": css}
+
 
 
 # ──────────────────────────────────────────────
@@ -409,31 +498,12 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
     if not text.strip():
         return {"error": "The file appears to be empty."}
 
-    if GEMINI_API_KEY:
-        res = await _try_gemini(text, 'gemini-2.0-flash')
-        if "error" not in res: return res
-
+    # Bypassed Gemini, routing directly to Groq-powered parser
     return await _parse_raw_text_to_json(text)
-
-async def _try_gemini(raw_text: str, model_name: str, custom_prompt: str = None) -> dict:
-    """Helper to try a specific Gemini model."""
-    try:
-        import google.generativeai as genai
-        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
-        
-        if custom_prompt:
-            prompt = f"{custom_prompt}\n\nData:\n{raw_text[:15000]}"
-        else:
-            prompt = f"Extract profile data from this text into structured JSON. Include: full_name, professional_title, bio, skills[], experience[], projects[], education[].\n\nText:\n{raw_text[:15000]}"
-            
-        response = model.generate_content(prompt)
-        return json.loads(response.text)
-    except Exception as e:
-        return {"error": str(e)}
 
 
 async def extract_data_from_link(link: str) -> dict:
-    """Best-effort scraper for public links (LinkedIn/Portfolios)."""
+    """Best-effort scraper for public links (LinkedIn/Portfolios) using Groq."""
     try:
         import urllib.request
         from bs4 import BeautifulSoup
@@ -452,21 +522,19 @@ async def extract_data_from_link(link: str) -> dict:
             
             raw_blob = f"Title: {title_text}\nDescription: {desc_text}\nSnippet: {html[:2000]}"
             
-            if GEMINI_API_KEY:
-                return await _try_gemini(raw_blob, 'gemini-2.0-flash')
-            
-            return {"full_name": title_text, "bio": desc_text}
+            # Bypassed Gemini, routing directly to Groq-powered parser
+            return await _parse_raw_text_to_json(raw_blob)
 
     except Exception as e:
         return {"error": "LinkedIn blocked the request. Try uploading a PDF resume instead."}
 
 async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict:
     """Uses Groq to turn raw text into a structured JSON schema."""
-    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
-        return {"raw_text": raw_text[:500]}
-
     if not system_msg:
         system_msg = """Extract information into JSON: full_name, professional_title, bio, skills, experience, projects, education."""
+
+    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
+        return {"raw_text": raw_text[:500]}
 
     try:
         client = Groq(api_key=GROQ_API_KEY)
@@ -483,8 +551,9 @@ async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict
     except Exception as e:
         return {"error": str(e)}
 
+
 async def extract_business_data(link: str) -> dict:
-    """Robust extraction from a Google Maps link."""
+    """Robust extraction from a Google Maps link using Groq parser."""
     try:
         import urllib.request
         from bs4 import BeautifulSoup
@@ -499,8 +568,7 @@ async def extract_business_data(link: str) -> dict:
             title_text = meta_title['content'] if meta_title else ""
             
             biz_prompt = "Extract business JSON: name, type, address, rating, description."
-            if GEMINI_API_KEY:
-                return await _try_gemini(html[:4000], 'gemini-2.0-flash', biz_prompt)
+            # Bypassed Gemini, routing directly to Groq-powered parser
             return await _parse_raw_text_to_json(html[:4000], system_msg=biz_prompt)
     except Exception as e:
         return {"error": str(e)}
@@ -509,26 +577,94 @@ async def extract_business_data(link: str) -> dict:
 # Vision Interpretation — Natural Language to Blueprint
 # ──────────────────────────────────────────────
 async def interpret_vision(description: str) -> dict:
-    """Converts natural language description into a structured JSON blueprint."""
-    instruction = f"Convert this website vision into JSON: {description}"
-    try:
-        import google.generativeai as genai
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(instruction)
-        return json.loads(response.text.strip())
-    except:
-        return {"site_type": "agency", "tone": "modern", "sections": ["Hero", "About", "Services", "Contact"]}
+    """Converts natural language description into a structured JSON blueprint using Groq."""
+    prompt = f"""You are a website blueprint architect. Convert the user's website vision/description into a structured JSON object.
+
+Required fields in the JSON object:
+1. "business_name": A clean name for the business (infer it from the text or use "My Business" if not mentioned).
+2. "site_type": The type/niche of the website (e.g., portfolio, agency, restaurant, saas, dental clinic, law-firm, etc.).
+3. "tone": The design tone (e.g., luxury, modern, clean, bold, dark, minimalist).
+4. "sections": A list of sections to generate (e.g., ["Hero", "About", "Services", "Testimonials", "Contact"]).
+
+User description:
+{description}
+
+JSON:"""
+
+    if GROQ_API_KEY and GROQ_API_KEY != "PASTE_YOUR_GROQ_KEY_HERE":
+        try:
+            client = Groq(api_key=GROQ_API_KEY)
+            response = client.chat.completions.create(
+                model="llama-3.1-8b-instant",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant that returns only a JSON object matching the requested schema."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.0
+            )
+            data = json.loads(response.choices[0].message.content.strip())
+            if not data.get("business_name"):
+                data["business_name"] = "My Business"
+            if not data.get("site_type"):
+                data["site_type"] = "agency"
+            if not data.get("tone"):
+                data["tone"] = "modern"
+            if not data.get("sections"):
+                data["sections"] = ["Hero", "About", "Services", "Contact"]
+            return data
+        except Exception as e:
+            print(f"[interpret_vision] Groq failed: {e}")
+
+    return {
+        "business_name": "My Business",
+        "site_type": "agency",
+        "tone": "modern",
+        "sections": ["Hero", "About", "Services", "Contact"]
+    }
 
 # ──────────────────────────────────────────────
 # Contextual Section Editing
 # ──────────────────────────────────────────────
 async def edit_section_content(section_html: str, instruction: str, section_type: str) -> str:
-    """Rewrites a specific section of the website."""
-    system_prompt = f"Edit this HTML section ({section_type}) based on: {instruction}\n\nHTML:\n{section_html}"
-    try:
-        import google.generativeai as genai
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(system_prompt)
-        return response.text.strip()
-    except:
-        return section_html
+    """Rewrites the text content of a specific section of the website using Groq."""
+    prompt = f"""You are a professional web developer and strict text-content editor.
+Edit the text content of the following HTML section ({section_type}) based on the instruction: "{instruction}".
+
+STRICT RULES:
+1. ONLY change the text content (e.g. headings, paragraph text, buttons text, links text) to satisfy the instruction.
+2. Do NOT add, remove, or modify any HTML tags, layout wrappers, CSS class names, styles, or ID attributes.
+3. Keep all dynamic scripts, classes, structure, animations, and onClick/postMessage triggers exactly as they are.
+4. Return ONLY the raw updated HTML without any explanation, markdown code blocks, or comments.
+
+HTML section to edit:
+{section_html}"""
+
+    if GROQ_API_KEY and GROQ_API_KEY != "PASTE_YOUR_GROQ_KEY_HERE":
+        try:
+            print(f"[EditSection] Using Groq (llama-3.3-70b-versatile) for editing section ({section_type})...")
+            client = Groq(api_key=GROQ_API_KEY)
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are a strict code editing assistant. You only output raw updated code without comments, Markdown code fences, or explanations."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=8192,
+                temperature=0.2,
+            )
+            result_html = response.choices[0].message.content.strip()
+            
+            # Clean markdown code blocks if present
+            if result_html.startswith("```"):
+                result_html = re.sub(r'^```[a-z]*\n?', '', result_html)
+                result_html = re.sub(r'\n?```$', '', result_html)
+                
+            if result_html:
+                print(f"[EditSection] ✅ Groq edit successful ({len(result_html)} bytes)")
+                return result_html
+        except Exception as e:
+            print(f"[EditSection] Groq failed: {e}")
+
+    return section_html
+

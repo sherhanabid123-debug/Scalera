@@ -3,168 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maison | Fine Dining & Culinary Experience</title>
+    <title>L'Ambroisie | Fine Dining & Culinary Experience</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <!-- Header Navbar -->
     <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">Maison</a>
+        <div class="container nav-container">
+            <a href="#" class="logo">L'Ambroisie</a>
             <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#menu">Menu</a>
-                <a href="#reservations">Reservations</a>
+                <a href="#philosophy">Philosophy</a>
+                <a href="#menu">The Menu</a>
+                <a href="#experience">The Experience</a>
+                <a href="#reserve">Reservations</a>
             </div>
-            <a href="#reservations" class="btn btn-outline">Book a Table</a>
+            <div class="nav-cta">
+                <a href="#reserve" class="btn btn-outline">Book Table</a>
+            </div>
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header class="hero">
-        <div class="hero-split">
-            <div class="hero-image reveal">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Restaurant Interior">
-            </div>
+        <div class="hero-bg-overlay"></div>
+        <div class="container hero-container">
             <div class="hero-content">
-                <h1 class="reveal" style="transition-delay: 0.2s;">A culinary <br>journey through <br><em>modern flavors.</em></h1>
-                <p class="reveal" style="transition-delay: 0.3s;">Experience the finest seasonal ingredients crafted with passion and precision.</p>
-                <div class="reveal" style="transition-delay: 0.4s;">
-                    <a href="#menu" class="btn btn-primary">Discover the Menu</a>
+                <span class="hero-subtitle">Michelin Starred Gastronomy</span>
+                <h1 class="hero-title">Culinary art, <br><em>redefined by passion</em></h1>
+                <p class="hero-desc">Experience an intimate journey through modern French flavors, crafted from organic hand-selected seasonal ingredients.</p>
+                <div class="hero-actions">
+                    <a href="#menu" class="btn btn-gold">Explore the Menu</a>
+                    <a href="#reserve" class="btn btn-outline">Book A Table</a>
                 </div>
             </div>
         </div>
     </header>
 
-    <section id="about" class="section">
+    <!-- Philosophy -->
+    <section id="philosophy" class="section philosophy-section">
         <div class="container container-sm text-center">
-            <div class="reveal">
-                <p class="eyebrow">Our Philosophy</p>
-                <h2>Tradition meets innovation.</h2>
-                <p class="lead-text">At Maison, we believe that dining is more than just a meal—it is an experience. Our chefs work closely with local farmers to source the freshest ingredients, bringing together classic techniques and modern innovation to create dishes that tell a story.</p>
-            </div>
+            <span class="section-eyebrow">Our Heritage</span>
+            <h2 class="section-title">An unforgettable pursuit of culinary perfection</h2>
+            <div class="divider"><span class="divider-gold-dot"></span></div>
+            <p class="section-lead">At L'Ambroisie, we believe dining is an artistic dialogue. Led by Chef de Cuisine Marc Bernard, our kitchen merges legendary classical techniques with modern creative expression to create plates that tell stories of legacy, terroir, and innovation.</p>
         </div>
     </section>
 
-    <section id="menu" class="section bg-light">
+    <!-- Menu Section (Tabbed) -->
+    <section id="menu" class="section menu-section">
         <div class="container">
-            <div class="text-center mb-4 reveal">
-                <p class="eyebrow">A la Carte</p>
-                <h2>Seasonal Menu</h2>
-            </div>
-            
-            <div class="menu-grid">
-                <!-- Starters -->
-                <div class="menu-category reveal">
-                    <h3>Starters</h3>
-                    <div class="menu-item">
-                        <div class="menu-header">
-                            <h4>Heirloom Tomato Tart</h4>
-                            <span class="menu-price">$18</span>
-                        </div>
-                        <p>Whipped ricotta, basil emulsion, pine nuts</p>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-header">
-                            <h4>Wagyu Beef Carpaccio</h4>
-                            <span class="menu-price">$24</span>
-                        </div>
-                        <p>Black truffle vinaigrette, shaved parmesan, capers</p>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-header">
-                            <h4>Seared Scallops</h4>
-                            <span class="menu-price">$22</span>
-                        </div>
-                        <p>Cauliflower purée, brown butter caper sauce</p>
-                    </div>
-                </div>
-
-                <!-- Mains -->
-                <div class="menu-category reveal" style="transition-delay: 0.2s;">
-                    <h3>Mains</h3>
-                    <div class="menu-item">
-                        <div class="menu-header">
-                            <h4>Pan-Roasted Halibut</h4>
-                            <span class="menu-price">$38</span>
-                        </div>
-                        <p>Fennel confit, citrus beurre blanc, asparagus</p>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-header">
-                            <h4>Duck Breast</h4>
-                            <span class="menu-price">$42</span>
-                        </div>
-                        <p>Cherry gastrique, sweet potato fondant, swiss chard</p>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-header">
-                            <h4>Wild Mushroom Risotto</h4>
-                            <span class="menu-price">$32</span>
-                        </div>
-                        <p>Porcini broth, aged parmesan, truffle oil (V)</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="reservations" class="section">
-        <div class="container reservation-container">
-            <div class="reservation-content reveal">
-                <p class="eyebrow">Join Us</p>
-                <h2>Make a Reservation</h2>
-                <p>We accept reservations up to 30 days in advance. For parties of 6 or more, please contact the restaurant directly.</p>
+            <div class="text-center section-head">
+                <span class="section-eyebrow">Seasonal Delicacies</span>
+                <h2 class="section-title">The Seasonal Tasting Menu</h2>
                 
-                <div class="contact-details mt-2">
-                    <p><strong>Call:</strong> +1 (555) 123-4567</p>
-                    <p><strong>Email:</strong> reservations@maison.com</p>
-                    <p><strong>Location:</strong> 123 Culinary Way, Food City</p>
+                <!-- Menu Tabs -->
+                <div class="menu-tabs">
+                    <button class="tab-btn active" data-tab="starters">Starters</button>
+                    <button class="tab-btn" data-tab="mains">Mains</button>
+                    <button class="tab-btn" data-tab="desserts">Desserts</button>
                 </div>
             </div>
-            
-            <div class="reservation-form-container reveal" style="transition-delay: 0.2s;">
-                <form class="reservation-form">
-                    <div class="form-group">
-                        <label for="date">Date</label>
-                        <input type="date" id="date" required>
+
+            <!-- Tab Contents -->
+            <div class="menu-content-wrapper">
+                <!-- Starters Tab -->
+                <div class="tab-content active" id="starters">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Brittany Lobster Tart</h3>
+                                <span class="price">$48</span>
+                            </div>
+                            <p class="item-desc">Golden Osetra caviar, micro-herbs, smoked butter emulsion.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Foie Gras Terrine</h3>
+                                <span class="price">$42</span>
+                            </div>
+                            <p class="item-desc">Caramelized fig compote, toasted brioche, port reduction.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Heirloom Beet Carpaccio</h3>
+                                <span class="price">$36</span>
+                            </div>
+                            <p class="item-desc">Whipped goat cheese pearls, truffle honey, toasted hazelnuts.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Wild Forest Consommé</h3>
+                                <span class="price">$34</span>
+                            </div>
+                            <p class="item-desc">Maitake mushroom caps, pine essence, gold leaf accent.</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="time">Time</label>
-                        <select id="time" required>
-                            <option value="">Select a time</option>
-                            <option value="18:00">6:00 PM</option>
-                            <option value="19:00">7:00 PM</option>
-                            <option value="20:00">8:00 PM</option>
-                            <option value="21:00">9:00 PM</option>
-                        </select>
+                </div>
+
+                <!-- Mains Tab -->
+                <div class="tab-content" id="mains">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Line-Caught Turbot</h3>
+                                <span class="price">$78</span>
+                            </div>
+                            <p class="item-desc">Braised baby leeks, saffron fumet, fingerling potato confit.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>A5 Japanese Wagyu</h3>
+                                <span class="price">$95</span>
+                            </div>
+                            <p class="item-desc">Parsnip purée, roasted heritage carrots, black garlic jus.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Glazed Challans Duck</h3>
+                                <span class="price">$72</span>
+                            </div>
+                            <p class="item-desc">Spiced honey crust, roasted stone fruits, bitter greens.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Morel Truffle Risotto</h3>
+                                <span class="price">$65</span>
+                            </div>
+                            <p class="item-desc">Carnaroli rice, aged Parmigiano-Reggiano, fresh winter truffle.</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="guests">Guests</label>
-                        <select id="guests" required>
-                            <option value="">Number of guests</option>
-                            <option value="1">1 Person</option>
-                            <option value="2">2 People</option>
-                            <option value="3">3 People</option>
-                            <option value="4">4 People</option>
-                        </select>
+                </div>
+
+                <!-- Desserts Tab -->
+                <div class="tab-content" id="desserts">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Grand Marnier Soufflé</h3>
+                                <span class="price">$28</span>
+                            </div>
+                            <p class="item-desc">Tahitian vanilla bean crème anglaise, orange zest dust.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Valrhona Dark Chocolate Dome</h3>
+                                <span class="price">$32</span>
+                            </div>
+                            <p class="item-desc">Salted caramel core, espresso meringue, hot fudge pour-over.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h3>Lemon Verbena Sorbet</h3>
+                                <span class="price">$24</span>
+                            </div>
+                            <p class="item-desc">Champagne gelatin, macerated wild strawberries, mint glass.</p>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Find a Table</button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Reservations Section -->
+    <section id="reserve" class="section reserve-section">
+        <div class="container">
+            <div class="reserve-wrapper">
+                <div class="reserve-info">
+                    <span class="section-eyebrow">Join Us</span>
+                    <h2>Secure your table</h2>
+                    <p class="reserve-text">Reservations open on the first day of each month for the following month. We recommend booking in advance. For parties larger than 6, please call our concierge directly.</p>
+                    <div class="contact-card">
+                        <div class="c-info-row">
+                            <strong>Concierge:</strong> +1 (555) 890-1234
+                        </div>
+                        <div class="c-info-row">
+                            <strong>Email:</strong> concierge@ambroisie.com
+                        </div>
+                        <div class="c-info-row">
+                            <strong>Dress Code:</strong> Smart Elegant (Jacket preferred)
+                        </div>
+                    </div>
+                </div>
+                <div class="reserve-form-box">
+                    <form id="reservation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="res-name">Full Name</label>
+                                <input type="text" id="res-name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="res-email">Email Address</label>
+                                <input type="email" id="res-email" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="res-date">Preferred Date</label>
+                                <input type="date" id="res-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="res-time">Dining Time</label>
+                                <select id="res-time" required>
+                                    <option value="">Select Time</option>
+                                    <option value="18:00">6:00 PM</option>
+                                    <option value="19:00">7:00 PM</option>
+                                    <option value="20:00">8:00 PM</option>
+                                    <option value="21:30">9:30 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-guests">Number of Guests</label>
+                            <select id="res-guests" required>
+                                <option value="">Select Guests</option>
+                                <option value="2">2 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="6">6 Guests</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-block">Request Reservation</button>
+                    </form>
+                    <div id="form-success" class="form-success-msg" style="display:none;">
+                        Reservation requested successfully. Our concierge team will email you validation within 2 hours.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container text-center">
-            <h2 class="logo mb-2">Maison</h2>
-            <div class="footer-links">
+            <h2 class="footer-logo">L'Ambroisie</h2>
+            <div class="footer-details">
+                <p>9 Place des Vosges, 75004 Paris, France</p>
+                <p>Lunch: 12:00 PM – 2:30 PM | Dinner: 7:00 PM – 10:30 PM</p>
+            </div>
+            <div class="footer-socials">
                 <a href="#">Instagram</a>
                 <a href="#">Facebook</a>
                 <a href="#">Newsletter</a>
             </div>
-            <p class="copyright">&copy; 2024 Maison Restaurant. All rights reserved.</p>
+            <div class="footer-copy">
+                <p>&copy; 2026 L'Ambroisie Group. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 

@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-const Hero = () => {
+const Hero = ({ setShowBuilder }) => {
     const containerRef = useRef();
 
     useLayoutEffect(() => {
@@ -70,7 +70,21 @@ const Hero = () => {
                     We engineer bespoke, high-performance digital ecosystems for global brands that demand precision, quality, and absolute technical excellence.
                 </p>
 
-                <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <button onClick={() => setShowBuilder(true)} className="hero-btn primary-cta" style={{
+                        padding: '1.25rem 3rem',
+                        background: 'linear-gradient(135deg, #f2e3c6 0%, var(--accent-color) 100%)',
+                        border: 'none',
+                        borderRadius: '50px',
+                        fontWeight: 600, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em',
+                        color: '#0a0a0a', transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', display: 'inline-block',
+                        boxShadow: '0 4px 20px rgba(220, 180, 128, 0.25)',
+                        cursor: 'pointer',
+                        fontFamily: 'inherit'
+                    }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(220, 180, 128, 0.45)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(220, 180, 128, 0.25)'; }}>
+                        Try Scalera AI ✨
+                    </button>
                     <a href="#work" className="hero-btn" style={{
                         padding: '1.25rem 3rem', border: '1px solid rgba(255,255,255,0.15)',
                         borderRadius: '50px',
@@ -80,17 +94,6 @@ const Hero = () => {
                     }} onMouseEnter={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#0a0a0a'; }}
                         onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#fff'; }}>
                         View Our Work
-                    </a>
-                    <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{
-                        color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em',
-                        transition: 'color 0.4s ease', position: 'relative', display: 'inline-block', paddingBottom: '6px'
-                    }} onMouseEnter={(e) => { e.target.style.color = '#fff'; e.currentTarget.querySelector('.underline').style.transform = 'scaleX(1)'; }}
-                        onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.currentTarget.querySelector('.underline').style.transform = 'scaleX(0)'; }}>
-                        Book a Consultation
-                        <div className="underline" style={{
-                            position: 'absolute', bottom: 0, left: 0, width: '100%', height: '1px',
-                            background: '#fff', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-                        }} />
                     </a>
                 </div>
             </div>

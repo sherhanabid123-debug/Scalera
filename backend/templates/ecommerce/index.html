@@ -3,170 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina | Modern Ecommerce</title>
+    <title>Vellum | Minimalist Fashion & Accessories</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="announcement-bar">
-        Free worldwide shipping on all orders over $150
-    </div>
 
+    <!-- Header Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <div class="nav-left">
-                <a href="#" class="nav-link">Shop</a>
-                <a href="#" class="nav-link">Collections</a>
-                <a href="#" class="nav-link">Journal</a>
+            <a href="#" class="logo">Vellum</a>
+            <div class="nav-links">
+                <a href="#products">Shop</a>
+                <a href="#story">Our Story</a>
+                <a href="#reviews">Reviews</a>
             </div>
-            
-            <a href="#" class="logo">LUMINA</a>
-            
-            <div class="nav-right">
-                <a href="#" class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                </a>
-                <a href="#" class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </a>
-                <a href="#" class="icon-btn cart-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                    <span class="cart-count">2</span>
-                </a>
+            <div class="nav-actions">
+                <button class="cart-trigger" aria-label="Open cart">
+                    Bag (<span id="cart-count">0</span>)
+                </button>
             </div>
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Hero -->
     <header class="hero">
-        <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Autumn Collection" class="hero-bg">
         <div class="hero-overlay"></div>
-        <div class="hero-content reveal">
-            <h2>The Autumn Collection</h2>
-            <p>Elevate your wardrobe with our new seasonal essentials.</p>
-            <a href="#shop" class="btn btn-primary">Shop Now</a>
+        <div class="container hero-container">
+            <h1 class="hero-title">Essential forms, <br>refined textures</h1>
+            <p class="hero-desc">Bespoke organic cotton garments and hand-crafted accessories designed for seasonal stability.</p>
+            <div class="hero-actions">
+                <a href="#products" class="btn btn-dark">Shop Selected Items</a>
+            </div>
         </div>
     </header>
 
-    <section id="shop" class="section">
+    <!-- Product Grid & Filters -->
+    <section id="products" class="section products-section">
         <div class="container">
-            <div class="section-header">
-                <h2>New Arrivals</h2>
-                <a href="#" class="link-arrow">View All <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <div class="section-head text-center">
+                <span class="section-eyebrow">Summer Collection</span>
+                <h2 class="section-title">Shop Selected Pieces</h2>
+                
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="all">All Items</button>
+                    <button class="filter-btn" data-category="apparel">Apparel</button>
+                    <button class="filter-btn" data-category="accessories">Accessories</button>
+                </div>
             </div>
 
             <div class="product-grid">
-                <!-- Product 1 -->
-                <div class="product-card reveal">
-                    <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1550639525-c97d455acf70?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Product" class="product-image">
-                        <div class="product-actions">
-                            <button class="btn btn-secondary btn-full">Quick Add</button>
-                        </div>
+                <!-- Item 1 -->
+                <div class="product-card apparel" data-category="apparel">
+                    <div class="prod-img-box">
+                        <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Organic Cotton Trench Coat" class="prod-img">
+                        <button class="btn-quick-add" data-id="1" data-name="Organic Trench" data-price="220">Add To Bag</button>
                     </div>
-                    <div class="product-info">
-                        <h3>Minimalist Linen Shirt</h3>
-                        <p class="price">$85.00</p>
+                    <div class="prod-info">
+                        <h3>Organic Cotton Trench</h3>
+                        <span class="price">$220</span>
                     </div>
                 </div>
 
-                <!-- Product 2 -->
-                <div class="product-card reveal" style="transition-delay: 0.1s;">
-                    <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Product" class="product-image">
-                        <div class="product-actions">
-                            <button class="btn btn-secondary btn-full">Quick Add</button>
-                        </div>
+                <!-- Item 2 -->
+                <div class="product-card apparel" data-category="apparel">
+                    <div class="prod-img-box">
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Linen Utility Trousers" class="prod-img">
+                        <button class="btn-quick-add" data-id="2" data-name="Linen Trousers" data-price="140">Add To Bag</button>
                     </div>
-                    <div class="product-info">
-                        <h3>Oversized Wool Coat</h3>
-                        <p class="price">$240.00</p>
+                    <div class="prod-info">
+                        <h3>Linen Utility Trousers</h3>
+                        <span class="price">$140</span>
                     </div>
                 </div>
 
-                <!-- Product 3 -->
-                <div class="product-card reveal" style="transition-delay: 0.2s;">
-                    <div class="product-image-container">
-                        <div class="badge">Sale</div>
-                        <img src="https://images.unsplash.com/photo-1588099768523-f4e6a5679d88?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Product" class="product-image">
-                        <div class="product-actions">
-                            <button class="btn btn-secondary btn-full">Quick Add</button>
-                        </div>
+                <!-- Item 3 -->
+                <div class="product-card accessories" data-category="accessories">
+                    <div class="prod-img-box">
+                        <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Handwoven Leather Totebag" class="prod-img">
+                        <button class="btn-quick-add" data-id="3" data-name="Leather Totebag" data-price="350">Add To Bag</button>
                     </div>
-                    <div class="product-info">
-                        <h3>Essential Denim</h3>
-                        <p class="price"><span class="old-price">$120.00</span> $95.00</p>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="product-card reveal" style="transition-delay: 0.3s;">
-                    <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1578129058052-a50e18146761?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Product" class="product-image">
-                        <div class="product-actions">
-                            <button class="btn btn-secondary btn-full">Quick Add</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Cashmere Sweater</h3>
-                        <p class="price">$150.00</p>
+                    <div class="prod-info">
+                        <h3>Handwoven Leather Tote</h3>
+                        <span class="price">$350</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section bg-light">
+    <!-- Brand Story -->
+    <section id="story" class="section story-section bg-light">
         <div class="container">
-            <div class="features-grid">
-                <div class="feature-item reveal">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8v-2a5 5 0 0 1 10 0v2"/></svg>
-                    <h4>Secure Checkout</h4>
-                    <p>SSL encrypted checkout to protect your data</p>
+            <div class="story-grid">
+                <div class="story-text">
+                    <span class="section-eyebrow">The Fabric</span>
+                    <h2 class="section-title">Ethical design, lifetime quality</h2>
+                    <p>At Vellum, we reject fast fashion metrics. We source GOTS-certified organic cotton, raw linen, and full-grain vegetable tanned leathers that age characteristically over decades.</p>
+                    <p>Our garments are produced in ethical micro-studios across Portugal and Japan, utilizing clean renewable energies.</p>
                 </div>
-                <div class="feature-item reveal" style="transition-delay: 0.1s;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                    <h4>Free Shipping</h4>
-                    <p>On all international orders over $150</p>
+                <div class="story-img" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section id="reviews" class="section reviews-section">
+        <div class="container">
+            <div class="section-head text-center">
+                <span class="section-eyebrow">Endorsements</span>
+                <h2 class="section-title">What they say</h2>
+            </div>
+
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <p class="review-text">"The linen utility trousers fit impeccably. The heavy linen weave is soft yet durable, and the stitch details reflect supreme craftsmanship."</p>
+                    <span class="reviewer">Clara Mitchell &bull; Verified Buyer</span>
                 </div>
-                <div class="feature-item reveal" style="transition-delay: 0.2s;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <h4>Free Returns</h4>
-                    <p>30-day return policy for a full refund</p>
+                <div class="review-card">
+                    <p class="review-text">"Vellum's leather totebag has been my daily carrier for 6 months. It has developed a beautiful dark caramel patina. Truly premium quality."</p>
+                    <span class="reviewer">Marcus Bernard &bull; Architect</span>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Cart Drawer Modal -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Bag</h3>
+            <button class="cart-close" aria-label="Close bag">&times;</button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <!-- Dynamic list -->
+            <p class="empty-cart-msg">Your shopping bag is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>Total:</span>
+                <span id="cart-total-amount">$0</span>
+            </div>
+            <button class="btn btn-dark btn-block" id="btn-checkout">Checkout Now</button>
+        </div>
+    </div>
+    <div id="cart-overlay" class="cart-overlay"></div>
+
+    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>LUMINA</h4>
-                    <p>Redefining modern essentials. Sustainably sourced, ethically crafted.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Shop</h4>
-                    <a href="#">New Arrivals</a>
-                    <a href="#">Best Sellers</a>
-                    <a href="#">Sale</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Customer Care</h4>
-                    <a href="#">Contact Us</a>
-                    <a href="#">Shipping & Returns</a>
-                    <a href="#">FAQ</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Newsletter</h4>
-                    <p>Sign up to receive 10% off your first order.</p>
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Email Address" required>
-                        <button type="submit">→</button>
-                    </form>
-                </div>
+        <div class="container text-center">
+            <h2 class="footer-logo">Vellum</h2>
+            <div class="footer-details">
+                <p>9 Rue Saint-Honoré, Paris | Strøget, Copenhagen</p>
+                <p>support@vellumstore.com | +33 1 4268 5300</p>
             </div>
+            <p class="copyright">&copy; 2026 Vellum Retail. All rights reserved.</p>
         </div>
     </footer>
 

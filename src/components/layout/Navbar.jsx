@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 
-const Navbar = () => {
+const Navbar = ({ showBuilder, setShowBuilder }) => {
     const [scrolled, setScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
@@ -40,11 +40,21 @@ const Navbar = () => {
     const scrollTo = (id) => (e) => {
         e.preventDefault();
         setIsOpen(false);
-        const element = document.querySelector(id);
-        if (element) {
+        if (showBuilder) {
+            setShowBuilder(false);
             setTimeout(() => {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }, 300);
+                const element = document.querySelector(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        } else {
+            const element = document.querySelector(id);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            }
         }
     };
 
@@ -68,6 +78,7 @@ const Navbar = () => {
                     style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102, opacity: 0 }}
                     onClick={() => {
                         if (isOpen) setIsOpen(false);
+                        if (showBuilder) setShowBuilder(false);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                 >
@@ -86,10 +97,10 @@ const Navbar = () => {
                     <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>About</a>
                     <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
                     <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
-                    <a href="/scalera-ai.html" style={{ 
+                    <button onClick={() => { if (showBuilder) window.scrollTo({ top: 0, behavior: 'smooth' }); else setShowBuilder(true); }} style={{ 
                         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', 
                         color: '#000', 
-                        background: 'linear-gradient(135deg, #facc15, #f59e0b)',
+                        background: 'linear-gradient(135deg, #f2e3c6 0%, var(--accent-color) 100%)',
                         padding: scrolled ? '6px 14px' : '8px 16px',
                         borderRadius: '99px',
                         fontWeight: '700',
@@ -97,10 +108,11 @@ const Navbar = () => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '6px',
-                        boxShadow: '0 0 15px rgba(250, 204, 21, 0.4)'
-                    }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 25px rgba(250, 204, 21, 0.6)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(250, 204, 21, 0.4)'; }}>
+                        boxShadow: '0 0 15px rgba(220, 180, 128, 0.35)',
+                        cursor: 'pointer'
+                    }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 25px rgba(220, 180, 128, 0.55)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(220, 180, 128, 0.35)'; }}>
                         Try scalera AI ✨
-                    </a>
+                    </button>
                     <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn" style={{
                         padding: scrolled ? '6px 18px' : '8px 24px',
                         fontSize: scrolled ? '0.8rem' : '0.95rem'
@@ -174,9 +186,9 @@ const Navbar = () => {
                 >
                     Work
                 </a>
-                <a
+                <button
                     ref={el => linksRef.current[3] = el}
-                    href="/scalera-ai.html"
+                    onClick={() => { setIsOpen(false); setShowBuilder(true); }}
                     className="mobile-nav-link"
                     style={{ 
                         fontSize: '2.5rem', 
@@ -184,15 +196,18 @@ const Navbar = () => {
                         letterSpacing: '-0.02em', 
                         textTransform: 'uppercase', 
                         color: '#000',
-                        background: 'linear-gradient(135deg, #facc15, #f59e0b)',
+                        background: 'linear-gradient(135deg, #f2e3c6, var(--accent-color))',
                         padding: '12px 32px',
                         borderRadius: '99px',
-                        boxShadow: '0 0 20px rgba(250, 204, 21, 0.4)',
-                        marginTop: '1rem'
+                        boxShadow: '0 0 20px rgba(220, 180, 128, 0.35)',
+                        marginTop: '1rem',
+                        cursor: 'pointer',
+                        border: 'none',
+                        textAlign: 'center'
                     }}
                 >
                     Try scalera AI ✨
-                </a>
+                </button>
                 <a
                     ref={el => linksRef.current[4] = el}
                     href="https://wa.me/917975242650"

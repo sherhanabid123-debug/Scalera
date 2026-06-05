@@ -3,61 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Product | Next-Gen Platform</title>
+    <title>Aura | Modern Fintech Cloud Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Top Glow Overlay -->
+    <div class="top-glow"></div>
+
+    <!-- Header Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
             <a href="#" class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="24" height="24" rx="6" fill="var(--primary)"/>
-                    <path d="M16 8L8 16M8 8L16 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                NexSaaS
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="url(#paint0_linear)" stroke-width="2.5"/>
+                        <path d="M12 7V17M7 12H17" stroke="url(#paint1_linear)" stroke-width="2" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="paint0_linear" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#8B5CF6"/>
+                                <stop offset="1" stop-color="#3B82F6"/>
+                            </linearGradient>
+                            <linearGradient id="paint1_linear" x1="7" y1="12" x2="17" y2="12" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#C084FC"/>
+                                <stop offset="1" stop-color="#60A5FA"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span>Aura</span>
             </a>
             <div class="nav-links">
                 <a href="#features">Features</a>
-                <a href="#how-it-works">How it Works</a>
+                <a href="#analytics">Analytics</a>
                 <a href="#pricing">Pricing</a>
+                <a href="#faq">FAQ</a>
             </div>
-            <div class="nav-cta">
-                <a href="#" class="btn btn-outline">Log in</a>
-                <a href="#" class="btn btn-primary">Get Started</a>
+            <div class="nav-actions">
+                <a href="#" class="btn-text">Sign In</a>
+                <a href="#" class="btn btn-primary btn-nav-cta">Start Free Trial</a>
             </div>
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
-    <header class="hero section">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <div class="badge reveal">New: AI-Powered Analytics 2.0</div>
-                <h1 class="reveal" style="transition-delay: 0.1s;">Scale your business with <span class="gradient-text">intelligent automation</span></h1>
-                <p class="hero-subtitle reveal" style="transition-delay: 0.2s;">Replace complex workflows with our unified platform. Save 15+ hours a week and boost team productivity by 40%.</p>
-                <div class="hero-actions reveal" style="transition-delay: 0.3s;">
-                    <a href="#" class="btn btn-primary btn-large">Start 14-day free trial</a>
-                    <p class="hero-note">No credit card required</p>
-                </div>
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="badge-tag">New Release</span>
+                <span class="badge-text">Introducing Aura AI Autopilot &rarr;</span>
             </div>
-            <div class="hero-image reveal" style="transition-delay: 0.4s;">
-                <div class="dashboard-mockup">
+            <h1 class="hero-title">
+                The intelligent cloud for <span class="text-gradient">modern finance teams</span>
+            </h1>
+            <p class="hero-subtitle">
+                Automate accounting, control spend globally, and gain real-time insight into your company's financial runway. All in one beautifully unified workspace.
+            </p>
+            <div class="hero-actions">
+                <a href="#pricing" class="btn btn-primary btn-large">Get Started Instantly</a>
+                <a href="#" class="btn btn-secondary btn-large">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon">
+                        <path d="M6 4L16 10L6 16V4Z" fill="currentColor"/>
+                    </svg>
+                    Watch Demo Video
+                </a>
+            </div>
+
+            <!-- Dashboard Mockup -->
+            <div class="hero-mockup-wrapper">
+                <div class="mockup-frame">
                     <div class="mockup-header">
-                        <span class="dot red"></span>
-                        <span class="dot yellow"></span>
-                        <span class="dot green"></span>
+                        <div class="mockup-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="mockup-search">aura.co/dashboard</div>
                     </div>
                     <div class="mockup-body">
-                        <!-- Abstract Dashboard UI -->
-                        <div class="mockup-sidebar"></div>
-                        <div class="mockup-content">
-                            <div class="mockup-chart"></div>
-                            <div class="mockup-cards">
-                                <div class="m-card"></div>
-                                <div class="m-card"></div>
-                                <div class="m-card"></div>
+                        <div class="dashboard-sidebar">
+                            <div class="sb-item active"></div>
+                            <div class="sb-item"></div>
+                            <div class="sb-item"></div>
+                            <div class="sb-item"></div>
+                        </div>
+                        <div class="dashboard-main">
+                            <div class="db-header">
+                                <div class="db-title-block">
+                                    <div class="db-sub">Overview</div>
+                                    <div class="db-title">Financial Status</div>
+                                </div>
+                                <div class="db-action"></div>
+                            </div>
+                            <div class="db-stats">
+                                <div class="db-card">
+                                    <span class="card-label">Total Revenue</span>
+                                    <span class="card-val">$1,248,390</span>
+                                    <span class="card-trend upward">+12.4% this month</span>
+                                </div>
+                                <div class="db-card">
+                                    <span class="card-label">Active Burn Rate</span>
+                                    <span class="card-val">$45,190</span>
+                                    <span class="card-trend downward">-3.1% decrease</span>
+                                </div>
+                                <div class="db-card">
+                                    <span class="card-label">Net Profit Margin</span>
+                                    <span class="card-val">24.6%</span>
+                                    <span class="card-trend upward">+1.8% change</span>
+                                </div>
+                            </div>
+                            <div class="db-chart-container">
+                                <div class="db-chart-bar" style="height: 40%"></div>
+                                <div class="db-chart-bar" style="height: 60%"></div>
+                                <div class="db-chart-bar" style="height: 50%"></div>
+                                <div class="db-chart-bar" style="height: 85%"></div>
+                                <div class="db-chart-bar" style="height: 70%"></div>
+                                <div class="db-chart-bar" style="height: 95%"></div>
+                                <div class="db-chart-bar" style="height: 80%"></div>
                             </div>
                         </div>
                     </div>
@@ -66,100 +134,248 @@
         </div>
     </header>
 
-    <section id="features" class="section bg-light">
+    <!-- Trusted By -->
+    <section class="trusted-by">
         <div class="container">
-            <div class="section-header text-center reveal">
-                <h2>Everything you need to grow</h2>
-                <p>Powerful features designed to help you streamline operations and scale faster.</p>
+            <p class="trusted-label">Trusted by the world's most innovative high-growth startups</p>
+            <div class="logo-cloud">
+                <div class="partner-logo">Linear</div>
+                <div class="partner-logo">Vercel</div>
+                <div class="partner-logo">Retool</div>
+                <div class="partner-logo">Figma</div>
+                <div class="partner-logo">Stripe</div>
             </div>
-            <div class="feature-grid">
-                <!-- Feature 1 -->
-                <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section id="features" class="section features-section">
+        <div class="container">
+            <div class="section-head text-center">
+                <span class="section-eyebrow">Enterprise Grade</span>
+                <h2 class="section-title">Everything you need to automate finances</h2>
+                <p class="section-desc">Aura consolidates cards, global transfers, treasury, and automated bookkeeping into a modern, integrated dashboard.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Bento Card 1 (Large) -->
+                <div class="bento-card col-span-2">
+                    <div class="card-content">
+                        <div class="card-badge">Aura AI</div>
+                        <h3>Smart automated categorization</h3>
+                        <p>Our AI reads invoice line-items and automatically maps expenses to your tax codes, eliminating 99% of manual receipt chasing.</p>
                     </div>
-                    <h3>Lightning Fast</h3>
-                    <p>Built on a modern edge architecture ensuring sub-100ms response times globally.</p>
+                    <div class="bento-visual card-visual-ai">
+                        <div class="visual-ai-bubble">Invoice verified &bull; tax code 4110</div>
+                        <div class="visual-ai-bubble">Uber Trip &bull; tax code 5200</div>
+                    </div>
                 </div>
-                <!-- Feature 2 -->
-                <div class="feature-card reveal" style="transition-delay: 0.1s;">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+
+                <!-- Bento Card 2 -->
+                <div class="bento-card">
+                    <div class="card-content">
+                        <h3>Global cards</h3>
+                        <p>Issue unlimited corporate cards in USD, EUR, and GBP with custom spend controls.</p>
                     </div>
-                    <h3>Unified Dashboard</h3>
-                    <p>View all your key metrics, customer data, and active campaigns in one place.</p>
+                    <div class="bento-visual card-visual-card">
+                        <div class="sim-card">
+                            <div class="card-chip"></div>
+                            <span class="card-logo">AURA</span>
+                        </div>
+                    </div>
                 </div>
-                <!-- Feature 3 -->
-                <div class="feature-card reveal" style="transition-delay: 0.2s;">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+
+                <!-- Bento Card 3 -->
+                <div class="bento-card">
+                    <div class="card-content">
+                        <h3>Real-time accounting</h3>
+                        <p>Sync automatically with QuickBooks, Xero, and NetSuite in seconds.</p>
                     </div>
-                    <h3>Bank-Grade Security</h3>
-                    <p>SOC2 Type II certified. End-to-end encryption for all your sensitive business data.</p>
+                </div>
+
+                <!-- Bento Card 4 (Large) -->
+                <div class="bento-card col-span-2">
+                    <div class="card-content">
+                        <h3>High-yield treasury management</h3>
+                        <p>Put idle runway cash into secure US government money market funds yielding up to 5.2% APY, accessible at any time.</p>
+                    </div>
+                    <div class="bento-visual treasury-yield-chart">
+                        <div class="yield-badge">5.2% APY</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="pricing" class="section">
+    <!-- ROI Calculator Section -->
+    <section id="analytics" class="section calc-section">
         <div class="container">
-            <div class="section-header text-center reveal">
-                <h2>Simple, transparent pricing</h2>
-                <p>Start for free, upgrade when you need to.</p>
+            <div class="calc-wrapper">
+                <div class="calc-info">
+                    <span class="section-eyebrow">Interactive Calculator</span>
+                    <h2>Estimate your company's savings with Aura</h2>
+                    <p>Move the slider to reflect your team's size and monthly card transaction volume to see estimated monthly savings.</p>
+                    <div class="slider-group">
+                        <label for="team-size">Team Members: <span id="team-val">25</span></label>
+                        <input type="range" id="team-size" min="5" max="250" value="25" class="range-slider">
+                    </div>
+                    <div class="slider-group">
+                        <label for="monthly-spend">Monthly Card Spend: <span id="spend-val">$50,000</span></label>
+                        <input type="range" id="monthly-spend" min="5000" max="1000000" step="5000" value="50000" class="range-slider">
+                    </div>
+                </div>
+                <div class="calc-result">
+                    <div class="result-box">
+                        <span class="result-label">Estimated Annual Savings</span>
+                        <h3 id="savings-amount">$18,400</h3>
+                        <span class="result-sub">Based on 15 hours saved per employee + 1.5% cashback</span>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section pricing-section">
+        <div class="container">
+            <div class="section-head text-center">
+                <span class="section-eyebrow">Flexible Plans</span>
+                <h2>Simple, scale-with-you pricing</h2>
+                <div class="toggle-wrapper">
+                    <span class="toggle-label active" id="billing-monthly">Monthly</span>
+                    <button class="billing-toggle" id="billing-toggle-btn" aria-label="Toggle billing interval">
+                        <span class="toggle-dot"></span>
+                    </button>
+                    <span class="toggle-label" id="billing-yearly">Yearly <span class="discount-badge">Save 20%</span></span>
+                </div>
+            </div>
+
             <div class="pricing-grid">
                 <!-- Plan 1 -->
-                <div class="pricing-card reveal">
-                    <h3>Starter</h3>
-                    <div class="price"><span>$</span>0<span>/mo</span></div>
-                    <p class="pricing-desc">Perfect for side projects and indie hackers.</p>
-                    <ul class="pricing-features">
-                        <li>Up to 1,000 users</li>
-                        <li>Basic analytics</li>
-                        <li>Community support</li>
+                <div class="pricing-card">
+                    <div class="p-header">
+                        <h3>Starter</h3>
+                        <p class="p-desc">For small startup teams automating expenses.</p>
+                        <div class="p-price"><span class="price-symbol">$</span><span class="price-val" data-monthly="0" data-yearly="0">0</span><span class="price-period">/mo</span></div>
+                    </div>
+                    <ul class="p-features">
+                        <li>&bull; Up to 5 team members</li>
+                        <li>&bull; 5 physical cards, unlimited virtual</li>
+                        <li>&bull; Automatic receipt scanning</li>
+                        <li>&bull; Standard Slack integrations</li>
                     </ul>
-                    <a href="#" class="btn btn-outline btn-block">Get Started</a>
+                    <a href="#" class="btn btn-secondary btn-block">Get Started Free</a>
                 </div>
-                <!-- Plan 2 -->
-                <div class="pricing-card popular reveal" style="transition-delay: 0.1s;">
-                    <div class="popular-badge">Most Popular</div>
-                    <h3>Pro</h3>
-                    <div class="price"><span>$</span>49<span>/mo</span></div>
-                    <p class="pricing-desc">For fast growing companies that need more power.</p>
-                    <ul class="pricing-features">
-                        <li>Up to 10,000 users</li>
-                        <li>Advanced analytics & reporting</li>
-                        <li>Priority 24/7 support</li>
-                        <li>Custom integrations</li>
+
+                <!-- Plan 2 (Popular) -->
+                <div class="pricing-card popular">
+                    <div class="popular-tag">Most Popular</div>
+                    <div class="p-header">
+                        <h3>Growth</h3>
+                        <p class="p-desc">For growing companies scaling finance workflows.</p>
+                        <div class="p-price"><span class="price-symbol">$</span><span class="price-val" data-monthly="49" data-yearly="39">49</span><span class="price-period">/mo</span></div>
+                    </div>
+                    <ul class="p-features">
+                        <li>&bull; Up to 50 team members</li>
+                        <li>&bull; Unlimited cards for everyone</li>
+                        <li>&bull; Advanced multi-level approvals</li>
+                        <li>&bull; Real-time Xero/QuickBooks sync</li>
+                        <li>&bull; Multi-currency wallets</li>
                     </ul>
-                    <a href="#" class="btn btn-primary btn-block">Start Free Trial</a>
+                    <a href="#" class="btn btn-primary btn-block">Start Growth Trial</a>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="pricing-card">
+                    <div class="p-header">
+                        <h3>Enterprise</h3>
+                        <p class="p-desc">For complex organizations needing maximum security.</p>
+                        <div class="p-price"><span class="price-symbol">$</span><span class="price-val" data-monthly="199" data-yearly="159">199</span><span class="price-period">/mo</span></div>
+                    </div>
+                    <ul class="p-features">
+                        <li>&bull; Unlimited team members</li>
+                        <li>&bull; NetSuite & Sage Intacct integration</li>
+                        <li>&bull; Custom treasury asset allocation</li>
+                        <li>&bull; Dedicated account manager</li>
+                        <li>&bull; Custom API access</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary btn-block">Talk to Sales</a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- FAQ Accordions -->
+    <section id="faq" class="section faq-section">
+        <div class="container container-sm">
+            <div class="section-head text-center">
+                <span class="section-eyebrow">Got Questions?</span>
+                <h2>Frequently asked questions</h2>
+            </div>
+            
+            <div class="faq-accordion-group">
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>How does the cashback and treasury yield work?</span>
+                        <span class="faq-icon"></span>
+                    </button>
+                    <div class="faq-content">
+                        <p>All virtual and physical corporate card purchases earn an automatic 1.5% cashback. Idle funds placed into your Aura Treasury account are held in AAA-rated blackrock money market funds yielding a highly competitive 5.2% APY, with no lockups.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>Can I sync my existing ERP or accounting system?</span>
+                        <span class="faq-icon"></span>
+                    </button>
+                    <div class="faq-content">
+                        <p>Absolutely. Aura integrates natively with QuickBooks Online, Xero, Sage Intacct, and NetSuite. Transactions sync automatically every hour with pre-mapped tax categories.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>Is my money safe with Aura?</span>
+                        <span class="faq-icon"></span>
+                    </button>
+                    <div class="faq-content">
+                        <p>Yes. Aura is a financial technology platform, not a bank. Banking services are provided by Evolve Bank & Trust, Member FDIC. Your deposits are FDIC-insured up to $250,000, and treasury investments are held securely in your company's name.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-top">
                 <div class="footer-brand">
-                    <div class="logo">NexSaaS</div>
-                    <p>Building the future of business operations, one workflow at a time.</p>
+                    <div class="logo">Aura</div>
+                    <p>Next-generation financial operations and treasury management for modern startups.</p>
                 </div>
-                <div class="footer-links">
-                    <h4>Product</h4>
-                    <a href="#">Features</a>
-                    <a href="#">Pricing</a>
-                    <a href="#">Changelog</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Careers</a>
+                <div class="footer-links-grid">
+                    <div class="link-column">
+                        <h4>Product</h4>
+                        <a href="#">Cards</a>
+                        <a href="#">Treasury</a>
+                        <a href="#">Integrations</a>
+                    </div>
+                    <div class="link-column">
+                        <h4>Company</h4>
+                        <a href="#">About Us</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Careers</a>
+                    </div>
+                    <div class="link-column">
+                        <h4>Legal</h4>
+                        <a href="#">Terms</a>
+                        <a href="#">Privacy</a>
+                        <a href="#">Security</a>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 NexSaaS Inc. All rights reserved.</p>
+                <p>&copy; 2026 Aura Technologies Inc. All rights reserved. Banking services provided by partner institutions.</p>
             </div>
         </div>
     </footer>

@@ -1,37 +1,73 @@
-// ──────────────────────────────────────
-// The Elara Hotel — Script
-// ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Mobile Menu Toggle
+    const mobileToggle = document.querySelector('.mobile-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            if (navLinks) {
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '90px';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = '#fdfcf7';
+                navLinks.style.padding = '2rem';
+                navLinks.style.borderBottom = '1px solid rgba(44,40,37,0.08)';
+                navLinks.style.gap = '1.5rem';
+            }
+        });
+    }
 
-// 1. Navbar scroll
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 100);
-});
+    // 2. Room details accordion
+    const detailBtns = document.querySelectorAll('.btn-room-details');
 
-// 2. Mobile menu
-const hamburger = document.getElementById('hamburger');
-hamburger.addEventListener('click', () => {
-    const sides = document.querySelectorAll('.nav-side');
-    sides.forEach(s => s.classList.toggle('open'));
-});
+    detailBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-room');
+            const targetEl = document.getElementById(targetId);
 
-// 3. Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', function(e) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+            if (targetEl) {
+                const isActive = targetEl.classList.contains('active');
+                
+                // Toggle active class
+                targetEl.classList.toggle('active');
+                
+                if (isActive) {
+                    btn.innerHTML = 'View Details &rarr;';
+                } else {
+                    btn.innerHTML = 'Hide Details &larr;';
+                }
+            }
+        });
     });
-});
 
-// 4. Scroll reveal
-const reveals = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-reveals.forEach(el => obs.observe(el));
+    // 3. Search Availability Form
+    const bookingForm = document.getElementById('booking-form');
+    const successMsg = document.getElementById('booking-success');
 
-// 5. Parallax hero (subtle)
-window.addEventListener('scroll', () => {
-    const hero = document.querySelector('.hero-bg');
-    if (hero) { hero.style.transform = `scale(1.05) translateY(${window.scrollY * 0.15}px)`; }
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            bookingForm.style.display = 'none';
+            if (successMsg) {
+                successMsg.style.display = 'block';
+            }
+        });
+    }
+
+    // 4. Navbar styling on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.style.height = '70px';
+            navbar.style.background = '#fdfcf7';
+            navbar.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)';
+        } else {
+            navbar.style.height = '90px';
+            navbar.style.boxShadow = 'none';
+        }
+    });
 });

@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sparkles, ArrowRight, Zap } from 'lucide-react';
 
-const ScaleraAIShowcase = () => {
+const ScaleraAIShowcase = ({ setShowBuilder }) => {
     const containerRef = useRef();
 
     useLayoutEffect(() => {
@@ -81,13 +81,14 @@ const ScaleraAIShowcase = () => {
                 </p>
 
                 <div className="ai-btn-wrapper" style={{ marginTop: '1rem' }}>
-                    <a href="/scalera-ai.html" style={{
+                    <button onClick={() => setShowBuilder(true)} style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.75rem',
                         background: '#fff', color: '#000',
                         padding: '1rem 2rem', borderRadius: '100px',
                         textDecoration: 'none', fontWeight: 500, fontSize: '1.1rem',
                         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                        boxShadow: '0 0 30px rgba(255,255,255,0.2)'
+                        boxShadow: '0 0 30px rgba(255,255,255,0.2)',
+                        cursor: 'pointer'
                     }}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
@@ -98,7 +99,7 @@ const ScaleraAIShowcase = () => {
                         e.currentTarget.style.boxShadow = '0 0 30px rgba(255,255,255,0.2)';
                     }}>
                         Try the Builder Free <ArrowRight size={18} />
-                    </a>
+                    </button>
                 </div>
             </div>
         </section>

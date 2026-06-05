@@ -18,10 +18,19 @@ import WhyScalera from './components/sections/WhyScalera';
 import Testimonials from './components/sections/Testimonials';
 import CTA from './components/sections/CTA';
 import Footer from './components/layout/Footer';
+import ScaleraAIBuilder from './components/sections/ScaleraAIBuilder';
 
-// ... (skipping unchanged code for brevity in instruction, using exactly what was targeted)
 function App() {
   const [loading, setLoading] = useState(true);
+  const [showBuilder, setShowBuilder] = useState(false);
+
+  useEffect(() => {
+    if (showBuilder) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [showBuilder]);
 
   // ... (keep useEffect as is) ...
   useEffect(() => {
@@ -108,21 +117,27 @@ function App() {
       <div className="noise-bg" />
 
       <div className="main-content" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
-        <Navbar />
+        <Navbar showBuilder={showBuilder} setShowBuilder={setShowBuilder} />
 
         <main style={{ pointerEvents: 'auto' }}>
-          <Hero />
-          <About />
-          <Services />
-          <ScaleraAIShowcase />
-          <Process />
-          <Portfolio />
-          <WhyScalera />
-          <Testimonials />
-          <CTA />
+          {showBuilder ? (
+            <ScaleraAIBuilder onBack={() => { setShowBuilder(false); window.scrollTo({ top: 0, behavior: 'instant' }); }} />
+          ) : (
+            <>
+              <Hero setShowBuilder={setShowBuilder} />
+              <About />
+              <Services />
+              <ScaleraAIShowcase setShowBuilder={setShowBuilder} />
+              <Process />
+              <Portfolio />
+              <WhyScalera />
+              <Testimonials />
+              <CTA />
+            </>
+          )}
         </main>
 
-        <Footer />
+        {!showBuilder && <Footer />}
 
         {/* Floating WhatsApp Action */}
         <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" style={{
