@@ -1,128 +1,262 @@
-import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const projects = [
-    { id: 1, title: 'Thar', category: 'Restaurant Experience', summary: 'An immersive digital experience bringing authentic culinary heritage online.', link: 'https://tharthetasteofrajasthan.com', img: '/assets/thar-preview.jpg' },
-    { id: 2, title: 'Kryptic', category: 'E-Commerce Platform', summary: 'A high-performance storefront designed for maximum conversion and speed.', link: 'https://kryptic.shop', img: '/assets/kryptic-preview.jpg' },
-    { id: 3, title: 'The Second House', category: 'Heritage Dining & Art', summary: 'A unique culinary journey blending Goan heritage and modern art in a 108-year-old Indo-Portuguese bungalow.', link: 'https://the-second-house.vercel.app', img: '/assets/second-house-real.png' },
-    {
-        id: 4,
-        title: 'Fridah by Bohemians',
-        category: 'Immersive Restaurant / UI Design',
-        summary: 'An immersive digital journey through bohemian luxury and artisanal multicuisine.',
-        img: '/assets/fridah-preview.png',
-        link: 'https://fridah-by-bohemians.vercel.app/#'
-    }
+  {
+    id: 1,
+    title: "Thar",
+    category: "Restaurant Experience",
+    summary:
+      "An immersive digital experience bringing authentic culinary heritage online.",
+    link: "https://tharthetasteofrajasthan.com",
+    img: "/assets/thar-preview.jpg",
+  },
+  {
+    id: 2,
+    title: "Kryptic",
+    category: "E-Commerce Platform",
+    summary:
+      "A high-performance storefront designed for maximum conversion and speed.",
+    link: "https://kryptic.shop",
+    img: "/assets/kryptic-preview.jpg",
+  },
+  {
+    id: 3,
+    title: "The Second House",
+    category: "Heritage Dining & Art",
+    summary:
+      "A unique culinary journey blending Goan heritage and modern art in a 108-year-old Indo-Portuguese bungalow.",
+    link: "https://the-second-house.vercel.app",
+    img: "/assets/second-house-real.png",
+  },
+  {
+    id: 4,
+    title: "Fridah by Bohemians",
+    category: "Immersive Restaurant / UI Design",
+    summary:
+      "An immersive digital journey through bohemian luxury and artisanal multicuisine.",
+    img: "/assets/fridah-preview.png",
+    link: "https://fridah-by-bohemians.vercel.app/#",
+  },
 ];
 
 const Portfolio = () => {
-    const containerRef = useRef();
-    const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef();
+  const [isMobile, setIsMobile] = useState(false);
 
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
-    useLayoutEffect(() => {
-        let ctx = gsap.context(() => {
-            gsap.fromTo('.portfolio-heading',
-                { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: '.portfolio-heading', start: 'top 80%' } }
-            );
+  useLayoutEffect(() => {
+    let ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".portfolio-heading",
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          ease: "expo.out",
+          scrollTrigger: { trigger: ".portfolio-heading", start: "top 80%" },
+        },
+      );
 
-            gsap.utils.toArray('.portfolio-item').forEach((item) => {
-                gsap.fromTo(item,
-                    { opacity: 0, y: 100 },
-                    {
-                        opacity: 1, y: 0, duration: 1.5, ease: 'expo.out',
-                        scrollTrigger: {
-                            trigger: item,
-                            start: 'top 85%'
-                        }
-                    }
-                );
-            });
+      gsap.utils.toArray(".portfolio-item").forEach((item) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, y: 100 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.5,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+            },
+          },
+        );
+      });
 
-            // Parallax image wrapper
-            gsap.utils.toArray('.img-parallax').forEach((img) => {
-                gsap.to(img, {
-                    yPercent: 15,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: img.parentElement,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
-            });
+      // Parallax image wrapper
+      gsap.utils.toArray(".img-parallax").forEach((img) => {
+        gsap.to(img, {
+          yPercent: 15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: img.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
+  return (
+    <section
+      id="work"
+      ref={containerRef}
+      style={{ padding: "8rem 0", borderTop: "1px solid var(--border-subtle)" }}
+    >
+      <div
+        className="container"
+        style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 5%" }}
+      >
+        <h2
+          className="portfolio-heading"
+          style={{
+            fontSize: "clamp(3rem, 7vw, 6rem)",
+            fontWeight: 300,
+            marginBottom: "1.5rem",
+            letterSpacing: "-0.04em",
+            lineHeight: 1,
+          }}
+        >
+          Selected
+          <br />
+          Work
+        </h2>
+        <p
+          className="portfolio-heading"
+          style={{
+            color: "var(--text-secondary)",
+            fontSize: "1.2rem",
+            maxWidth: "500px",
+            marginBottom: "6rem",
+            lineHeight: 1.6,
+          }}
+        >
+          A selection of projects focused on clarity, structure, and measurable
+          impact.
+        </p>
 
-        }, containerRef);
-        return () => ctx.revert();
-    }, []);
-    return (
-        <section id="work" ref={containerRef} style={{ padding: '8rem 0', borderTop: '1px solid var(--border-subtle)' }}>
-            <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5%' }}>
-                <h2 className="portfolio-heading" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, marginBottom: '1.5rem', letterSpacing: '-0.04em', lineHeight: 1 }}>Selected<br />Work</h2>
-                <p className="portfolio-heading" style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '6rem', lineHeight: 1.6 }}>
-                    A selection of projects focused on clarity, structure, and measurable impact.
-                </p>
-
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '4rem' : '4rem', alignItems: 'flex-start' }}>
-                    {projects.map((project, index) => (
-                        <a
-                            href={project.link || '#'}
-                            target={project.link ? '_blank' : '_self'}
-                            rel={project.link ? 'noopener noreferrer' : ''}
-                            key={project.id}
-                            className="portfolio-item group"
-                            style={{ display: 'block', cursor: 'pointer', textDecoration: 'none' }}
-                        >
-                            <div style={{
-                                aspectRatio: '4/3', /* Equal aspect ratios for perfect alignment */
-                                overflow: 'hidden', position: 'relative', marginBottom: '2rem', background: '#111'
-                            }}>
-                                <div
-                                    className="img-parallax"
-                                    style={{
-                                        position: 'absolute', top: '-10%', left: 0,
-                                        width: '100%', height: '120%',
-                                        backgroundImage: `url(${project.img})`,
-                                        backgroundSize: 'cover', backgroundPosition: 'center',
-                                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease',
-                                        filter: 'grayscale(0) contrast(1) brightness(0.8)',
-                                        transformOrigin: 'center'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1.05)';
-                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.filter = 'grayscale(0) contrast(1) brightness(0.8)';
-                                    }}
-                                />
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div style={{ flex: 1, paddingRight: '2rem' }}>
-                                    <h3 style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: '0.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{project.title}</h3>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 1rem 0' }}>{project.category}</p>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, textTransform: 'none', letterSpacing: 'normal' }}>{project.summary}</p>
-                                </div>
-                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '0.2rem 0', whiteSpace: 'nowrap' }}>
-                                    [0{index + 1}]
-                                </div>
-                            </div>
-                        </a>
-                    ))}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: isMobile ? "4rem" : "4rem",
+            alignItems: "flex-start",
+          }}
+        >
+          {projects.map((project, index) => (
+            <a
+              href={project.link || "#"}
+              target={project.link ? "_blank" : "_self"}
+              rel={project.link ? "noopener noreferrer" : ""}
+              key={project.id}
+              className="portfolio-item group"
+              style={{
+                display: "block",
+                cursor: "pointer",
+                textDecoration: "none",
+              }}
+            >
+              <div
+                style={{
+                  aspectRatio:
+                    "4/3" /* Equal aspect ratios for perfect alignment */,
+                  overflow: "hidden",
+                  position: "relative",
+                  marginBottom: "2rem",
+                  background: "#111",
+                }}
+              >
+                <div
+                  className="img-parallax"
+                  style={{
+                    position: "absolute",
+                    top: "-10%",
+                    left: 0,
+                    width: "100%",
+                    height: "120%",
+                    backgroundImage: `url(${project.img})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    transition:
+                      "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease",
+                    filter: "grayscale(0) contrast(1) brightness(0.8)",
+                    transformOrigin: "center",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.05)";
+                    e.currentTarget.style.filter =
+                      "grayscale(0) contrast(1) brightness(1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.filter =
+                      "grayscale(0) contrast(1) brightness(0.8)";
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                <div style={{ flex: 1, paddingRight: "2rem" }}>
+                  <h3
+                    style={{
+                      fontSize: "1.75rem",
+                      fontWeight: 400,
+                      letterSpacing: "-0.02em",
+                      marginBottom: "0.5rem",
+                      textTransform: "uppercase",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {project.title}
+                  </h3>
+                  <p
+                    style={{
+                      color: "var(--text-secondary)",
+                      fontSize: "0.9rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      margin: "0 0 1rem 0",
+                    }}
+                  >
+                    {project.category}
+                  </p>
+                  <p
+                    style={{
+                      color: "var(--text-secondary)",
+                      fontSize: "0.95rem",
+                      lineHeight: 1.6,
+                      margin: 0,
+                      textTransform: "none",
+                      letterSpacing: "normal",
+                    }}
+                  >
+                    {project.summary}
+                  </p>
                 </div>
-            </div>
-        </section>
-    );
+                <div
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "var(--text-secondary)",
+                    padding: "0.2rem 0",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [0{index + 1}]
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default Portfolio;

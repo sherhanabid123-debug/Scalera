@@ -1,0 +1,29 @@
+{
+    "user_biodata": {
+        "name": "Yogiraj Kapoor",
+        "role": "Undergraduate",
+        "organization": "Personal",
+        "special_instructions": "Confirm acceptance by August 15th, 2026",
+        "age": "46",
+        "language": "English",
+        "email": "yogirajkapoor2504@gmail.com",
+        "postal code": "560076",
+        "feedback": "feedback_text",
+        "feature": "create_calendar_event",
+        "function": "create_calendar_event(title, start_time, end_time, location)",
+        "contact_name": "Sherhan",
+        "phone_number": "+91 95353 37959",
+        "phone": "+91 93807 61343"
+    },
+    "contacts": [],
+    "reminders": [
+        "alarm",
+        "alarm in 1 minute",
+        "Confirm acceptance with Yogiraj Kapoor by August 15th, 2026",
+        "Confirm acceptance with Yogiraj Kapoor by August 15th, 2026",
+        "Confirm acceptance with Yogiraj Kapoor by August 15th, 2026",
+        "Confirm acceptance with Yogiraj Kapoor by August 15th, 2026",
+        "Party invitation sent to Yogiraj Kapoor",
+        "Party invitation confirmation email sent to Yogiraj Kapoor"
+    ]
+}

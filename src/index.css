@@ -14,8 +14,9 @@
   /* Faint structural borders */
   /* Architectural thin borders */
   /* Typography */
-  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans:
+    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Layout */
   --max-width: 1400px;
@@ -40,11 +41,12 @@ body {
   /* Webkit font smoothing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
+  line-height: 1.7;
   width: 100%;
   min-height: 100%;
   overflow-x: hidden;
   position: relative;
+  font-size: 16px;
 }
 
 /* Base Typography Refinements */
@@ -55,14 +57,16 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.05em;
+  font-weight: 500;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
+  line-height: 1.1;
 }
 
 p {
   color: var(--text-secondary);
   font-weight: 400;
+  font-size: 1.05rem;
   /* Increased legibility for graphite */
 }
 
@@ -83,7 +87,6 @@ p {
 
 /* Premium noise overlay overlay to break up solid bands */
 @keyframes noiseTranslation {
-
   0%,
   100% {
     transform: translate(0, 0);
@@ -145,7 +148,11 @@ p {
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(220, 180, 128, 0.04) 0%, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(220, 180, 128, 0.04) 0%,
+    transparent 60%
+  );
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
@@ -208,7 +215,7 @@ img {
 /* Base selection color for professional look */
 ::selection {
   background-color: var(--accent-color);
-  color: #fff;
+  color: #0a0a0a;
 }
 
 /* Lenis smooth scrolling resets (Forced universally for production) */
@@ -281,13 +288,18 @@ body {
 }
 
 .nav-contact-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   transition: all 0.6s ease;
 }
 
@@ -301,4 +313,14 @@ body {
 
 .nav-contact-btn:hover::before {
   left: 100%;
+}
+
+/* Responsive Nav Centering */
+@media (max-width: 768px) {
+  .mobile-nav-placeholder {
+    display: block !important;
+  }
+  .mobile-toggle {
+    display: flex !important;
+  }
 }

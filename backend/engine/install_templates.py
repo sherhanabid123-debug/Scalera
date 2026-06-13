@@ -92,7 +92,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: #333
 .price { font-size: 1.5rem; font-weight: 700; color: var(--accent); margin: 0.5rem 0; }
 .details { color: #666; font-size: 0.9rem; }
 """,
-        "js": "console.log('Real Estate initialized');"
+        "js": "console.log('Real Estate initialized');",
     },
     "law-firm": {
         "html": """<!DOCTYPE html>
@@ -160,7 +160,7 @@ h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
 .area-card { background: white; padding: 3rem; border-top: 4px solid var(--gold); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 .area-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary); }
 """,
-        "js": ""
+        "js": "",
     },
     "medical-clinic": {
         "html": """<!DOCTYPE html>
@@ -227,7 +227,7 @@ body { font-family: 'Inter', sans-serif; color: var(--text); background: white; 
 .service { padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(2,132,199,0.05); border: 1px solid #E0F2FE; }
 .service h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.25rem; }
 """,
-        "js": ""
+        "js": "",
     },
     "fitness-gym": {
         "html": """<!DOCTYPE html>
@@ -297,7 +297,7 @@ h1, h2, .logo { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
 .card h2 { font-size: 2rem; margin-bottom: 1rem; }
 .card p { color: #888; line-height: 1.6; }
 """,
-        "js": ""
+        "js": "",
     },
     "yoga-studio": {
         "html": """<!DOCTYPE html>
@@ -360,7 +360,7 @@ h1, h2, .logo { font-family: 'Cormorant Garamond', serif; font-weight: 400; colo
 .text-content h2 { font-size: 3rem; margin-bottom: 2rem; }
 .text-content p { font-size: 1.2rem; line-height: 2; }
 """,
-        "js": ""
+        "js": "",
     },
     "crypto-web3": {
         "html": """<!DOCTYPE html>
@@ -423,46 +423,104 @@ body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: v
 .stat h3 { font-size: 2.5rem; background: linear-gradient(to right, #FFF, #94A3B8); -webkit-background-clip: text; color: transparent; }
 .stat p { color: #64748B; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
 """,
-        "js": ""
+        "js": "",
     },
     # Will add more but keeping array concise for execution limits
 }
 
+
 def install():
     print("Installing 16 premium templates...")
     os.makedirs(templates_dir, exist_ok=True)
-    
-    # Due to size, I'll generate the remaining 10 procedurally to guarantee high quality 
+
+    # Due to size, I'll generate the remaining 10 procedurally to guarantee high quality
     # without exceeding python string literals limits in one go.
-    
+
     # Create the ones explicitly defined above
     for niche, content in niches.items():
         niche_dir = os.path.join(templates_dir, niche)
         os.makedirs(niche_dir, exist_ok=True)
-        with open(os.path.join(niche_dir, "index.html"), "w") as f: f.write(content["html"])
-        with open(os.path.join(niche_dir, "styles.css"), "w") as f: f.write(content["css"])
-        with open(os.path.join(niche_dir, "script.js"), "w") as f: f.write(content["js"])
+        with open(os.path.join(niche_dir, "index.html"), "w") as f:
+            f.write(content["html"])
+        with open(os.path.join(niche_dir, "styles.css"), "w") as f:
+            f.write(content["css"])
+        with open(os.path.join(niche_dir, "script.js"), "w") as f:
+            f.write(content["js"])
         print(f"Installed: {niche}")
 
     # Generate the remaining dynamically with CSS variables to ensure perfect quality
     additional_niches = [
-        ("bakery", "The Artisan Bakery", "Fresh breads and pastries daily.", "#FDE68A", "#78350F"),
-        ("plumber", "ProPipe Services", "24/7 Emergency Plumbing.", "#3B82F6", "#1E40AF"),
-        ("interior-design", "Studio Minimal", "Modern interior architecture.", "#F3F4F6", "#111827"),
-        ("travel-agency", "Wanderlust", "Curated travel experiences.", "#34D399", "#064E3B"),
-        ("event-planner", "Luxe Events", "Unforgettable moments.", "#FBCFE8", "#831843"),
-        ("barbershop", "The Classic Cut", "Traditional barbering.", "#D1D5DB", "#111827"),
-        ("logistics", "FastTrack Freight", "Global supply chain solutions.", "#FBBF24", "#0F172A"),
-        ("accounting", "Trust Financial", "Expert tax and accounting.", "#A7F3D0", "#065F46"),
+        (
+            "bakery",
+            "The Artisan Bakery",
+            "Fresh breads and pastries daily.",
+            "#FDE68A",
+            "#78350F",
+        ),
+        (
+            "plumber",
+            "ProPipe Services",
+            "24/7 Emergency Plumbing.",
+            "#3B82F6",
+            "#1E40AF",
+        ),
+        (
+            "interior-design",
+            "Studio Minimal",
+            "Modern interior architecture.",
+            "#F3F4F6",
+            "#111827",
+        ),
+        (
+            "travel-agency",
+            "Wanderlust",
+            "Curated travel experiences.",
+            "#34D399",
+            "#064E3B",
+        ),
+        (
+            "event-planner",
+            "Luxe Events",
+            "Unforgettable moments.",
+            "#FBCFE8",
+            "#831843",
+        ),
+        (
+            "barbershop",
+            "The Classic Cut",
+            "Traditional barbering.",
+            "#D1D5DB",
+            "#111827",
+        ),
+        (
+            "logistics",
+            "FastTrack Freight",
+            "Global supply chain solutions.",
+            "#FBBF24",
+            "#0F172A",
+        ),
+        (
+            "accounting",
+            "Trust Financial",
+            "Expert tax and accounting.",
+            "#A7F3D0",
+            "#065F46",
+        ),
         ("music-artist", "Vibrations", "New album out now.", "#000000", "#FFFFFF"),
-        ("blog", "Daily Insights", "Thoughts on tech and design.", "#FFFFFF", "#333333"),
-        ("photographer", "Lens & Light", "Capturing moments.", "#18181B", "#E4E4E7")
+        (
+            "blog",
+            "Daily Insights",
+            "Thoughts on tech and design.",
+            "#FFFFFF",
+            "#333333",
+        ),
+        ("photographer", "Lens & Light", "Capturing moments.", "#18181B", "#E4E4E7"),
     ]
-    
+
     for niche, title, desc, bg, text in additional_niches:
         niche_dir = os.path.join(templates_dir, niche)
         os.makedirs(niche_dir, exist_ok=True)
-        
+
         html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -488,7 +546,7 @@ def install():
     </section>
 </body>
 </html>"""
-        
+
         css = f""":root {{
     --bg: {bg};
     --text: {text};
@@ -506,11 +564,15 @@ body {{ background: var(--bg); color: var(--text); }}
 .card {{ border: 2px solid var(--text); padding: 2rem; border-radius: 12px; }}
 .card h3 {{ margin-bottom: 1rem; font-size: 1.5rem; }}
 """
-        
-        with open(os.path.join(niche_dir, "index.html"), "w") as f: f.write(html)
-        with open(os.path.join(niche_dir, "styles.css"), "w") as f: f.write(css)
-        with open(os.path.join(niche_dir, "script.js"), "w") as f: f.write("")
+
+        with open(os.path.join(niche_dir, "index.html"), "w") as f:
+            f.write(html)
+        with open(os.path.join(niche_dir, "styles.css"), "w") as f:
+            f.write(css)
+        with open(os.path.join(niche_dir, "script.js"), "w") as f:
+            f.write("")
         print(f"Installed: {niche}")
+
 
 if __name__ == "__main__":
     install()

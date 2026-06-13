@@ -1,226 +1,412 @@
-import React, { useEffect, useState, useRef } from 'react';
-import gsap from 'gsap';
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ExternalLink } from "lucide-react";
 
-const Navbar = ({ showBuilder, setShowBuilder }) => {
-    const [scrolled, setScrolled] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const menuRef = useRef(null);
-    const linksRef = useRef([]);
+const Navbar = ({ loading }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+  const linksRef = useRef([]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-            gsap.to(menuRef.current, {
-                x: 0,
-                duration: 0.8,
-                ease: "expo.out"
-            });
-            gsap.fromTo(linksRef.current,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "expo.out", delay: 0.2 }
-            );
-        } else {
-            document.body.style.overflow = 'auto';
-            gsap.to(menuRef.current, {
-                x: '100%',
-                duration: 0.6,
-                ease: "expo.in"
-            });
-        }
-    }, [isOpen]);
-
-    const scrollTo = (id) => (e) => {
-        e.preventDefault();
-        setIsOpen(false);
-        if (showBuilder) {
-            setShowBuilder(false);
-            setTimeout(() => {
-                const element = document.querySelector(id);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, 100);
-        } else {
-            const element = document.querySelector(id);
-            if (element) {
-                setTimeout(() => {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }, 300);
-            }
-        }
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
     };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    return (
-        <>
-            <nav className={scrolled ? 'glass-nav' : ''} style={{
-                position: 'fixed', 
-                top: scrolled ? '20px' : 0, 
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: scrolled ? 'calc(100% - 40px)' : '100%',
-                maxWidth: scrolled ? '700px' : '100%',
-                padding: scrolled ? '10px 24px' : '32px 5%',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                zIndex: 110, pointerEvents: 'auto',
-                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                background: !scrolled ? 'transparent' : undefined,
-            }}>
-                <div
-                    id="navbar-logo-target"
-                    style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.03em', cursor: 'pointer', zIndex: 102, opacity: 0 }}
-                    onClick={() => {
-                        if (isOpen) setIsOpen(false);
-                        if (showBuilder) setShowBuilder(false);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                >
-                    Scalera<span style={{ color: 'var(--accent-color)' }}>.</span>
-                </div>
+  useLayoutEffect(() => {
+    if (loading) return;
+    let ctx = gsap.context(() => {
+      // Animate desktop menu links & buttons
+      gsap.fromTo(
+        ".desktop-menu > *",
+        { y: -20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          stagger: 0.08,
+          ease: "expo.out",
+          delay: 0.2,
+        },
+      );
+      // Animate mobile toggle
+      gsap.fromTo(
+        ".mobile-toggle",
+        { y: -20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "expo.out",
+          delay: 0.2,
+        },
+      );
+    });
+    return () => ctx.revert();
+  }, [loading]);
 
-                {/* Desktop Menu */}
-                <div className="desktop-menu" style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: scrolled ? '1.5rem' : '2.5rem', 
-                    fontSize: scrolled ? '0.85rem' : '0.95rem', 
-                    fontWeight: 500,
-                    transition: 'all 0.4s ease'
-                }}>
-                    <a href="#about" onClick={scrollTo('#about')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>About</a>
-                    <a href="#services" onClick={scrollTo('#services')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Services</a>
-                    <a href="#work" onClick={scrollTo('#work')} style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', color: 'var(--text-secondary)', display: 'inline-block' }} onMouseEnter={(e) => { e.target.style.color = 'var(--text-primary)'; e.target.style.transform = 'translateY(-2px)'; }} onMouseLeave={(e) => { e.target.style.color = 'var(--text-secondary)'; e.target.style.transform = 'translateY(0)'; }}>Work</a>
-                    <button onClick={() => { if (showBuilder) window.scrollTo({ top: 0, behavior: 'smooth' }); else setShowBuilder(true); }} style={{ 
-                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', 
-                        color: '#000', 
-                        background: 'linear-gradient(135deg, #f2e3c6 0%, var(--accent-color) 100%)',
-                        padding: scrolled ? '6px 14px' : '8px 16px',
-                        borderRadius: '99px',
-                        fontWeight: '700',
-                        fontSize: scrolled ? '0.8rem' : '0.9rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        boxShadow: '0 0 15px rgba(220, 180, 128, 0.35)',
-                        cursor: 'pointer'
-                    }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 25px rgba(220, 180, 128, 0.55)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(220, 180, 128, 0.35)'; }}>
-                        Try scalera AI ✨
-                    </button>
-                    <a href="https://wa.me/917975242650" target="_blank" rel="noopener noreferrer" className="nav-contact-btn" style={{
-                        padding: scrolled ? '6px 18px' : '8px 24px',
-                        fontSize: scrolled ? '0.8rem' : '0.95rem'
-                    }}>
-                        Let's Talk
-                    </a>
-                </div>
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      gsap.to(menuRef.current, {
+        x: 0,
+        duration: 0.8,
+        ease: "expo.out",
+      });
+      gsap.fromTo(
+        linksRef.current,
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "expo.out",
+          delay: 0.2,
+        },
+      );
+    } else {
+      document.body.style.overflow = "auto";
+      gsap.to(menuRef.current, {
+        x: "100%",
+        duration: 0.6,
+        ease: "expo.in",
+      });
+    }
+  }, [isOpen]);
 
-                {/* Hamburger Toggle */}
-                <button
-                    className="mobile-toggle"
-                    onClick={() => setIsOpen(!isOpen)}
-                    style={{
-                        zIndex: 102,
-                        display: 'none',
-                        flexDirection: 'column',
-                        gap: '6px',
-                        padding: '10px'
-                    }}
-                >
-                    <span style={{
-                        width: '24px', height: '2px', background: 'var(--text-primary)',
-                        transition: '0.4s', transform: isOpen ? 'rotate(45deg) translate(5px, 6px)' : 'none'
-                    }} />
-                    <span style={{
-                        width: '24px', height: '2px', background: 'var(--text-primary)',
-                        opacity: isOpen ? 0 : 1, transition: '0.2s'
-                    }} />
-                    <span style={{
-                        width: '24px', height: '2px', background: 'var(--text-primary)',
-                        transition: '0.4s', transform: isOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'none'
-                    }} />
-                </button>
-            </nav>
+  const scrollTo = (id) => (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+    const element = document.querySelector(id);
+    if (element) {
+      setTimeout(() => {
+        element.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    }
+  };
+  return (
+    <>
+      <nav
+        className={scrolled ? "glass-nav" : ""}
+        style={{
+          position: "fixed",
+          top: scrolled ? "20px" : 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: scrolled ? "calc(100% - 40px)" : "100%",
+          maxWidth: scrolled ? "900px" : "100%",
+          padding: scrolled ? "10px 24px" : "32px 5%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          zIndex: 110,
+          pointerEvents: "auto",
+          transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          background: !scrolled ? "transparent" : undefined,
+        }}
+      >
+        {/* Left Side: Desktop Links */}
+        <div
+          className="desktop-menu"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: scrolled ? "1.5rem" : "2.5rem",
+            fontSize: scrolled ? "0.85rem" : "0.95rem",
+            fontWeight: 500,
+            transition: "all 0.4s ease",
+            opacity: loading ? 0 : 1,
+            flex: 1,
+            justifyContent: "flex-start",
+          }}
+        >
+          <a
+            href="#about"
+            onClick={scrollTo("#about")}
+            style={{
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              color: "var(--text-secondary)",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "var(--text-primary)";
+              e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "var(--text-secondary)";
+              e.target.style.transform = "translateY(0)";
+            }}
+          >
+            About
+          </a>
+          <a
+            href="#services"
+            onClick={scrollTo("#services")}
+            style={{
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              color: "var(--text-secondary)",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "var(--text-primary)";
+              e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "var(--text-secondary)";
+              e.target.style.transform = "translateY(0)";
+            }}
+          >
+            Services
+          </a>
+          <a
+            href="#work"
+            onClick={scrollTo("#work")}
+            style={{
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              color: "var(--text-secondary)",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = "var(--text-primary)";
+              e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = "var(--text-secondary)";
+              e.target.style.transform = "translateY(0)";
+            }}
+          >
+            Work
+          </a>
+        </div>
 
-            {/* Mobile Menu Overlay */}
-            <div
-                ref={menuRef}
-                style={{
-                    position: 'fixed', top: 0, right: 0, width: '100%', height: '100dvh',
-                    background: 'rgba(10, 10, 10, 0.98)', backdropFilter: 'blur(20px)',
-                    zIndex: 101, display: 'flex', flexDirection: 'column',
-                    justifyContent: 'center', alignItems: 'center', gap: '3rem',
-                    transform: 'translateX(100%)', pointerEvents: 'auto'
-                }}
-            >
-                <a
-                    ref={el => linksRef.current[0] = el}
-                    href="#about"
-                    onClick={scrollTo('#about')}
-                    className="mobile-nav-link"
-                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
-                >
-                    About
-                </a>
-                <a
-                    ref={el => linksRef.current[1] = el}
-                    href="#services"
-                    onClick={scrollTo('#services')}
-                    className="mobile-nav-link"
-                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
-                >
-                    Services
-                </a>
-                <a
-                    ref={el => linksRef.current[2] = el}
-                    href="#work"
-                    onClick={scrollTo('#work')}
-                    className="mobile-nav-link"
-                    style={{ fontSize: '3rem', fontWeight: 600, letterSpacing: '-0.02em', textTransform: 'uppercase' }}
-                >
-                    Work
-                </a>
-                <button
-                    ref={el => linksRef.current[3] = el}
-                    onClick={() => { setIsOpen(false); setShowBuilder(true); }}
-                    className="mobile-nav-link"
-                    style={{ 
-                        fontSize: '2.5rem', 
-                        fontWeight: 700, 
-                        letterSpacing: '-0.02em', 
-                        textTransform: 'uppercase', 
-                        color: '#000',
-                        background: 'linear-gradient(135deg, #f2e3c6, var(--accent-color))',
-                        padding: '12px 32px',
-                        borderRadius: '99px',
-                        boxShadow: '0 0 20px rgba(220, 180, 128, 0.35)',
-                        marginTop: '1rem',
-                        cursor: 'pointer',
-                        border: 'none',
-                        textAlign: 'center'
-                    }}
-                >
-                    Try scalera AI ✨
-                </button>
-                <a
-                    ref={el => linksRef.current[4] = el}
-                    href="https://wa.me/917975242650"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="nav-contact-btn"
-                    style={{ marginTop: '2rem', fontSize: '1.5rem', padding: '16px 40px' }}
-                >
-                    Let's Talk
-                </a>
-            </div>
-        </>
-    );
+        {/* Mobile Nav Left Placeholder (keeps logo centered on mobile) */}
+        <div
+          className="mobile-nav-placeholder"
+          style={{
+            display: "none",
+            flex: 1,
+          }}
+        />
+
+        {/* Center Side: Logo */}
+        <div
+          id="navbar-logo-target"
+          style={{
+            fontWeight: 700,
+            fontSize: "1.5rem",
+            letterSpacing: "-0.03em",
+            cursor: "pointer",
+            zIndex: 102,
+            opacity: 1,
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+          }}
+          onClick={() => {
+            if (isOpen) setIsOpen(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          Scalera<span style={{ color: "var(--accent-color)" }}>.</span>
+        </div>
+
+        {/* Right Side: Actions (Desktop) / Toggle (Mobile) */}
+        <div
+          className="desktop-menu"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: scrolled ? "1rem" : "1.5rem",
+            fontSize: scrolled ? "0.85rem" : "0.95rem",
+            fontWeight: 500,
+            transition: "all 0.4s ease",
+            opacity: loading ? 0 : 1,
+            flex: 1,
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            onClick={() => {
+              window.location.href = "/builder.html";
+            }}
+            style={{
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              color: "#000",
+              background:
+                "linear-gradient(135deg, #f2e3c6 0%, var(--accent-color) 100%)",
+              padding: scrolled ? "6px 14px" : "8px 16px",
+              borderRadius: "99px",
+              fontWeight: "700",
+              fontSize: scrolled ? "0.8rem" : "0.9rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "0 0 15px rgba(220, 180, 128, 0.35)",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
+              e.currentTarget.style.boxShadow =
+                "0 0 25px rgba(220, 180, 128, 0.55)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0) scale(1)";
+              e.currentTarget.style.boxShadow =
+                "0 0 15px rgba(220, 180, 128, 0.35)";
+            }}
+          >
+            Scalera AI <ExternalLink size={16} />
+          </button>
+        </div>
+
+        {/* Hamburger Toggle */}
+        <button
+          className="mobile-toggle"
+          onClick={() => setIsOpen(!isOpen)}
+          style={{
+            zIndex: 102,
+            display: "none",
+            flexDirection: "column",
+            gap: "6px",
+            padding: "10px",
+            opacity: loading ? 0 : 1,
+            flex: 1,
+            alignItems: "flex-end",
+            background: "none",
+            border: "none",
+          }}
+        >
+          <span
+            style={{
+              width: "24px",
+              height: "2px",
+              background: "var(--text-primary)",
+              transition: "0.4s",
+              transform: isOpen ? "rotate(45deg) translate(5px, 6px)" : "none",
+            }}
+          />
+          <span
+            style={{
+              width: "24px",
+              height: "2px",
+              background: "var(--text-primary)",
+              opacity: isOpen ? 0 : 1,
+              transition: "0.2s",
+            }}
+          />
+          <span
+            style={{
+              width: "24px",
+              height: "2px",
+              background: "var(--text-primary)",
+              transition: "0.4s",
+              transform: isOpen
+                ? "rotate(-45deg) translate(5px, -6px)"
+                : "none",
+            }}
+          />
+        </button>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        ref={menuRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          width: "100%",
+          height: "100dvh",
+          background: "rgba(10, 10, 10, 0.98)",
+          backdropFilter: "blur(20px)",
+          zIndex: 101,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "3rem",
+          transform: "translateX(100%)",
+          pointerEvents: "auto",
+        }}
+      >
+        <a
+          ref={(el) => (linksRef.current[0] = el)}
+          href="#about"
+          onClick={scrollTo("#about")}
+          className="mobile-nav-link"
+          style={{
+            fontSize: "3rem",
+            fontWeight: 600,
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
+          }}
+        >
+          About
+        </a>
+        <a
+          ref={(el) => (linksRef.current[1] = el)}
+          href="#services"
+          onClick={scrollTo("#services")}
+          className="mobile-nav-link"
+          style={{
+            fontSize: "3rem",
+            fontWeight: 600,
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
+          }}
+        >
+          Services
+        </a>
+        <a
+          ref={(el) => (linksRef.current[2] = el)}
+          href="#work"
+          onClick={scrollTo("#work")}
+          className="mobile-nav-link"
+          style={{
+            fontSize: "3rem",
+            fontWeight: 600,
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
+          }}
+        >
+          Work
+        </a>
+        <button
+          ref={(el) => (linksRef.current[3] = el)}
+          onClick={() => {
+            setIsOpen(false);
+            window.location.href = "/builder.html";
+          }}
+          className="mobile-nav-link"
+          style={{
+            fontSize: "2.5rem",
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
+            color: "#000",
+            background: "linear-gradient(135deg, #f2e3c6, var(--accent-color))",
+            padding: "12px 32px",
+            borderRadius: "99px",
+            boxShadow: "0 0 20px rgba(220, 180, 128, 0.35)",
+            marginTop: "1rem",
+            cursor: "pointer",
+            border: "none",
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+          }}
+        >
+          Scalera AI <ExternalLink size={28} />
+        </button>
+      </div>
+    </>
+  );
 };
 
 export default Navbar;

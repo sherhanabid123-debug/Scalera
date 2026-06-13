@@ -3,84 +3,123 @@ import re
 import datetime
 from .components.library import COMPONENTS, GLOBAL_STYLES, GLOBAL_JS
 
+
 async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
     """
     Stitches together a website from components based on a blueprint.
     """
     html_sections = []
     css_sections = [GLOBAL_STYLES]
-    
+
     # Iterate through requested sections
-    sections_to_build = blueprint.get("sections", ["Hero", "About", "Services", "Contact"])
-    
+    sections_to_build = blueprint.get(
+        "sections", ["Hero", "About", "Services", "Contact"]
+    )
+
     for section_name in sections_to_build:
-        section_key = section_name.lower().split("/")[0] # handle "Portfolio/Work"
-        
+        section_key = section_name.lower().split("/")[0]  # handle "Portfolio/Work"
+
         if section_key in COMPONENTS:
             # Pick a variant (default to first one if not specified)
-            variant_name = blueprint.get("variants", {}).get(section_key, list(COMPONENTS[section_key].keys())[0])
+            variant_name = blueprint.get("variants", {}).get(
+                section_key, list(COMPONENTS[section_key].keys())[0]
+            )
             component = COMPONENTS[section_key][variant_name]
-            
+
             # Wrap in identifying container for in-context editing
             section_html = f'<div id="section-{section_key}" class="editable-section" data-type="{section_key}">{component["html"]}</div>'
             section_css = component["css"]
-            
+
             # ──────────────────────────────────────────────
             # Data Injection logic
             # ──────────────────────────────────────────────
-            
+
             # 1. Map Data to Hero
             if section_key == "hero":
-                section_html = section_html.replace("[HERO_TITLE]", data.get("full_name") or data.get("business_name") or "Your Vision")
-                section_html = section_html.replace("[HERO_SUBTITLE]", data.get("bio") or data.get("professional_title") or data.get("description") or "Building the future.")
+                section_html = section_html.replace(
+                    "[HERO_TITLE]",
+                    data.get("full_name") or data.get("business_name") or "Your Vision",
+                )
+                section_html = section_html.replace(
+                    "[HERO_SUBTITLE]",
+                    data.get("bio")
+                    or data.get("professional_title")
+                    or data.get("description")
+                    or "Building the future.",
+                )
                 section_html = section_html.replace("[CTA_TEXT]", "Get Started")
-                section_html = section_html.replace("[TAGLINE]", data.get("site_type", "Portfolio").upper())
-                section_html = section_html.replace("[HERO_IMAGE]", "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80")
-            
+                section_html = section_html.replace(
+                    "[TAGLINE]", data.get("site_type", "Portfolio").upper()
+                )
+                section_html = section_html.replace(
+                    "[HERO_IMAGE]",
+                    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80",
+                )
+
             # 2. Map Data to About
             elif section_key == "about":
-                bio_text = data.get("bio") or data.get("description") or "We believe in creating digital excellence."
-                section_html = section_html.replace("[ABOUT_TEXT]", f"<p>{bio_text}</p>")
-            
+                bio_text = (
+                    data.get("bio")
+                    or data.get("description")
+                    or "We believe in creating digital excellence."
+                )
+                section_html = section_html.replace(
+                    "[ABOUT_TEXT]", f"<p>{bio_text}</p>"
+                )
+
             # 3. Map Data to Services
             elif section_key == "services":
-                items = data.get("services") or data.get("skills") or ["Design", "Development", "Strategy"]
+                items = (
+                    data.get("services")
+                    or data.get("skills")
+                    or ["Design", "Development", "Strategy"]
+                )
                 items_html = ""
                 item_template = COMPONENTS["services"]["grid"]["item_html"]
-                
+
                 for i, item in enumerate(items):
                     title = ""
                     desc = ""
                     if isinstance(item, dict):
                         title = item.get("title") or item.get("role") or "Expertise"
-                        desc = item.get("description") or item.get("company") or "Professional service delivery."
+                        desc = (
+                            item.get("description")
+                            or item.get("company")
+                            or "Professional service delivery."
+                        )
                     else:
                         title = item
                         desc = "Expert professional services tailored to your needs."
-                    
+
                     # Cycle icons
                     icons = ["⚡", "🎨", "🚀", "🛠️", "💎"]
                     icon = icons[i % len(icons)]
-                    
+
                     item_chunk = item_template.replace("[TITLE]", str(title))
                     item_chunk = item_chunk.replace("[DESC]", str(desc))
                     item_chunk = item_chunk.replace("[ICON]", icon)
                     items_html += item_chunk
-                
+
                 section_html = section_html.replace("[SERVICES_ITEMS]", items_html)
-            
+
             # 4. Map Data to Contact
             elif section_key == "contact":
                 biz_name = data.get("business_name") or data.get("full_name") or "Us"
-                section_html = section_html.replace("Let's Collaborate", f"Work with {biz_name}")
-                
+                section_html = section_html.replace(
+                    "Let's Collaborate", f"Work with {biz_name}"
+                )
+
             html_sections.append(section_html)
             css_sections.append(section_css)
 
     # Wrap in standard HTML shell
-    biz_display_name = data.get('business_name') or data.get('full_name') or 'Scalera Site'
-    logo_text = biz_display_name.split()[0] if ' ' in biz_display_name else biz_display_name
-    
+    biz_display_name = (
+        data.get("business_name") or data.get("full_name") or "Scalera Site"
+    )
+    logo_text = (
+        biz_display_name.split()[0] if " " in biz_display_name else biz_display_name
+    )
+
     full_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -120,6 +159,6 @@ async def assemble_modular_site(blueprint: dict, data: dict) -> dict:
 
     return {
         "html": full_html,
-        "css": "", # Integrated into HTML for modular simplicity
-        "js": ""
+        "css": "",  # Integrated into HTML for modular simplicity
+        "js": "",
     }

@@ -23,7 +23,7 @@ COMPONENTS = {
 .hero-modern { min-height: 90vh; display: flex; align-items: center; padding: 120px 0; background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.1), transparent); }
 .hero-modern h1 { font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1.1; margin-bottom: 2rem; font-weight: 800; letter-spacing: -0.03em; }
 .hero-modern .subtitle { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin-bottom: 3rem; line-height: 1.6; }
-"""
+""",
         },
         "split": {
             "html": """
@@ -49,8 +49,8 @@ COMPONENTS = {
 .hero-text h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin: 1rem 0 2rem; }
 .hero-image .glass-image-card { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 40px 100px rgba(0,0,0,0.5); }
 @media (max-width: 991px) { .split-grid { grid-template-columns: 1fr; text-align: center; } .hero-image { order: -1; } }
-"""
-        }
+""",
+        },
     },
     "about": {
         "modern": {
@@ -83,7 +83,7 @@ COMPONENTS = {
 .stat-card { padding: 30px; text-align: center; }
 .stat-card h3 { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 0.5rem; }
 @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
-"""
+""",
         }
     },
     "services": {
@@ -111,7 +111,7 @@ COMPONENTS = {
 .service-card { padding: 40px; transition: transform 0.3s ease; }
 .service-card:hover { transform: translateY(-10px); border-color: var(--accent-color); }
 .service-card .icon { font-size: 2rem; margin-bottom: 1.5rem; }
-"""
+""",
         }
     },
     "contact": {
@@ -140,9 +140,9 @@ COMPONENTS = {
 .contact-header { text-align: center; margin-bottom: 40px; }
 .contact-form { display: grid; gap: 20px; }
 .glass-input { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; color: #fff; width: 100%; }
-"""
+""",
         }
-    }
+    },
 }
 
 GLOBAL_STYLES = """

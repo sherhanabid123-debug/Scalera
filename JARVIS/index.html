@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS - HUD Terminal</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background: #212121;
+            color: #ececec;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            position: relative;
+        }
+
+        #hud {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: #212121;
+        }
+
+        /* ChatGPT style sidebar */
+        .sidebar {
+            width: 260px;
+            background: #171717;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 6px;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(255,255,255,0.02);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        
+        .stat-label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-val {
+            color: #ffffff;
+            font-weight: 500;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        /* Progress bars */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #10a37f; /* OpenAI Green */
+            transition: width 0.5s ease;
+        }
+
+        /* Center main chat panel */
+        #center-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #212121;
+            height: 100%;
+            min-height: 0;
+            position: relative;
+        }
+
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: #212121;
+        }
+
+        #clock {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: monospace;
+        }
+
+        #date {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #state-lbl {
+            font-size: 9px;
+            font-weight: bold;
+            color: #10a37f;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(16, 163, 127, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        /* Speech visualizer wave */
+        #bars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 20px;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .b {
+            width: 3px;
+            background: #10a37f;
+            height: 3px;
+            border-radius: 1px;
+            transition: height 0.1s ease;
+        }
+
+        /* ChatGPT Conversational Feed */
+        #console {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            min-height: 0;
+        }
+
+        #console::-webkit-scrollbar {
+            width: 8px;
+        }
+        #console::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .line {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 90%;
+            animation: fadeIn 0.25s ease-out;
+            padding: 0 16px;
+        }
+
+        /* ChatGPT style bubbles */
+        .line.you {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+        .line.you .bubble-content {
+            background-color: #2f2f2f;
+            color: #ececec;
+            border-radius: 20px 20px 4px 20px;
+            padding: 10px 16px;
+            max-width: 85%;
+            word-break: break-word;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .line.rs {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
+        .line.rs .bubble-content {
+            color: #ececec;
+            max-width: 100%;
+            padding: 8px 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .line.sys {
+            align-self: center;
+            align-items: center;
+            max-width: 100%;
+            opacity: 0.5;
+            font-style: italic;
+            font-size: 11px;
+            text-align: center;
+        }
+        .line.sys .bubble-content {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        .line.err {
+            align-self: center;
+            align-items: center;
+            color: #ef5350;
+            font-size: 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Center Input Bar Container */
+        #cmd-wrap {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0 16px 24px 16px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #cmd-box {
+            display: flex;
+            align-items: center;
+            background: #2f2f2f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 26px;
+            padding: 6px 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            position: relative;
+        }
+
+        #prompt-symbol {
+            display: none; /* Hide eDEX prompt symbol for ChatGPT interface */
+        }
+
+        #cmd {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: inherit;
+            padding: 8px 12px;
+            outline: none;
+        }
+        #cmd::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+        }
+
+        #ml {
+            display: none; /* Hide mic status label text */
+        }
+
+        #mic {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        #mic:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Active mic animation */
+        .s-listening #mic {
+            color: #ef5350;
+            animation: micPulse 1.5s infinite;
+        }
+
+        @keyframes micPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .cfg-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cfg-btn:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Config menu */
+        #cfg {
+            position: absolute;
+            bottom: 80px;
+            right: 16px;
+            background: #171717;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 99;
+            border-radius: 12px;
+            min-width: 240px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        #cfg.open { display: flex; }
+        
+        #cfg label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+        }
+
+        #cfg select {
+            background: #2f2f2f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 12px;
+            padding: 6px;
+            outline: none;
+            border-radius: 6px;
+        }
+
+        /* Mail Composer overlay */
+        #mail-composer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #171717;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            z-index: 100;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 480px;
+        }
+
+        #mail-composer h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #mail-composer label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+        }
+
+        #mail-composer input, #mail-composer textarea {
+            background: #2f2f2f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 13px;
+            padding: 8px;
+            outline: none;
+            border-radius: 6px;
+        }
+
+        #mail-composer textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        #mail-composer .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        #mail-composer button {
+            background: none;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        #mail-composer .btn-send {
+            background: #10a37f;
+            color: #ffffff;
+        }
+        #mail-composer .btn-send:hover {
+            background: #1a7f64;
+        }
+
+        #mail-composer .btn-discard {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        #mail-composer .btn-discard:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* State color bindings */
+        .s-listening .b { background: #ef5350; }
+        .s-thinking .b { background: #10a37f; }
+        .s-speaking .b { background: #ff9100; }
+
+        /* macOS style Dock */
+        #mac-dock {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 8px 12px;
+            width: fit-content;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .dock-item {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .dock-item:hover {
+            transform: scale(1.2) translateY(-6px);
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dock-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dock-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 48px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 9px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            display: none;
+            font-family: inherit;
+            pointer-events: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .dock-item:hover::after {
+            display: block;
+        }
+
+        @media (max-width: 850px) {
+            #hud {
+                flex-direction: column;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body id="app">
+    <div id="hud">
+        <!-- Left Sidebar: System Monitor & Location -->
+        <div class="panel sidebar">
+            <div class="panel-title">
+                <span>GEOLOCATION HUD</span>
+                <span style="color:#00bbff">●</span>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-label"><span>LOCATION:</span></div>
+                <div id="stat-location" style="font-size:11px; color:#ffffff; font-weight:bold; letter-spacing:1px; margin-top: 2px; text-transform: uppercase;">LOADING...</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>POSTAL CODE:</span> <span id="stat-pincode" class="stat-val">—</span></div>
+            </div>
+
+            <div style="border-bottom:1px solid rgba(0,255,102,0.1); margin: 6px 0;"></div>
+
+            <div class="panel-title">
+                <span>SYSTEM MONITOR</span>
+                <span style="color:#ff9100">●</span>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-label"><span>HOST:</span> <span id="stat-host" class="stat-val">—</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>OS:</span> <span id="stat-os" class="stat-val">—</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>ARCH:</span> <span id="stat-arch" class="stat-val">—</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>UPTIME:</span> <span id="stat-uptime" class="stat-val">—</span></div>
+            </div>
+
+            <div style="border-bottom:1px solid rgba(0,255,102,0.1); margin: 6px 0;"></div>
+
+            <div class="stat-item">
+                <div class="stat-label"><span>CPU BRAND:</span></div>
+                <div id="stat-cpu-model" style="font-size:10px; color:#ffffff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">—</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-label"><span>CPU LOAD:</span> <span id="stat-cpu" class="stat-val">0%</span></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="bar-cpu"></div>
+                </div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-label"><span>RAM ALLOC:</span> <span id="stat-ram" class="stat-val">0GB</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>BATTERY:</span> <span id="stat-battery" class="stat-val">—</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>NETWORK:</span> <span id="stat-network" class="stat-val">—</span></div>
+            </div>
+        </div>
+
+        <!-- Center Panel: Terminal & Core -->
+        <div id="center-panel">
+            <div id="header">
+                <div>
+                    <span id="date">LOADING...</span>
+                </div>
+                <div id="clock">00:00:00</div>
+                <div>
+                    <span id="state-lbl" style="font-size:10px; font-weight:bold; letter-spacing:1px;">OFFLINE</span>
+                </div>
+            </div>
+
+            <div id="bars"></div>
+
+            <div id="console"></div>
+
+            <div id="mac-dock">
+                <div class="dock-item" data-tooltip="Mail Workspace" onclick="document.getElementById('mail-composer').style.display = document.getElementById('mail-composer').style.display === 'flex' ? 'none' : 'flex'">
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <div class="dock-item" data-tooltip="Chat Console" onclick="document.getElementById('cmd').focus();">
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                </div>
+                <div class="dock-item" data-tooltip="Preferences" onclick="document.getElementById('cfg').classList.toggle('open')">
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                </div>
+            </div>
+
+            <div id="cmd-wrap">
+                <div id="cmd-box">
+                    <span id="prompt-symbol">jarvis@kapoor ~ %</span>
+                    <input type="text" id="cmd" placeholder="Ask JARVIS a question or type command..." autocomplete="off" />
+                    
+                    <div id="footer">
+                        <span id="ml">MIC STATUS: INACTIVE</span>
+                        <button id="mic" onclick="window.J.toggle()">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+                        </button>
+                        <button class="cfg-btn" onclick="document.getElementById('cfg').classList.toggle('open')">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="cfg">
+                <label>Voice Output<select id="vs"></select></label>
+                <label>Speech Volume<input type="range" id="vol" min="0" max="1" step="0.1" value="1" style="width:100%"></label>
+                <label>Input Engine
+                    <select id="speech-engine" style="width:100%; background:#050810; border:1px solid rgba(0,187,255,0.3); color:#00bbff; font:11px monospace; padding:4px; outline:none; margin-top:2px;">
+                        <option value="native">Native Chrome Engine</option>
+                        <option value="whisper">Whisper Engine (VAD)</option>
+                    </select>
+                </label>
+                <label>Active Model <span id="model-warn-indicator" style="display:none; color:#ffcc00; font-weight:bold; font-size:9px;">⚠️ EXHAUSTED</span>
+                    <select id="model-select" onchange="const opt = this.options[this.selectedIndex]; const isEx = opt.textContent.includes('EXHAUSTED'); document.getElementById('model-warn-indicator').style.display = isEx ? 'inline-block' : 'none';" style="width:100%; background:#050810; border:1px solid rgba(0,187,255,0.3); color:#00bbff; font:11px monospace; padding:4px; outline:none; margin-top:2px;">
+                        <option value="llama-3.3-70b-versatile">Groq: Llama 3.3 70B (Versatile)</option>
+                        <option value="llama-3.1-8b-instant">Groq: Llama 3.1 8B (Instant)</option>
+                        <option value="meta-llama/Llama-3.3-70B-Instruct">Hugging Face: Llama 3.3 70B</option>
+                        <option value="Qwen/Qwen2.5-Coder-32B-Instruct">Hugging Face: Qwen 2.5 Coder 32B</option>
+                    </select>
+                </label>
+            </div>
+            
+            <div id="mail-composer">
+                <h3><span>JARVIS Mail Workspace</span></h3>
+                <label>Recipient
+                    <input type="text" id="mail-to" placeholder="email@address.com">
+                </label>
+                <label>Subject
+                    <input type="text" id="mail-subject" placeholder="Subject">
+                </label>
+                <label>Message Body
+                    <textarea id="mail-body" placeholder="Write message body here..."></textarea>
+                </label>
+                <div class="btn-row">
+                    <button class="btn-discard" onclick="document.getElementById('mail-composer').style.display='none'">Discard</button>
+                    <button class="btn-send" onclick="window.J && window.J.sendApprovedMail()">Approve & Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar: Profiles & Latency -->
+        <div class="panel sidebar">
+            <div class="panel-title">
+                <span>USER IDENT CARD</span>
+                <span style="color:#00bbff">●</span>
+            </div>
+            
+            <div class="stat-item" style="display:flex; flex-direction:column; gap:4px; margin-bottom:6px;">
+                <div class="stat-label"><span>USER:</span></div>
+                <input type="text" id="bio-name" class="stat-val" value="" onchange="window.J && window.J.saveBiodataFromUI()" style="background:#050810; border:1px solid rgba(0,187,255,0.2); color:#ffffff; font:10px monospace; padding:4px 6px; width:100%; border-radius:2px; box-sizing:border-box; outline:none;">
+            </div>
+            <div class="stat-item" style="display:flex; flex-direction:column; gap:4px; margin-bottom:6px;">
+                <div class="stat-label"><span>ROLE:</span></div>
+                <input type="text" id="bio-role" class="stat-val" value="" onchange="window.J && window.J.saveBiodataFromUI()" style="background:#050810; border:1px solid rgba(0,187,255,0.2); color:#ffffff; font:10px monospace; padding:4px 6px; width:100%; border-radius:2px; box-sizing:border-box; outline:none;">
+            </div>
+            <div class="stat-item" style="display:flex; flex-direction:column; gap:4px; margin-bottom:6px;">
+                <div class="stat-label"><span>PHONE:</span></div>
+                <input type="text" id="bio-phone" class="stat-val" value="" onchange="window.J && window.J.saveBiodataFromUI()" style="background:#050810; border:1px solid rgba(0,187,255,0.2); color:#ffffff; font:10px monospace; padding:4px 6px; width:100%; border-radius:2px; box-sizing:border-box; outline:none;">
+            </div>
+
+            <div style="border-bottom:1px solid rgba(0,255,102,0.1); margin: 6px 0;"></div>
+
+            <!-- Spotify Connection Widget -->
+            <div class="panel-title">
+                <span>SPOTIFY CONNECTION</span>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>STATUS:</span> <span id="spotify-status-val" class="stat-val" style="color:#ff3333;">DISCONNECTED</span></div>
+            </div>
+
+            <div style="border-bottom:1px solid rgba(0,255,102,0.1); margin: 6px 0;"></div>
+
+            <div class="panel-title">
+                <span>NET METRICS</span>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-label"><span>GATEWAY:</span> <span class="stat-val" style="color:#00bbff">ONLINE</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>PING TIME:</span> <span id="net-ping" class="stat-val">0ms</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label"><span>SSL:</span> <span class="stat-val">SECURE</span></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+const $ = id => document.getElementById(id);
+const BARS = 32;
+
+class J {
+    constructor() {
+        this.s = 'off';
+        this.synth = speechSynthesis;
+        this.rec = null;
+        this.voice = null;
+        this.utt = null;
+        this.hist = [];
+        this.bars = [];
+        this.raf = null;
+        this.analyser = null;
+        this.ctx = null;
+        this.stream = null;
+        this.timer = null;
+        this.recActive = false;
+
+        // Build visualizer bars
+        const c = $('bars');
+        for (let i = 0; i < BARS; i++) {
+            const d = document.createElement('div');
+            d.className = 'b';
+            c.appendChild(d);
+            this.bars.push(d);
+        }
+
+        // Initialize clock & date
+        this.tick();
+        setInterval(() => this.tick(), 1000);
+
+        // System stats polling
+        this.updateSystemStats();
+        setInterval(() => this.updateSystemStats(), 3000);
+
+        // Fetch initial User Biodata
+        this.updateBiodata();
+        this.loadChatHistory();
+
+        // Fetch location details
+        this.updateLocation();
+        setInterval(() => this.updateLocation(), 30000);
+
+        // Spotify connection status polling
+        this.updateSpotifyStatus();
+        setInterval(() => this.updateSpotifyStatus(), 5000);
+
+        // Load speech synthesis voices
+        this.loadVoices();
+        if (this.synth.onvoiceschanged !== undefined) {
+            this.synth.onvoiceschanged = () => this.loadVoices();
+        }
+
+        // Setup Speech Engine settings
+        this.engine = localStorage.getItem('speech-engine') || 'native';
+        $('speech-engine').value = this.engine;
+        $('speech-engine').onchange = () => {
+            this.engine = $('speech-engine').value;
+            localStorage.setItem('speech-engine', this.engine);
+            this.log('sys', `SPEECH ENGINE SET TO: ${this.engine.toUpperCase()}`);
+            if (this.s !== 'off') {
+                this.toggle(false);
+                setTimeout(() => this.toggle(true), 300);
+            }
+        };
+
+        // Setup Speech Recognition
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SR) {
+            this.rec = new SR();
+            this.rec.continuous = true;
+            this.rec.interimResults = true;
+            this.rec.lang = 'en-US';
+            this.rec.onstart = () => { this.recActive = true; };
+            this.rec.onresult = e => this.onResult(e);
+            this.rec.onerror = e => { 
+                if (e.error !== 'no-speech' && e.error !== 'aborted') {
+                    this.log('sys', `Speech Recognition Error: ${e.error}`);
+                }
+                if (e.error === 'not-allowed') {
+                    this.log('err', 'Microphone permissions denied.');
+                    this.toggle(false); 
+                }
+            };
+            this.rec.onend = () => { 
+                this.recActive = false;
+                if (this.s !== 'off' && this.s !== 'speaking' && this.engine === 'native') {
+                    this.startRec(); 
+                }
+            };
+
+            // 1-second Auto-Restart watchdog to keep mic hot in listening/standby state
+            setInterval(() => {
+                if (this.s !== 'off' && this.s !== 'speaking' && !this.recActive && this.engine === 'native') {
+                    this.startRec();
+                }
+            }, 1000);
+        } else {
+            this.log('sys', 'LOCAL SPEECH ENGINE OFFLINE. BACKEND WHISPER TRANSCRIBER WARM.');
+            this.engine = 'whisper';
+            $('speech-engine').value = 'whisper';
+        }
+
+        this.animate();
+        this.log('sys', 'SYSTEM CORE INITIALIZED. SAY "JARVIS" TO WAKE.');
+    }
+
+    async sendApprovedMail() {
+        const toVal = document.getElementById('mail-to').value.trim();
+        const subVal = document.getElementById('mail-subject').value.trim();
+        const bodyVal = document.getElementById('mail-body').value.trim();
+        
+        if (!toVal) {
+            this.log('err', 'Cannot send email: Recipient field is empty.');
+            this.speak('Please specify a recipient email address.');
+            return;
+        }
+        
+        this.log('sys', 'DRAFTING IN MAIL APP & SENDING INSTANTLY...');
+        try {
+            const res = await fetch('/api/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    to: toVal,
+                    subject: subVal,
+                    body: bodyVal,
+                    send_instantly: true
+                })
+            });
+            if (res.ok) {
+                this.log('rs', 'Mail sent successfully.');
+                this.speak('Approved. The email has been sent, sir.');
+                document.getElementById('mail-composer').style.display = 'none';
+            } else {
+                const errData = await res.json();
+                throw new Error(errData.detail || 'Server error');
+            }
+        } catch (e) {
+            this.log('err', 'FAILED TO SEND MAIL: ' + e.message);
+            this.speak('Apologies sir, I encountered an issue sending the mail.');
+        }
+    }
+
+    tick() {
+        const d = new Date();
+        $('clock').textContent = d.toLocaleTimeString('en-GB', { hour12: false });
+        $('date').textContent = d.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+    }
+
+    log(type, text) {
+        const c = $('console');
+        const d = document.createElement('div');
+        d.className = `line ${type}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble-content';
+        bubble.textContent = text;
+        d.appendChild(bubble);
+        
+        c.appendChild(d);
+        c.scrollTop = c.scrollHeight;
+    }
+
+    set(state) {
+        this.s = state;
+        $('app').className = state === 'off' ? '' : `s-${state}`;
+        const labels = { 
+            off: 'OFFLINE', 
+            standby: 'STANDBY', 
+            listening: 'ACTIVE LISTENING', 
+            thinking: 'PROCESSING DIRECTIVE', 
+            speaking: 'VOCALIZING RESPONSE' 
+        };
+        $('state-lbl').textContent = labels[state] || 'STANDBY';
+        
+        clearTimeout(this.timer);
+        if (state === 'listening') {
+            this.timer = setTimeout(() => { 
+                if (this.s === 'listening') { 
+                    this.set('standby'); 
+                    this.log('sys', 'Idle timeout. Entering standby.');
+                } 
+            }, 15000);
+        }
+    }
+
+    loadVoices() {
+        const all = this.synth.getVoices();
+        const vs = $('vs');
+        vs.innerHTML = '';
+        
+        const en = all.filter(v => v.lang.startsWith('en'));
+        en.forEach(v => {
+            const o = document.createElement('option');
+            o.value = v.name; 
+            o.textContent = v.name;
+            if (!this.voice && (v.name.includes('Siri') || v.name.includes('Alex') || v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Oliver'))) {
+                o.selected = true; 
+                this.voice = v;
+            }
+            vs.appendChild(o);
+        });
+        if (!this.voice && en.length) this.voice = en[0];
+        vs.onchange = () => { 
+            this.voice = all.find(v => v.name === vs.value); 
+        };
+    }
+
+        async loadChatHistory() {
+        try {
+            const res = await fetch('/api/chat_history');
+            if (res.ok) {
+                const history = await res.json();
+                history.forEach(msg => {
+                    this.log(msg.role === 'user' ? 'you' : 'rs', msg.content);
+                    this.hist.push({ role: msg.role, content: msg.content });
+                });
+                if (this.hist.length > 14) {
+                    this.hist = this.hist.slice(this.hist.length - 14);
+                }
+            }
+        } catch(e) {}
+    }
+
+    async updateSystemStats() {
+        const startTime = Date.now();
+        try {
+            const res = await fetch('/api/system_stats');
+            if (res.ok) {
+                const data = await res.json();
+                $('stat-host').textContent = data.hostname.toUpperCase();
+                $('stat-os').textContent = data.os;
+                $('stat-arch').textContent = data.arch.toUpperCase();
+                $('stat-uptime').textContent = data.uptime.toUpperCase();
+                $('stat-cpu-model').textContent = data.cpu_model;
+                $('stat-cpu').textContent = data.cpu_usage;
+                $('stat-ram').textContent = data.ram_usage;
+                $('stat-battery').textContent = data.battery ? data.battery.toUpperCase() : 'UNKNOWN';
+                $('stat-network').textContent = data.network ? data.network.toUpperCase() : 'OFFLINE';
+                
+                // Update model select options with exhausted status
+                if (data.exhausted_models) {
+                    const select = $('model-select');
+                    if (select) {
+                        const exhausted = data.exhausted_models || [];
+                        Array.from(select.options).forEach(opt => {
+                            const modelId = opt.value;
+                            const isExhausted = exhausted.includes(modelId);
+                            let baseText = opt.getAttribute('data-base-text');
+                            if (!baseText) {
+                                baseText = opt.textContent.replace('⚠️ ', '').replace(' [EXHAUSTED]', '');
+                                opt.setAttribute('data-base-text', baseText);
+                            }
+                            if (isExhausted) {
+                                opt.textContent = '⚠️ ' + baseText + ' [EXHAUSTED]';
+                                opt.style.color = '#ffcc00';
+                            } else {
+                                opt.textContent = baseText;
+                                opt.style.color = '';
+                            }
+                        });
+                        
+                        const currentModel = select.value;
+                        const warnIndicator = $('model-warn-indicator');
+                        if (warnIndicator) {
+                            if (exhausted.includes(currentModel)) {
+                                warnIndicator.style.display = 'inline-block';
+                            } else {
+                                warnIndicator.style.display = 'none';
+                            }
+                        }
+                    }
+                }
+                
+                // Update CPU progress bar width
+                const cpuVal = parseInt(data.cpu_usage) || 0;
+                $('bar-cpu').style.width = cpuVal + '%';
+                
+                // Update ping latency
+                $('net-ping').textContent = (Date.now() - startTime) + 'ms';
+            }
+        } catch(e) {}
+    }
+
+    async updateBiodata() {
+        try {
+            const res = await fetch('/api/memory');
+            if (res.ok) {
+                const data = await res.json();
+                const bio = data.user_biodata || {};
+                if ($('bio-name')) $('bio-name').value = bio.name || '';
+                if ($('bio-role')) $('bio-role').value = bio.role || '';
+                if ($('bio-phone')) $('bio-phone').value = bio.phone || '';
+            }
+        } catch(e) {}
+    }
+
+    async saveBiodataFromUI() {
+        const nameVal = $('bio-name').value.trim();
+        const roleVal = $('bio-role').value.trim();
+        const phoneVal = $('bio-phone').value.trim();
+        
+        try {
+            const r = await fetch('/api/memory');
+            if (r.ok) {
+                const m = await r.json();
+                m.user_biodata = m.user_biodata || {};
+                m.user_biodata.name = nameVal;
+                m.user_biodata.role = roleVal;
+                m.user_biodata.phone = phoneVal;
+                
+                await fetch('/api/memory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(m)
+                });
+                this.log('sys', 'USER BIODATA SYNCHRONIZED.');
+            }
+        } catch (e) {
+            this.log('err', 'Failed to synchronize biodata: ' + e.message);
+        }
+    }
+
+    async updateLocation() {
+        try {
+            const res = await fetch('/api/location');
+            if (res.ok) {
+                const data = await res.json();
+                $('stat-location').textContent = `${data.city}, ${data.state}, ${data.country}`.toUpperCase();
+                $('stat-pincode').textContent = data.pincode;
+            }
+        } catch(e) {
+            $('stat-location').textContent = "MUMBAI, MAHARASHTRA, INDIA";
+            $('stat-pincode').textContent = "400001";
+        }
+    }
+
+    async updateSpotifyStatus() {
+        try {
+            const res = await fetch('/api/spotify/status');
+            if (res.ok) {
+                const data = await res.json();
+                const val = $('spotify-status-val');
+                const btn = $('spotify-link-btn');
+                if (data.connected) {
+                    val.textContent = (data.display_name || 'CONNECTED').toUpperCase();
+                    val.style.color = '#00bbff';
+                    val.style.textShadow = '0 0 4px #00bbff';
+                    btn.textContent = '[ ACCOUNT LINKED ]';
+                    btn.style.color = '#00bbff';
+                    btn.style.borderColor = '#00bbff';
+                    btn.style.textShadow = '0 0 4px #00bbff';
+                    btn.href = 'javascript:void(0)';
+                    btn.target = '';
+                    btn.onclick = null;
+                } else {
+                    val.textContent = 'DISCONNECTED';
+                    val.style.color = '#ff3333';
+                    val.style.textShadow = 'none';
+                    btn.textContent = '[ LINK SPOTIFY ]';
+                    btn.style.color = '#ff3333';
+                    btn.style.borderColor = '#ff3333';
+                    btn.style.textShadow = '0 0 4px rgba(255, 51, 83, 0.3)';
+                    btn.href = 'javascript:void(0)';
+                    btn.target = '';
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        this.openExternal('/api/spotify/login');
+                    };
+                }
+            }
+        } catch(e) {}
+    }
+
+    openExternal(path) {
+        const absoluteUrl = window.location.origin + path;
+        fetch('/api/open', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ target: absoluteUrl })
+        });
+    }
+
+    speak(text) {
+        if (!text) return;
+        this.set('speaking');
+        try { if (this.rec) this.rec.stop(); } catch(e){}
+        this.synth.cancel();
+        
+        const u = new SpeechSynthesisUtterance(text);
+        if (this.voice) u.voice = this.voice;
+        u.rate = 1.05; 
+        u.pitch = 0.95; 
+        u.volume = parseFloat($('vol').value);
+        this.utt = u;
+        
+        u.onstart = () => { 
+            this.set('speaking'); 
+            try { if (this.rec) this.rec.stop(); } catch(e){} 
+        };
+        u.onend = () => { 
+            this.utt = null; 
+            this.set(this.nextState || 'listening'); 
+            this.nextState = null;
+            this.startSpeechFlow(); 
+        };
+        u.onerror = () => { 
+            this.utt = null; 
+            this.set('standby'); 
+            this.startSpeechFlow(); 
+        };
+        this.synth.speak(u);
+    }
+
+    startRec() { 
+        if (this.rec && !this.recActive && this.s !== 'off' && this.s !== 'speaking') {
+            try { 
+                this.rec.start(); 
+            } catch(e){} 
+        }
+    }
+
+    startSpeechFlow() {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SR && this.engine === 'native') {
+            this.startRec();
+        } else {
+            this.startRecording();
+        }
+    }
+
+    startRecording() {
+        if (!this.stream) return;
+        this.chunks = [];
+        this.hasSpoken = false;
+        this.lastSpeechTime = Date.now();
+
+        try {
+            this.mediaRecorder = new MediaRecorder(this.stream);
+            this.mediaRecorder.ondataavailable = e => {
+                if (e.data && e.data.size > 0) {
+                    this.chunks.push(e.data);
+                }
+            };
+            this.mediaRecorder.onstop = () => {
+                if (this.hasSpoken && this.chunks.length > 0) {
+                    this.transcribeAudio();
+                } else {
+                    if (this.s === 'listening') {
+                        this.startRecording();
+                    }
+                }
+            };
+            this.mediaRecorder.start();
+        } catch (e) {
+            console.error("Failed to start MediaRecorder", e);
+        }
+    }
+
+    stopRecording() {
+        if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+            try {
+                this.mediaRecorder.stop();
+            } catch(e){}
+        }
+    }
+
+    async transcribeAudio() {
+        this.set('thinking');
+        this.log('sys', 'TRANSCRIBING AUDIO INPUT...');
+        const blob = new Blob(this.chunks, { type: 'audio/webm' });
+        const formData = new FormData();
+        formData.append('file', blob, 'recording.webm');
+
+        try {
+            const res = await fetch('/api/speech_to_text', {
+                method: 'POST',
+                body: formData
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const text = data.text ? data.text.trim() : '';
+                if (text.length > 1) {
+                    this.ask(text);
+                } else {
+                    this.log('sys', 'NO SPEECH DETECTED.');
+                    this.set('listening');
+                    this.startRecording();
+                }
+            } else {
+                throw new Error("Transcription server error");
+            }
+        } catch (e) {
+            this.log('err', 'TRANSCRIPTION FAILED: ' + e.message);
+            this.set('listening');
+            this.startRecording();
+        }
+    }
+
+    toggle(force) {
+        const on = force !== undefined ? force : this.s === 'off';
+        if (on) {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            
+            this.playWakeSound();
+            $('mic').classList.add('on');
+            $('ml').textContent = 'MIC STATUS: ACTIVE';
+            
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SR && this.engine === 'native') {
+                this.set('standby');
+                this.startRec();
+                this.log('sys', 'MIC ACCESS GRANTED. SAY "JARVIS" TO ACTIVATE.');
+            } else {
+                this.set('listening');
+                this.startRecording();
+                this.log('sys', 'MIC ACCESS GRANTED. ACTIVE LISTENING START (WHISPER).');
+            }
+            this.startMic();
+        } else {
+            this.synth.cancel(); 
+            this.utt = null;
+            try { this.rec.stop(); } catch(e){}
+            this.stopRecording();
+            this.stopMic();
+            this.set('off');
+            $('mic').classList.remove('on');
+            $('ml').textContent = 'MIC STATUS: INACTIVE';
+            this.log('sys', 'MIC DEACTIVATED. OFFLINE.');
+        }
+    }
+
+    async startMic() {
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+            const src = this.ctx.createMediaStreamSource(this.stream);
+            this.analyser = this.ctx.createAnalyser();
+            this.analyser.fftSize = 64;
+            src.connect(this.analyser);
+        } catch(e) {
+            this.log('err', 'Failed to connect audio visualizer to mic.');
+        }
+    }
+
+    stopMic() {
+        if (this.stream) { 
+            this.stream.getTracks().forEach(t => t.stop()); 
+            this.stream = null; 
+        }
+        this.analyser = null;
+    }
+
+    playWakeSound() {
+        try {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const c = this.ctx, t = c.currentTime;
+            
+            const o1 = c.createOscillator(), g1 = c.createGain();
+            o1.type = 'sine';
+            o1.frequency.setValueAtTime(800, t);
+            o1.frequency.exponentialRampToValueAtTime(1400, t + 0.08);
+            g1.gain.setValueAtTime(0.04, t);
+            g1.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+            o1.connect(g1); g1.connect(c.destination);
+            o1.start(t); o1.stop(t + 0.08);
+            
+            const o2 = c.createOscillator(), g2 = c.createGain();
+            o2.type = 'sine';
+            o2.frequency.setValueAtTime(1100, t + 0.05);
+            o2.frequency.exponentialRampToValueAtTime(1700, t + 0.15);
+            g2.gain.setValueAtTime(0.03, t + 0.05);
+            g2.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+            o2.connect(g2); g2.connect(c.destination);
+            o2.start(t + 0.05); o2.stop(t + 0.15);
+        } catch(e) {}
+    }
+
+    playConfirmSound() {
+        try {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const c = this.ctx, t = c.currentTime;
+            
+            const o = c.createOscillator(), g = c.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(500, t);
+            o.frequency.setValueAtTime(800, t + 0.05);
+            g.gain.setValueAtTime(0.03, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+            o.connect(g); g.connect(c.destination);
+            o.start(t); o.stop(t + 0.12);
+        } catch(e) {}
+    }
+
+    playClickSound() {
+        try {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const c = this.ctx, t = c.currentTime;
+            
+            const o = c.createOscillator(), g = c.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(1200 + Math.random() * 400, t);
+            g.gain.setValueAtTime(0.015, t);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
+            o.connect(g); g.connect(c.destination);
+            o.start(t); o.stop(t + 0.03);
+        } catch(e) {}
+    }
+
+    animate() {
+        const data = this.analyser ? new Uint8Array(this.analyser.frequencyBinCount) : null;
+        const step = () => {
+            if (data && this.analyser) this.analyser.getByteFrequencyData(data);
+            const t = Date.now() * 0.001;
+
+            // Voice Activity Silence Detection (VAD) fallback when native SpeechRecognition is absent
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (data) {
+                let sum = 0;
+                for (let i = 0; i < data.length; i++) {
+                    sum += data[i];
+                }
+                let avg = sum / data.length;
+
+                // Interruption during speaking ALWAYS ACTIVE
+                if (this.s === 'speaking' && avg > 8) {
+                    this.log('sys', 'USER INTERRUPTION DETECTED. LISTENING...');
+                    this.nextState = 'listening';
+                    this.synth.cancel(); // This will automatically trigger u.onend which starts STT
+                }
+                // Normal listening
+                else if ((this.engine === 'whisper' || !SR) && this.s === 'listening' && this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    if (avg > 12) {
+                        this.hasSpoken = true;
+                        this.lastSpeechTime = Date.now();
+                    } else if (this.hasSpoken && (Date.now() - this.lastSpeechTime > 1500)) {
+                        this.stopRecording();
+                    } else if (!this.hasSpoken && (Date.now() - this.lastSpeechTime > 8000)) {
+                        this.stopRecording();
+                    }
+                }
+            }
+
+            for (let i = 0; i < BARS; i++) {
+                let h = 4;
+                if (this.s === 'listening' && data) {
+                    let bin = i;
+                    if (i >= BARS / 2) {
+                        bin = BARS - 1 - i;
+                    }
+                    const val = data[bin] || 0;
+                    h = Math.max(4, (val / 255) * 85 * (1 + (bin / BARS) * 2));
+                } else if (this.s === 'speaking') {
+                    h = Math.max(4, (Math.sin(t * 8 + i * 0.3) * 0.5 + 0.5) * 50);
+                } else if (this.s === 'thinking') {
+                    h = Math.max(4, (Math.cos(t * 4 + i * 0.2) * 0.5 + 0.5) * 25);
+                } else if (this.s === 'standby') {
+                    h = Math.max(3, (Math.sin(t * 1.5 + i * 0.15) * 0.5 + 0.5) * 8);
+                }
+                this.bars[i].style.height = h + 'px';
+            }
+            this.raf = requestAnimationFrame(step);
+        };
+        step();
+    }
+
+    onResult(e) {
+        if (this.s === 'speaking' || this.s === 'thinking') return;
+        let fin = '', interim = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) fin += e.results[i][0].transcript;
+            else interim += e.results[i][0].transcript;
+        }
+        const a = (fin || interim).toLowerCase().trim();
+        if (this.s === 'standby' && (a.includes('jarvis') || a.includes('j.a.r.v.i.s.') || a.includes('wake'))) {
+            this.wake(a);
+        } else if (this.s === 'listening' && fin) {
+            this.ask(fin.trim());
+        }
+    }
+
+    wake(t) {
+        this.playWakeSound();
+        this.synth.cancel(); 
+        this.utt = null;
+        this.set('listening');
+        const q = t.replace(/.*jarvis\s*/i, '').replace(/.*j\.a\.r\.v\.i\.s\.\s*/i, '').replace(/.*wake\s*/i, '').trim();
+        if (q.length > 2) { 
+            this.ask(q); 
+        } else {
+            const g = "Yes, sir?";
+            this.log('rs', g);
+            this.speak(g);
+        }
+    }
+
+    async ask(q) {
+        if (document.getElementById('mail-composer').style.display === 'flex') {
+            const clean = q.toLowerCase().replace(/[?.!,]/g, '').trim();
+            if (["send it", "send the mail", "send mail", "approve and send", "approve mail", "approve the mail", "send", "approve"].includes(clean)) {
+                this.log('you', q);
+                this.sendApprovedMail();
+                return;
+            }
+        }
+        this.log('you', q);
+        this.set('thinking');
+        this.hist.push({ role: 'user', content: q });
+        if (this.hist.length > 20) this.hist.splice(0, 2);
+        
+        try {
+            this.log('sys', 'CONTACTING COGNITIVE ENGINE...');
+            const selectedModel = $('model-select') ? $('model-select').value : 'llama-3.3-70b-versatile';
+            const r = await fetch('/api/groq', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ 
+                    messages: this.hist,
+                    model: selectedModel
+                }) 
+            });
+            const d = await r.json();
+            if (d.detail) throw new Error(typeof d.detail === 'object' ? JSON.stringify(d.detail) : d.detail);
+            if (d.error) throw new Error(typeof d.error === 'object' ? JSON.stringify(d.error) : d.error);
+            if (!d.choices?.[0]) throw new Error('Empty response');
+            
+            const reply = d.choices[0].message.content.trim();
+            this.hist.push({ role: 'assistant', content: reply });
+            if (this.hist.length > 14) this.hist = this.hist.slice(this.hist.length - 14);
+            
+            this.exec(reply);
+        } catch(e) {
+            this.log('err', e.message);
+            this.speak("Apologies sir, I encountered an error: " + e.message);
+        }
+    }
+
+    async exec(reply) {
+        let t = reply;
+
+        // Visual HUD Logging of intermediate actions
+        const se = reply.match(/\[SEARCH:\s*([^\]]+)\]/i);
+        if (se) this.log('sys', `PERFORMING WEB SEARCH FOR: ${se[1].toUpperCase()}`);
+
+        const nw = reply.match(/\[NEWS:?\s*([^\]]*)]/i);
+        if (nw) this.log('sys', `FETCHING NEWS: ${nw[1] ? nw[1].toUpperCase() : 'GENERAL HEADLINES'}`);
+
+        const wk = reply.match(/\[WIKIPEDIA:\s*([^\]]+)\]/i);
+        if (wk) this.log('sys', `QUERYING WIKIPEDIA DB FOR: ${wk[1].toUpperCase()}`);
+
+        const rv = reply.match(/\[REVIEW_URL:\s*([^\]]+)\]/i);
+        if (rv) this.log('sys', `SCRAPING WEB TEXT FROM: ${rv[1].toUpperCase()}`);
+
+        const rf = reply.match(/\[READ_FILE:\s*([^\]]+)\]/i);
+        if (rf) this.log('sys', `READING FILE: ${rf[1]}`);
+
+        const wf_block = reply.match(/\[WRITE_FILE:\s*([^\]\s]+)\]/i);
+        const wf_inline = reply.match(/\[WRITE_FILE:\s*([^|]+)\|([^\]]+)\]/i);
+        if (wf_block || wf_inline) {
+            const path = wf_block ? wf_block[1] : wf_inline[1];
+            this.log('sys', `WRITING FILE: ${path}`);
+        }
+
+        const rc_block = reply.match(/\[RUN_COMMAND\]/i);
+        const rc_inline = reply.match(/\[RUN_COMMAND:\s*([^\]]+)\]/i);
+        if (rc_block || rc_inline) {
+            const cmd = rc_inline ? rc_inline[1] : "block command";
+            this.log('sys', `EXECUTING TERMINAL COMMAND: ${cmd}`);
+        }
+
+        const rd = reply.match(/\[REMOVE_FROM_DOCK:\s*([^\]]+)\]/i);
+        if (rd) this.log('sys', `MODIFYING DOCK LAYOUT, REMOVING: ${rd[1].toUpperCase()}`);
+
+        const wa = reply.match(/\[WHATSAPP:\s*([^|]+)\|/i);
+        if (wa) this.log('sys', `INJECTING DESKTOP WHATSAPP PAYLOAD FOR: ${wa[1].toUpperCase()}`);
+
+        // 1. SAVE_MEMORY (DISABLED: ONLY UI TEXT BOXES PERMITTED)
+        const mem = reply.match(/\[SAVE_MEMORY:\s*(\{[^}]+\})\]/i);
+        if (mem) {
+            t = t.replace(/\[SAVE_MEMORY:\s*\{[^}]+\}\]/gi, '').trim();
+            this.log('sys', 'VOICE PROFILE CHANGE BLOCKED. PLEASE USE THE IDENT CARD TEXT INPUTS.');
+        }
+
+        // 2. OPEN
+        const op = reply.match(/\[OPEN:\s*([^\]]+)\]/i);
+        if (op) {
+            t = t.replace(/\[OPEN:\s*[^\]]+\]/gi, '').trim();
+            const targetName = op[1].trim();
+            try {
+                this.log('sys', `LAUNCHING PROTOCOL FOR: ${targetName.toUpperCase()}`);
+                const res = await fetch('/api/open', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: targetName })
+                });
+                if (!res.ok) {
+                    t = `Apologies sir, I could not open ${targetName}.`;
+                }
+            } catch (e) {
+                t = `Apologies sir, I failed to open ${targetName} due to a connection issue.`;
+            }
+        }
+
+        // 3. CLOSE
+        const cl = reply.match(/\[CLOSE:\s*([^\]]+)\]/i);
+        if (cl) {
+            t = t.replace(/\[CLOSE:\s*[^\]]+\]/gi, '').trim();
+            const targetName = cl[1].trim();
+            try {
+                this.log('sys', `TERMINATING APPLICATION: ${targetName.toUpperCase()}`);
+                const res = await fetch('/api/close', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: targetName })
+                });
+                if (!res.ok) {
+                    t = `Apologies sir, I could not close ${targetName}.`;
+                }
+            } catch (e) {
+                t = `Apologies sir, failed to connect to app closing service.`;
+            }
+        }
+
+        // 4. EMAIL
+        const em = reply.match(/\[EMAIL:\s*([^|]+)\|([^|]+)\|([^\]]+)\]/i);
+        if (em) {
+            t = t.replace(/\[EMAIL:\s*[^\]]+\]/gi, '').trim();
+            try {
+                this.log('sys', `POPULATING MAIL WORKSPACE...`);
+                const toField = document.getElementById('mail-to');
+                const subField = document.getElementById('mail-subject');
+                const bodyField = document.getElementById('mail-body');
+                if (toField) toField.value = em[1].trim();
+                if (subField) subField.value = em[2].trim();
+                if (bodyField) bodyField.value = em[3].trim();
+                const composer = document.getElementById('mail-composer');
+                if (composer) composer.style.display = 'flex';
+            } catch (e) {
+                this.log('err', 'Failed to open Mail Workspace: ' + e.message);
+            }
+        }
+
+        // 4b. SEND_EMAIL
+        const se_tag = reply.match(/\[SEND_EMAIL\]/i);
+        if (se_tag) {
+            t = t.replace(/\[SEND_EMAIL\]/gi, '').trim();
+            this.sendApprovedMail();
+        }
+
+        // 4c. OPEN_MAIL_APP
+        const open_mail_tag = reply.match(/\[OPEN_MAIL_APP\]/i);
+        if (open_mail_tag) {
+            t = t.replace(/\[OPEN_MAIL_APP\]/gi, '').trim();
+            const composer = document.getElementById('mail-composer');
+            if (composer) composer.style.display = 'flex';
+        }
+
+        // 4d. CLOSE_MAIL_APP
+        const close_mail_tag = reply.match(/\[CLOSE_MAIL_APP\]/i);
+        if (close_mail_tag) {
+            t = t.replace(/\[CLOSE_MAIL_APP\]/gi, '').trim();
+            const composer = document.getElementById('mail-composer');
+            if (composer) composer.style.display = 'none';
+        }
+
+        // 5. MESSAGE
+        const ms = reply.match(/\[MESSAGE:\s*([^|]+)\|([^\]]+)\]/i);
+        if (ms) {
+            t = t.replace(/\[MESSAGE:\s*[^\]]+\]/gi, '').trim();
+            try {
+                this.log('sys', `TRANSMITTING IMESSAGE PROTOCOL...`);
+                const res = await fetch('/api/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ to: ms[1].trim(), body: ms[2].trim() })
+                });
+                if (!res.ok) {
+                    t = `Apologies sir, I could not send the message.`;
+                }
+            } catch (e) {
+                t = `Apologies sir, failed to connect to messaging service.`;
+            }
+        }
+
+        // 6. SCREENSHOT
+        if (/\[SCREENSHOT\]/i.test(reply)) {
+            t = t.replace(/\[SCREENSHOT\]/gi, '').trim();
+            try {
+                this.log('sys', 'CAPTURING SCREENSHOT...');
+                const res = await fetch('/api/screenshot', { method: 'POST' });
+                if (!res.ok) {
+                    t = `Apologies sir, I failed to capture the screen.`;
+                }
+            } catch (e) {
+                t = `Apologies sir, screenshot API failed.`;
+            }
+        }
+
+        // 7. PLAY_MUSIC
+        const pm = reply.match(/\[PLAY_MUSIC:\s*([^\]]+)\]/i);
+        if (pm) {
+            t = t.replace(/\[PLAY_MUSIC:\s*[^\]]+\]/gi, '').trim();
+            try {
+                this.log('sys', `PLAYING MUSIC MATCHING: ${pm[1].trim().toUpperCase()}`);
+                const res = await fetch('/api/music', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: pm[1].trim() })
+                });
+                if (!res.ok) {
+                    t = `Apologies sir, I could not play the track.`;
+                }
+            } catch (e) {
+                t = `Apologies sir, music API failed.`;
+            }
+        }
+
+        // 8. SAVE_REMINDER
+        const sr = reply.match(/\[SAVE_REMINDER:\s*([^\]]+)\]/i);
+        if (sr) {
+            t = t.replace(/\[SAVE_REMINDER:\s*[^\]]+\]/gi, '').trim();
+            try {
+                this.log('sys', 'COMMITTING REMINDER TO MEMORY...');
+                const r = await fetch('/api/memory');
+                const m = await r.json();
+                m.reminders = m.reminders || [];
+                m.reminders.push(sr[1].trim());
+                await fetch('/api/memory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(m)
+                });
+            } catch (e) {
+                console.error("Save reminder failed", e);
+            }
+        }
+
+        
+        // 9. QUIT
+        if (/\[QUIT\]/i.test(reply)) {
+            t = t.replace(/\[QUIT\]/gi, '').trim();
+            if (!t) t = "Goodbye, sir. Shutting down systems.";
+            this.log('rs', t);
+            this.speak(t);
+            setTimeout(() => {
+                window.close();
+            }, 4000);
+            return;
+        }
+
+        // 10. SLEEP
+        if (/\[SLEEP\]/i.test(reply)) {
+            t = t.replace(/\[SLEEP\]/gi, '').trim();
+            if (!t) t = "Entering standby mode, sir.";
+            this.nextState = 'standby';
+            this.log('rs', t);
+            this.speak(t);
+            return;
+        }
+
+        // Strip remaining command tags from final spoken text
+        t = t.replace(/\[WRITE_FILE:\s*[^\]]+\]([\s\S]*?)\[\/WRITE_FILE\]/gi, '');
+        t = t.replace(/\[RUN_COMMAND\]([\s\S]*?)\[\/RUN_COMMAND\]/gi, '');
+        t = t.replace(/\[[A-Z_]+:?\s*[^\]]*\]/gi, '');
+        t = t.replace(/\[\/[A-Z_]+\]/gi, '');
+        t = t.trim();
+        if (!t) t = 'Right away, sir.';
+        
+        this.log('rs', t);
+        this.speak(t);
+    }
+}
+
+window.J = new J();
+
+// Handle CLI prompts
+$('cmd').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && e.target.value.trim()) {
+        const val = e.target.value.trim();
+        e.target.value = '';
+        if (window.J.s === 'off') {
+            window.J.toggle(true);
+        }
+        window.J.ask(val);
+    }
+});
+
+// Mechanical Keyboard Click Sounds on typing
+$('cmd').addEventListener('input', () => {
+    window.J.playClickSound();
+});
+</script>
+</body>
+</html>

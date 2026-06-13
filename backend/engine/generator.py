@@ -3,14 +3,14 @@ import re
 import os
 import json
 from dotenv import load_dotenv
+import g4f
+
 load_dotenv()
 
 # ──────────────────────────────────────────────
 # API Keys
 # ──────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
-# Force Gemini to be disabled as per user request to only use Groq
-GEMINI_API_KEY = ""
 
 if not GROQ_API_KEY:
     print("[Scalera AI] ⚠️ WARNING: GROQ_API_KEY not found.")
@@ -33,8 +33,10 @@ async def _route_template(chat_history: str) -> str:
         os.makedirs(templates_dir, exist_ok=True)
 
     subfolders = [
-        f.name for f in os.scandir(templates_dir)
-        if f.is_dir() and os.path.exists(os.path.join(templates_dir, f.name, "index.html"))
+        f.name
+        for f in os.scandir(templates_dir)
+        if f.is_dir()
+        and os.path.exists(os.path.join(templates_dir, f.name, "index.html"))
     ]
 
     if not subfolders:
@@ -43,13 +45,35 @@ async def _route_template(chat_history: str) -> str:
 
     print(f"[Router] Available templates: {subfolders}")
 
+    all_templates = [
+        'agency', 'construction', 'corporate', 'dental-clinic', 'ecommerce',
+        'education', 'event-planner', 'fitness', 'healthcare', 'hotel',
+        'law-firm', 'mobile-app', 'non-profit', 'photography', 'portfolio',
+        'real-estate', 'restaurant', 'saas', 'sherhan_portfolio', 'spa', 'startup'
+    ]
+    # Use the union of discovered subfolders and the known full list
+    combined = sorted(set(subfolders) | set(all_templates))
+
     prompt = f"""You are a template router. Based on the conversation below, pick the SINGLE BEST template folder. 
-Available: {', '.join(subfolders)}
+Available: {', '.join(combined)}
 
 GUIDANCE: 
 - For premium, dark, or minimalist personal portfolios, prefer 'sherhan_portfolio'.
-- For standard portfolios, use 'spa' or 'photography'.
-- For business sites, use 'corporate' or 'saas'.
+- For standard portfolios, use 'portfolio' or 'photography'.
+- For business/corporate sites, use 'corporate' or 'agency'.
+- For SaaS or tech startups, use 'saas' or 'startup'.
+- For restaurants or cafes, use 'restaurant'.
+- For fitness or gyms, use 'fitness'.
+- For medical or dental, use 'healthcare' or 'dental-clinic'.
+- For legal services, use 'law-firm'.
+- For hotels or hospitality, use 'hotel' or 'spa'.
+- For online stores, use 'ecommerce'.
+- For schools or courses, use 'education'.
+- For events or weddings, use 'event-planner'.
+- For charities, use 'non-profit'.
+- For construction or contractors, use 'construction'.
+- For real estate or property, use 'real-estate'.
+- For mobile app landing pages, use 'mobile-app'.
 
 Conversation:
 {chat_history}
@@ -85,7 +109,6 @@ Reply with ONLY the folder name, nothing else. Example: sherhan_portfolio"""
         return subfolders[0]
 
 
-
 # ──────────────────────────────────────────────
 # Template Loader — reads the actual files
 # ──────────────────────────────────────────────
@@ -95,11 +118,15 @@ def _read_template(folder_name: str) -> dict:
     folder_path = os.path.join(templates_dir, folder_name)
 
     result = {"html": "", "css": "", "js": ""}
-    for filename, key in [("index.html", "html"), ("styles.css", "css"), ("script.js", "js")]:
+    for filename, key in [
+        ("index.html", "html"),
+        ("styles.css", "css"),
+        ("script.js", "js"),
+    ]:
         filepath = os.path.join(folder_path, filename)
         if os.path.exists(filepath):
             try:
-                with open(filepath, 'r', encoding='utf-8') as f:
+                with open(filepath, "r", encoding="utf-8") as f:
                     result[key] = f.read()
             except Exception as e:
                 print(f"[Loader] Error reading {filepath}: {e}")
@@ -108,75 +135,78 @@ def _read_template(folder_name: str) -> dict:
 
 
 # ──────────────────────────────────────────────
-# Personalisation — Full deep text rewrite via Gemini/Groq
+# Personalisation — Full deep text rewrite via Groq
 # ──────────────────────────────────────────────
-async def _personalise_template(template: dict, chat_history: str) -> dict:
+async def _personalise_template(html: str, chat_history: str) -> str:
     """
     Rewrites the HTML template using Groq for high-fidelity data injection.
     """
-    html = template["html"]
-    
     # Construct the instruction
     instruction = f"""You are a luxury website content architect. Rewrite the text content of this HTML template to match the user's data.
 
 PRIME DIRECTIVE:
-Your priority #1 is to replace all generic placeholders with the REAL USER DATA provided below.
-CRITICAL: You MUST use the existing template layout and structure. ONLY change text features, content, and very few minor UI features (like duplicating existing cards/lists) based on the user's prompts. Do NOT invent new sections or alter the core design architecture.
+Your priority #1 is to actively ALTER ALL TEXT on the website. Based on the chat history performed by the user, you MUST ADD CONTENT ON YOUR OWN as a premium AI. Even if the user provided minimal data, you must infer their niche, tone, and generate persuasive, high-end copywriting for EVERY section (Hero, About, Services, Features, Testimonials, Footer, etc.). Do not leave any original generic placeholder text (e.g. "Lorem ipsum", "Your Business", "Company Name").
+
+CRITICAL: You MUST use the existing template layout and structure. ONLY change text features, content, and very few minor UI features (like duplicating existing cards/lists). Do NOT invent new sections or alter the core design architecture.
 ONLY the text on the website is supposed to be changed by you. You must NOT change HTML tags, class attributes, id attributes, or structural styling.
 The 'business_name' in the data is your BRAND ANCHOR. Use it for the Logo, Hero Headline, and Footer.
-Keeping generic text like "Your Business" or "Company Name" is a total failure.
 
 USER DATA & REQUIREMENTS:
 {chat_history}
 
 MAPPING RULES:
-1. HERO: Headline = 'full_name', Subtitle = 'professional_title' (or 'business_type').
-2. ABOUT/BIO: Use 'bio' or 'description'. If short, expand into professional, high-end copy.
-3. EXPERIENCE/SERVICES: Map each item to a card or list item.
-4. SOCIAL PROOF: If 'rating' exists, mention it (e.g., "Top Rated Business").
-5. CONTACT: Use the provided address/email in the footer and contact sections.
+1. HERO: Headline = 'full_name' or 'business_name', Subtitle = 'professional_title' (or 'business_type'). Add a persuasive 2-sentence hook based on their niche.
+2. ABOUT/BIO: Use 'bio' or 'description'. If short, expand it into professional, high-end copy spanning multiple paragraphs.
+3. EXPERIENCE/SERVICES/FEATURES: Map each item to a card or list item. Invent premium service descriptions if they only provided basic bullet points.
+4. SOCIAL PROOF: If 'rating' exists, mention it (e.g., "Top Rated Business"). Invent realistic, niche-appropriate testimonial quotes if the template has a testimonial section.
+5. CONTACT: Use the provided address/email in the footer and contact sections. 
 
 STRICT TECHNICAL RULES:
 - Output ONLY the raw HTML starting with <!DOCTYPE html>.
 - PRESERVE all classes, IDs, structural tags, script links, stylesheet links, and existing structure exactly. Do NOT change them.
+- You MUST preserve the <link rel="stylesheet" href="styles.css"> and <script src="script.js"></script> tags exactly. Do not alter their attributes or remove them.
+- Do NOT inject any custom styles, <style> blocks, or inline styles.
+- Do NOT use any external CSS frameworks. Rely entirely on the pre-existing stylesheet referenced by the template.
 - REPEATING ELEMENTS: If the template has repeating elements (like 'Experience cards' or 'Service blocks'), you MUST duplicate or remove them to match the number of items in the user's data, without changing the underlying UI structure.
-- If data is provided, the original template text MUST be gone.
+- If data is provided, the original template text MUST be completely replaced.
 
 TEMPLATE TO REWRITE:
 {html}"""
 
-    # Use Groq llama-3.3-70b-versatile
+    # Use Groq llama-3.1-8b-instant to avoid TPM rate limits
     try:
-        print("[Personalise] Customising template text using Groq (llama-3.3-70b-versatile)...")
+        print(
+            "[Personalise] Customising template text using Groq (llama-3.1-8b-instant)..."
+        )
         client = Groq(api_key=GROQ_API_KEY)
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": instruction}],
-            max_tokens=16384,
+            max_tokens=8192,
             temperature=0.5,
         )
         result_html = response.choices[0].message.content.strip()
 
         if result_html.startswith("```"):
-            result_html = re.sub(r'^```[a-z]*\n?', '', result_html)
-            result_html = re.sub(r'\n?```$', '', result_html)
+            result_html = re.sub(r"^```[a-z]*\n?", "", result_html)
+            result_html = re.sub(r"\n?```$", "", result_html)
 
         if "<html" in result_html.lower() and "<nav" in result_html:
-            print(f"[Personalise] ✅ Personalisation successful ({len(result_html)} bytes)")
-            return {
-                "html": result_html,
-                "css": template["css"],
-                "js": template["js"],
-            }
+            print(
+                f"[Personalise] ✅ Personalisation successful ({len(result_html)} bytes)"
+            )
+            return result_html
         else:
-            print("[Personalise] ⚠️ Personalised output invalid, returning template as-is")
+            print(
+                "[Personalise] ⚠️ Personalised output invalid, returning template as-is"
+            )
 
     except Exception as e:
         print(f"[Personalise] Groq personalisation failed: {e}")
 
     # ── Last resort: return the template with no personalisation ──
     print("[Personalise] Returning raw template (no text changes)")
-    return template
+    return html
 
 
 # ──────────────────────────────────────────────
@@ -187,33 +217,51 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     Generates a premium website from niche-specific templates:
     1. Routes to the best matching premium template folder based on user niche.
     2. Loads index.html, styles.css, and script.js from the selected template.
-    3. Injects glassmorphic in-context AI editing styles and JS script triggers.
-    4. Personalises the copy, sections, and values based on the conversation log.
+    3. Personalises the copy in index.html based on the conversation log using Groq.
+    4. Appends glassmorphic in-context AI editing styles to the CSS, and reveal/message handlers to the JS.
+    5. Returns the personalized HTML, updated CSS, and updated JS.
     """
     # 1. Ensure we have data dictionary
     if not data:
         data = {}
-    
+
     # 2. Route to the best premium template folder based on user niche
     folder_name = await _route_template(chat_history)
     print(f"[Generator] 🛠️ Routed to premium template: {folder_name}")
-    
+
     # 3. Read template files
     template_data = _read_template(folder_name)
     html_content = template_data.get("html", "")
     css_content = template_data.get("css", "")
     js_content = template_data.get("js", "")
-    
+
     if not html_content:
         # Fallback to corporate if directory is empty or read failed
-        print(f"[Generator] ⚠️ Template {folder_name} empty or missing, falling back to corporate.")
+        print(
+            f"[Generator] ⚠️ Template {folder_name} empty or missing, falling back to corporate."
+        )
         template_data = _read_template("corporate")
         html_content = template_data.get("html", "")
         css_content = template_data.get("css", "")
         js_content = template_data.get("js", "")
 
-    # Add standard CSS for the in-context editing hooks
-    css_content += "\n" + """
+    # 4. Final text rewrite via LLM personalisation (done on clean HTML)
+    personalisation_prompt = f"""
+    BUSINESS_NAME: {data.get('business_name') or 'Generic Business'}
+    SITE_TYPE: {data.get('site_type') or 'Professional Business'}
+    BIO: {data.get('bio') or data.get('description') or ''}
+    TONE: {data.get('tone') or 'Premium & Elegant'}
+    LOCATION: {data.get('address') or ''}
+    RATING: {data.get('rating') or ''}
+    
+    ORIGINAL CONTEXT:
+    {chat_history}
+    """
+
+    personalized_html = await _personalise_template(html_content, personalisation_prompt)
+
+    # 5. Build full CSS (template CSS + standard CSS for the in-context editing hooks)
+    full_css = css_content + "\n" + """
     /* In-Context Editor Styles */
     .editable-section { position: relative; transition: all 0.3s ease; }
     .editable-section:hover { box-shadow: inset 0 0 50px rgba(220, 180, 128, 0.05); }
@@ -239,15 +287,9 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
     .editable-section:hover .ai-edit-trigger { opacity: 1; transform: translateY(0); }
     .ai-edit-trigger:hover { background: #dcb480; color: #000; box-shadow: 0 0 20px rgba(220, 180, 128, 0.4); }
     """
-    
-    # Inject CSS into HTML head
-    if "<head>" in html_content:
-        html_content = html_content.replace("<head>", f"<head>\n<style>\n{css_content}\n</style>")
-    else:
-        html_content = f"<style>\n{css_content}\n</style>\n" + html_content
-        
-    # Inject JS scripts for scrolling reveal animations & postMessage event handlers
-    js_inject = js_content + "\n" + """
+
+    # 6. Build full JS (template JS + JS scripts for scrolling reveal animations & postMessage event handlers)
+    full_js = js_content + "\n" + """
     document.addEventListener('DOMContentLoaded', () => {
         // Reveal Animations
         const observer = new IntersectionObserver((entries) => {
@@ -316,36 +358,15 @@ async def generate_website(chat_history: str, data: dict = None) -> dict:
         });
     });
     """
-    
-    if "</body>" in html_content:
-        html_content = html_content.replace("</body>", f"<script>\n{js_inject}\n</script>\n</body>")
-    else:
-        html_content = html_content + f"\n<script>\n{js_inject}\n</script>"
-        
-    # Remove link/script tag references to avoid browser 404 console errors
-    html_content = re.sub(r'<link[^>]*href=["\']styles\.css["\'][^>]*>', '', html_content)
-    html_content = re.sub(r'<script[^>]*src=["\']script\.js["\'][^>]*>\s*</script>', '', html_content)
 
-    # 4. Final text rewrite via LLM personalisation
-    personalisation_prompt = f"""
-    BUSINESS_NAME: {data.get('business_name') or 'Generic Business'}
-    SITE_TYPE: {data.get('site_type') or 'Professional Business'}
-    BIO: {data.get('bio') or data.get('description') or ''}
-    TONE: {data.get('tone') or 'Premium & Elegant'}
-    LOCATION: {data.get('address') or ''}
-    RATING: {data.get('rating') or ''}
-    
-    ORIGINAL CONTEXT:
-    {chat_history}
-    """
-    
-    result = await _personalise_template(
-        {"html": html_content, "css": "", "js": ""},
-        personalisation_prompt
+    print(
+        f"[Generator] ✅ Premium Website generated successfully from template '{folder_name}'."
     )
-    
-    print(f"[Generator] ✅ Premium Website generated successfully from template '{folder_name}'.")
-    return result
+    return {
+        "html": personalized_html,
+        "css": full_css,
+        "js": full_js
+    }
 
 
 # ──────────────────────────────────────────────
@@ -373,38 +394,62 @@ async def chat_with_ai(messages: list) -> dict:
         {
           "reply": "Your conversational response here",
           "ready_to_generate": true/false,
-          "website_type": "portfolio" | "business" | "restaurant" | "other"
+          "website_type": "portfolio" | "business" | "restaurant" | "other",
+          "detected_niche": "string or null",
+          "suggested_template": "string or null"
         }
         
         Set "ready_to_generate" to true ONLY if you have identified all key pieces of information. 
-        Set "website_type" based on the user's niche. If they want a portfolio or personal site, set it to "portfolio"."""
+        Set "website_type" based on the user's niche. If they want a portfolio or personal site, set it to "portfolio".
+        
+        When you have enough context to determine the user's business niche/industry, set "detected_niche" to a short label (e.g. "dental clinic", "SaaS", "restaurant").
+        When you can map the niche to one of the available templates, set "suggested_template" to the closest template name from this list:
+        agency, construction, corporate, dental-clinic, ecommerce, education, event-planner, fitness, healthcare, hotel, law-firm, mobile-app, non-profit, photography, portfolio, real-estate, restaurant, saas, spa, startup.
+        If you don't have enough information yet, set both fields to null.""",
     }
 
     formatted_messages = [system_prompt] + messages
 
-    if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
-        return {
-            "reply": "Error: GROQ_API_KEY is missing. Please add your Groq API key to your .env file in the root directory.",
-            "ready_to_generate": False
-        }
-
     try:
-        client = Groq(api_key=GROQ_API_KEY)
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+        from g4f.Provider import PollinationsAI
+        print("[Scalera AI] Querying keyless assistant (g4f PollinationsAI)...")
+        response = await g4f.ChatCompletion.create_async(
+            model="openai",
+            provider=PollinationsAI,
             messages=formatted_messages,
-            max_tokens=512,
-            temperature=0.7,
-            response_format={"type": "json_object"}
         )
-        raw_content = response.choices[0].message.content
-        return json.loads(raw_content)
+        
+        # Clean markdown code blocks from response
+        clean_content = response.strip()
+        if clean_content.startswith("```"):
+            clean_content = re.sub(r"^```[a-z]*\n?", "", clean_content)
+            clean_content = re.sub(r"\n?```$", "", clean_content)
+        return json.loads(clean_content)
+        
     except Exception as e:
-        error_msg = str(e)
-        return {
-            "reply": f"Groq API Error: {error_msg}. Please check if your API key is valid and has sufficient quota.",
-            "ready_to_generate": False
-        }
+        print(f"[Scalera AI] Keyless assistant error: {e}. Falling back to Groq...")
+        if not GROQ_API_KEY or GROQ_API_KEY == "PASTE_YOUR_GROQ_KEY_HERE":
+            return {
+                "reply": f"Assistant Error: {str(e)}. (Also GROQ_API_KEY is missing, please configure it in .env for fallback).",
+                "ready_to_generate": False,
+            }
+        
+        try:
+            client = Groq(api_key=GROQ_API_KEY)
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=formatted_messages,
+                max_tokens=512,
+                temperature=0.7,
+                response_format={"type": "json_object"},
+            )
+            raw_content = response.choices[0].message.content
+            return json.loads(raw_content)
+        except Exception as groq_err:
+            return {
+                "reply": f"API Errors: Free Assistant: {str(e)} | Groq: {str(groq_err)}",
+                "ready_to_generate": False,
+            }
 
 
 # ──────────────────────────────────────────────
@@ -446,21 +491,20 @@ Return a JSON object: {{"html": "...", "css": ""}}
             model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": system_msg},
-                {"role": "user", "content": user_msg}
+                {"role": "user", "content": user_msg},
             ],
             response_format={"type": "json_object"},
-            temperature=0.2
+            temperature=0.2,
         )
         raw_content = response.choices[0].message.content
         parsed = json.loads(raw_content)
         return {
             "html": parsed.get("html", html),
-            "css": css # Keep original CSS completely intact
+            "css": css,  # Keep original CSS completely intact
         }
     except Exception as e:
         print(f"[AI Editor] Error: {e}")
         return {"html": html, "css": css}
-
 
 
 # ──────────────────────────────────────────────
@@ -470,24 +514,26 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
     """Extracts text from PDF/DOCX and uses Groq to structure it."""
     print(f"[Extractor] Processing file: {filename} ({len(content)} bytes)")
     text = ""
-    ext = filename.lower().split('.')[-1]
-    
+    ext = filename.lower().split(".")[-1]
+
     import io
 
     try:
         if ext == "pdf":
             from pypdf import PdfReader
+
             reader = PdfReader(io.BytesIO(content))
             for page in reader.pages:
                 page_text = page.extract_text()
                 if page_text:
                     text += page_text + "\n"
-            
+
         elif ext in ["docx", "doc"]:
             import mammoth
+
             result = mammoth.extract_raw_text(io.BytesIO(content))
             text = result.value
-            
+
         else:
             text = content.decode("utf-8", errors="ignore")
 
@@ -498,7 +544,7 @@ async def extract_data_from_resume(content: bytes, filename: str) -> dict:
     if not text.strip():
         return {"error": "The file appears to be empty."}
 
-    # Bypassed Gemini, routing directly to Groq-powered parser
+    # Route to Groq-powered parser
     return await _parse_raw_text_to_json(text)
 
 
@@ -507,26 +553,37 @@ async def extract_data_from_link(link: str) -> dict:
     try:
         import urllib.request
         from bs4 import BeautifulSoup
-        
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'}
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+        }
         req = urllib.request.Request(link, headers=headers)
         with urllib.request.urlopen(req, timeout=10) as response:
-            html = response.read().decode('utf-8', errors='ignore')
-            soup = BeautifulSoup(html, 'html.parser')
-            
-            meta_title = soup.find('meta', property='og:title')
-            meta_desc = soup.find('meta', property='og:description')
-            
-            title_text = meta_title['content'] if meta_title else soup.title.string if soup.title else ""
-            desc_text = meta_desc['content'] if meta_desc else ""
-            
-            raw_blob = f"Title: {title_text}\nDescription: {desc_text}\nSnippet: {html[:2000]}"
-            
-            # Bypassed Gemini, routing directly to Groq-powered parser
+            html = response.read().decode("utf-8", errors="ignore")
+            soup = BeautifulSoup(html, "html.parser")
+
+            meta_title = soup.find("meta", property="og:title")
+            meta_desc = soup.find("meta", property="og:description")
+
+            title_text = (
+                meta_title["content"]
+                if meta_title
+                else soup.title.string if soup.title else ""
+            )
+            desc_text = meta_desc["content"] if meta_desc else ""
+
+            raw_blob = (
+                f"Title: {title_text}\nDescription: {desc_text}\nSnippet: {html[:2000]}"
+            )
+
+            # Route to Groq-powered parser
             return await _parse_raw_text_to_json(raw_blob)
 
     except Exception as e:
-        return {"error": "LinkedIn blocked the request. Try uploading a PDF resume instead."}
+        return {
+            "error": "LinkedIn blocked the request. Try uploading a PDF resume instead."
+        }
+
 
 async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict:
     """Uses Groq to turn raw text into a structured JSON schema."""
@@ -542,10 +599,10 @@ async def _parse_raw_text_to_json(raw_text: str, system_msg: str = None) -> dict
             model="llama-3.1-8b-instant",
             messages=[
                 {"role": "system", "content": system_msg},
-                {"role": "user", "content": f"Text:\n{raw_text[:8000]}"}
+                {"role": "user", "content": f"Text:\n{raw_text[:8000]}"},
             ],
             response_format={"type": "json_object"},
-            temperature=0.0
+            temperature=0.0,
         )
         return json.loads(response.choices[0].message.content)
     except Exception as e:
@@ -557,21 +614,26 @@ async def extract_business_data(link: str) -> dict:
     try:
         import urllib.request
         from bs4 import BeautifulSoup
-        
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'}
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+        }
         req = urllib.request.Request(link, headers=headers)
-        
+
         with urllib.request.urlopen(req, timeout=10) as response:
-            html = response.read().decode('utf-8', errors='ignore')
-            soup = BeautifulSoup(html, 'html.parser')
-            meta_title = soup.find('meta', property='og:title')
-            title_text = meta_title['content'] if meta_title else ""
-            
-            biz_prompt = "Extract business JSON: name, type, address, rating, description."
-            # Bypassed Gemini, routing directly to Groq-powered parser
+            html = response.read().decode("utf-8", errors="ignore")
+            soup = BeautifulSoup(html, "html.parser")
+            meta_title = soup.find("meta", property="og:title")
+            title_text = meta_title["content"] if meta_title else ""
+
+            biz_prompt = (
+                "Extract business JSON: name, type, address, rating, description."
+            )
+            # Route to Groq-powered parser
             return await _parse_raw_text_to_json(html[:4000], system_msg=biz_prompt)
     except Exception as e:
         return {"error": str(e)}
+
 
 # ──────────────────────────────────────────────
 # Vision Interpretation — Natural Language to Blueprint
@@ -597,11 +659,14 @@ JSON:"""
             response = client.chat.completions.create(
                 model="llama-3.1-8b-instant",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant that returns only a JSON object matching the requested schema."},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": "You are a helpful assistant that returns only a JSON object matching the requested schema.",
+                    },
+                    {"role": "user", "content": prompt},
                 ],
                 response_format={"type": "json_object"},
-                temperature=0.0
+                temperature=0.0,
             )
             data = json.loads(response.choices[0].message.content.strip())
             if not data.get("business_name"):
@@ -620,13 +685,16 @@ JSON:"""
         "business_name": "My Business",
         "site_type": "agency",
         "tone": "modern",
-        "sections": ["Hero", "About", "Services", "Contact"]
+        "sections": ["Hero", "About", "Services", "Contact"],
     }
+
 
 # ──────────────────────────────────────────────
 # Contextual Section Editing
 # ──────────────────────────────────────────────
-async def edit_section_content(section_html: str, instruction: str, section_type: str) -> str:
+async def edit_section_content(
+    section_html: str, instruction: str, section_type: str
+) -> str:
     """Rewrites the text content of a specific section of the website using Groq."""
     prompt = f"""You are a professional web developer and strict text-content editor.
 Edit the text content of the following HTML section ({section_type}) based on the instruction: "{instruction}".
@@ -642,29 +710,35 @@ HTML section to edit:
 
     if GROQ_API_KEY and GROQ_API_KEY != "PASTE_YOUR_GROQ_KEY_HERE":
         try:
-            print(f"[EditSection] Using Groq (llama-3.3-70b-versatile) for editing section ({section_type})...")
+            print(
+                f"[EditSection] Using Groq (llama-3.3-70b-versatile) for editing section ({section_type})..."
+            )
             client = Groq(api_key=GROQ_API_KEY)
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
-                    {"role": "system", "content": "You are a strict code editing assistant. You only output raw updated code without comments, Markdown code fences, or explanations."},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": "You are a strict code editing assistant. You only output raw updated code without comments, Markdown code fences, or explanations.",
+                    },
+                    {"role": "user", "content": prompt},
                 ],
                 max_tokens=8192,
                 temperature=0.2,
             )
             result_html = response.choices[0].message.content.strip()
-            
+
             # Clean markdown code blocks if present
             if result_html.startswith("```"):
-                result_html = re.sub(r'^```[a-z]*\n?', '', result_html)
-                result_html = re.sub(r'\n?```$', '', result_html)
-                
+                result_html = re.sub(r"^```[a-z]*\n?", "", result_html)
+                result_html = re.sub(r"\n?```$", "", result_html)
+
             if result_html:
-                print(f"[EditSection] ✅ Groq edit successful ({len(result_html)} bytes)")
+                print(
+                    f"[EditSection] ✅ Groq edit successful ({len(result_html)} bytes)"
+                )
                 return result_html
         except Exception as e:
             print(f"[EditSection] Groq failed: {e}")
 
     return section_html
-
