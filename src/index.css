@@ -81,6 +81,60 @@ p {
   /* Increased legibility for graphite */
 }
 
+/* ── AURORA ATMOSPHERE (colored light behind the glass) ── */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+.aurora-blob.a {
+  width: 55vw; height: 55vw;
+  top: -12%; left: -6%;
+  background: radial-gradient(circle, rgba(232,192,138,0.32) 0%, transparent 65%);
+  animation: auroraA 26s ease-in-out infinite alternate;
+}
+.aurora-blob.b {
+  width: 52vw; height: 52vw;
+  top: 28%; right: -12%;
+  background: radial-gradient(circle, rgba(155,124,255,0.24) 0%, transparent 65%);
+  animation: auroraB 32s ease-in-out infinite alternate;
+}
+.aurora-blob.c {
+  width: 46vw; height: 46vw;
+  bottom: -18%; left: 22%;
+  background: radial-gradient(circle, rgba(111,211,224,0.16) 0%, transparent 65%);
+  animation: auroraC 30s ease-in-out infinite alternate;
+}
+.aurora-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,192,138,0.06), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 110%, rgba(7,7,11,0.85), transparent 65%);
+}
+@keyframes auroraA {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(7vw, 5vh) scale(1.15); }
+}
+@keyframes auroraB {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(-9vw, -4vh) scale(1.1); }
+}
+@keyframes auroraC {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(6vw, -7vh) scale(1.2); }
+}
+
 /* Premium gradient text utility */
 .text-gradient {
   background: linear-gradient(135deg, #fafafa 0%, #a0a0a0 100%);
