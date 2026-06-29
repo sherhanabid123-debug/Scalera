@@ -193,22 +193,26 @@ const Services = () => {
                   >
                     <div
                       style={{
-                        width: 44, height: 44,
-                        borderRadius: 12,
+                        width: 48, height: 48,
+                        borderRadius: 14,
                         background: service.highlight
-                          ? "rgba(220,180,128,0.15)"
-                          : "rgba(255,255,255,0.05)",
+                          ? "linear-gradient(145deg, rgba(232,192,138,0.35), rgba(232,192,138,0.12))"
+                          : "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04))",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        border: "1px solid rgba(255,255,255,0.08)",
+                        border: "1px solid",
+                        borderColor: service.highlight ? "rgba(232,192,138,0.4)" : "rgba(255,255,255,0.16)",
+                        boxShadow: service.highlight
+                          ? "0 4px 16px rgba(232,192,138,0.25), inset 0 1px 0 rgba(255,255,255,0.3)"
+                          : "0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
                         transition: "all 0.4s ease",
                       }}
                     >
                       <Icon
-                        size={20}
-                        color={service.highlight ? "var(--accent-color)" : "rgba(255,255,255,0.5)"}
-                        strokeWidth={1.5}
+                        size={21}
+                        color={service.highlight ? "var(--accent-warm)" : "rgba(255,255,255,0.92)"}
+                        strokeWidth={1.6}
                       />
                     </div>
                     <span
