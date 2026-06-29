@@ -266,76 +266,85 @@ const Hero = ({ loading }) => {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             gap: "1.25rem",
             alignItems: "center",
             justifyContent: "center",
-            flexWrap: "wrap",
-            marginBottom: "5rem",
+            marginBottom: "4.5rem",
+            width: "100%",
             opacity: loading ? 0 : undefined,
           }}
         >
-          <button
+          {/* Liquid-glass AI prompt console */}
+          <div
+            className="hero-btn glass-card glass-prism-border hero-console"
             onClick={() => { window.location.href = "/builder.html"; }}
-            className="hero-btn btn-glass glass-prism-border"
             style={{
-              padding: "1.1rem 2.5rem",
-              background: "linear-gradient(135deg, var(--accent-warm) 0%, var(--accent-color) 100%)",
-              border: "none",
-              borderRadius: "50px",
-              fontWeight: 700,
-              fontSize: "0.82rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "#080808",
-              transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-              display: "inline-flex",
+              width: "100%",
+              maxWidth: 620,
+              borderRadius: 18,
+              padding: "0.65rem 0.65rem 0.65rem 1.5rem",
+              display: "flex",
               alignItems: "center",
-              gap: "8px",
-              boxShadow: "0 6px 30px rgba(220,180,128,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
-              cursor: "pointer",
-              fontFamily: "inherit",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-3px) scale(1.04)";
-              e.currentTarget.style.boxShadow = "0 12px 40px rgba(220,180,128,0.55), inset 0 1px 0 rgba(255,255,255,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0) scale(1)";
-              e.currentTarget.style.boxShadow = "0 6px 30px rgba(220,180,128,0.35), inset 0 1px 0 rgba(255,255,255,0.4)";
+              gap: "1rem",
+              cursor: "text",
             }}
           >
-            <Sparkles size={15} />
-            Try Scalera AI
-          </button>
+            <Sparkles size={18} color="var(--accent-color)" style={{ flexShrink: 0 }} />
+            <span
+              style={{
+                flex: 1,
+                textAlign: "left",
+                color: "var(--text-secondary)",
+                fontSize: "clamp(0.85rem, 1.5vw, 1rem)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              Describe your dream website
+              <span className="hero-caret">|</span>
+            </span>
+            <span
+              className="hero-generate"
+              style={{
+                flexShrink: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "7px",
+                background: "linear-gradient(135deg, var(--accent-warm) 0%, var(--accent-color) 100%)",
+                color: "#080808",
+                padding: "0.75rem 1.4rem",
+                borderRadius: 12,
+                fontWeight: 700,
+                fontSize: "0.8rem",
+                letterSpacing: "0.02em",
+                boxShadow: "0 4px 16px rgba(232,192,138,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
+                transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+              }}
+            >
+              Generate <ArrowUpRight size={15} />
+            </span>
+          </div>
 
+          {/* Secondary link */}
           <a
             href="#work"
-            className="hero-btn glass-card"
             style={{
-              padding: "1.1rem 2.5rem",
-              borderRadius: "50px",
-              fontWeight: 500,
-              fontSize: "0.82rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "var(--text-primary)",
-              transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
               display: "inline-flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "6px",
+              color: "var(--text-secondary)",
+              fontSize: "0.82rem",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              transition: "color 0.3s ease",
               textDecoration: "none",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-3px)";
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.borderColor = "var(--border-glass)";
-            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
           >
-            View Our Work
-            <ArrowUpRight size={15} />
+            Or view our work <ArrowUpRight size={13} />
           </a>
         </div>
 
