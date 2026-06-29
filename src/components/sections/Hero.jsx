@@ -172,15 +172,6 @@ const Hero = ({ loading }) => {
           width: "100%",
         }}
       >
-        {/* Label */}
-        <div
-          className="hero-label section-label glass-animated-border"
-          style={{ marginBottom: "2.5rem", opacity: loading ? 0 : undefined }}
-        >
-          <div className="section-label-dot" />
-          Premium Digital Studio · Est. 2024
-        </div>
-
         {/* Main headline */}
         <h1
           style={{
