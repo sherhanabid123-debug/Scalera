@@ -54,10 +54,15 @@ function App() {
       }
     );
 
+    // Failsafe: never let the preloader trap the page if RAF/GSAP stalls
+    // (backgrounded tab, throttled device, reduced-motion engines, etc.)
+    const failsafe = setTimeout(() => setLoading(false), 1600);
+
     return () => {
       lenis.destroy();
       gsap.ticker.remove(lenis.raf);
       tl.kill();
+      clearTimeout(failsafe);
     };
   }, []);
 
@@ -97,28 +102,52 @@ function App() {
             position: "fixed",
             bottom: "30px",
             right: "30px",
-            width: "60px",
-            height: "60px",
-            borderRadius: "50%",
-            background: "#25D366",
-            color: "#fff",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 4px 20px rgba(37, 211, 102, 0.4)",
+            gap: "10px",
+            padding: "12px 20px 12px 16px",
+            borderRadius: "100px",
+            background: "rgba(6,6,8,0.85)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "#fff",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
             zIndex: 9999,
             pointerEvents: "auto",
-            transition:
-              "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            textDecoration: "none",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.1)";
+            e.currentTarget.style.transform = "translateY(-3px) scale(1.03)";
+            e.currentTarget.style.borderColor = "rgba(37, 211, 102, 0.4)";
+            e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(37,211,102,0.15), inset 0 1px 0 rgba(255,255,255,0.08)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.transform = "translateY(0) scale(1)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+            e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)";
           }}
         >
-          <MessageCircle size={28} />
+          <div
+            style={{
+              width: 32, height: 32,
+              borderRadius: "50%",
+              background: "#25D366",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              boxShadow: "0 0 12px rgba(37,211,102,0.4)",
+            }}
+          >
+            <MessageCircle size={16} color="#fff" />
+          </div>
+          Chat With Us
         </a>
       </div>
 
@@ -128,34 +157,44 @@ function App() {
           className="preloader"
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "#0a0a0a",
+            top: 0, left: 0,
+            width: "100vw", height: "100vh",
+            backgroundColor: "#060608",
             zIndex: 10000,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
+          {/* Ambient glow orb */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 600, height: 600,
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(220,180,128,0.08) 0%, transparent 70%)",
+              pointerEvents: "none",
+            }}
+          />
           <div
             className="preloader-logo"
             style={{
               position: "absolute",
-              top: "50%",
-              left: "50%",
+              top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              fontWeight: 700,
-              fontSize: "1.5rem",
-              letterSpacing: "-0.03em",
+              fontWeight: 800,
+              fontSize: "2rem",
+              letterSpacing: "-0.04em",
               color: "var(--text-primary)",
+              fontFamily: "var(--font-display)",
               pointerEvents: "none",
-              opacity: 0, // Prevent visual pop before GSAP timeline runs
-              filter: "blur(15px)", // Prevent visual pop before GSAP timeline runs
+              opacity: 0,
+              filter: "blur(15px)",
             }}
           >
-            Scalera<span style={{ color: "var(--accent-color)" }}>.</span>
+            Scalera<span style={{ color: "var(--accent-color)", textShadow: "0 0 20px rgba(220,180,128,0.5)" }}>.</span>
           </div>
         </div>
       )}

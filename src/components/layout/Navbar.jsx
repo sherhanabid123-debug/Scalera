@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
-import { ExternalLink } from "lucide-react";
+import { Sparkles } from "lucide-react";
+
+const NAV_LINKS = [
+  { label: "About", href: "#about" },
+  { label: "Services", href: "#services" },
+  { label: "Work", href: "#work" },
+];
 
 const Navbar = ({ loading }) => {
   const [scrolled, setScrolled] = useState(false);
@@ -9,40 +15,23 @@ const Navbar = ({ loading }) => {
   const linksRef = useRef([]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useLayoutEffect(() => {
     if (loading) return;
     let ctx = gsap.context(() => {
-      // Animate desktop menu links & buttons
       gsap.fromTo(
         ".desktop-menu > *",
         { y: -20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          stagger: 0.08,
-          ease: "expo.out",
-          delay: 0.2,
-        },
+        { y: 0, opacity: 1, duration: 1.2, stagger: 0.08, ease: "expo.out", delay: 0.2 },
       );
-      // Animate mobile toggle
       gsap.fromTo(
         ".mobile-toggle",
         { y: -20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: "expo.out",
-          delay: 0.2,
-        },
+        { y: 0, opacity: 1, duration: 1.2, ease: "expo.out", delay: 0.2 },
       );
     });
     return () => ctx.revert();
@@ -51,219 +40,165 @@ const Navbar = ({ loading }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      gsap.to(menuRef.current, {
-        x: 0,
-        duration: 0.8,
-        ease: "expo.out",
-      });
+      gsap.to(menuRef.current, { x: 0, duration: 0.8, ease: "expo.out" });
       gsap.fromTo(
-        linksRef.current,
+        linksRef.current.filter(Boolean),
         { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "expo.out",
-          delay: 0.2,
-        },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "expo.out", delay: 0.2 },
       );
     } else {
       document.body.style.overflow = "auto";
-      gsap.to(menuRef.current, {
-        x: "100%",
-        duration: 0.6,
-        ease: "expo.in",
-      });
+      gsap.to(menuRef.current, { x: "100%", duration: 0.6, ease: "expo.in" });
     }
   }, [isOpen]);
 
   const scrollTo = (id) => (e) => {
     e.preventDefault();
     setIsOpen(false);
-    const element = document.querySelector(id);
-    if (element) {
-      setTimeout(() => {
-        element.scrollIntoView({ behavior: "smooth" });
-      }, 300);
-    }
+    const el = document.querySelector(id);
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
   };
+
   return (
     <>
       <nav
         className={scrolled ? "glass-nav" : ""}
         style={{
           position: "fixed",
-          top: scrolled ? "20px" : 0,
+          top: scrolled ? 20 : 0,
           left: "50%",
           transform: "translateX(-50%)",
           width: scrolled ? "calc(100% - 40px)" : "100%",
-          maxWidth: scrolled ? "900px" : "100%",
-          padding: scrolled ? "10px 24px" : "32px 5%",
+          maxWidth: scrolled ? "940px" : "100%",
+          padding: scrolled ? "12px 28px" : "32px 5%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           zIndex: 110,
-          pointerEvents: "auto",
-          transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
           background: !scrolled ? "transparent" : undefined,
         }}
       >
-        {/* Left Side: Desktop Links */}
+        {/* Left nav links */}
         <div
           className="desktop-menu"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: scrolled ? "1.5rem" : "2.5rem",
-            fontSize: scrolled ? "0.85rem" : "0.95rem",
+            gap: scrolled ? "1.75rem" : "2.5rem",
+            fontSize: scrolled ? "0.82rem" : "0.92rem",
             fontWeight: 500,
             transition: "all 0.4s ease",
-            opacity: loading ? 0 : 1,
             flex: 1,
-            justifyContent: "flex-start",
           }}
         >
-          <a
-            href="#about"
-            onClick={scrollTo("#about")}
-            style={{
-              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-              color: "var(--text-secondary)",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.color = "var(--text-primary)";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = "var(--text-secondary)";
-              e.target.style.transform = "translateY(0)";
-            }}
-          >
-            About
-          </a>
-          <a
-            href="#services"
-            onClick={scrollTo("#services")}
-            style={{
-              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-              color: "var(--text-secondary)",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.color = "var(--text-primary)";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = "var(--text-secondary)";
-              e.target.style.transform = "translateY(0)";
-            }}
-          >
-            Services
-          </a>
-          <a
-            href="#work"
-            onClick={scrollTo("#work")}
-            style={{
-              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-              color: "var(--text-secondary)",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.color = "var(--text-primary)";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = "var(--text-secondary)";
-              e.target.style.transform = "translateY(0)";
-            }}
-          >
-            Work
-          </a>
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              onClick={scrollTo(link.href)}
+              style={{
+                color: "var(--text-secondary)",
+                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                display: "inline-block",
+                position: "relative",
+                paddingBottom: 2,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--text-primary)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--text-secondary)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
 
-        {/* Mobile Nav Left Placeholder (keeps logo centered on mobile) */}
-        <div
-          className="mobile-nav-placeholder"
-          style={{
-            display: "none",
-            flex: 1,
-          }}
-        />
+        {/* Mobile placeholder */}
+        <div className="mobile-nav-placeholder" style={{ display: "none", flex: 1 }} />
 
-        {/* Center Side: Logo */}
+        {/* Center logo */}
         <div
           id="navbar-logo-target"
           style={{
-            fontWeight: 700,
-            fontSize: "1.5rem",
-            letterSpacing: "-0.03em",
+            fontWeight: 800,
+            fontSize: scrolled ? "1.3rem" : "1.5rem",
+            letterSpacing: "-0.04em",
             cursor: "pointer",
             zIndex: 102,
-            opacity: 1,
             flex: 1,
             display: "flex",
             justifyContent: "center",
+            fontFamily: "var(--font-display)",
+            transition: "font-size 0.4s ease",
           }}
           onClick={() => {
             if (isOpen) setIsOpen(false);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
-          Scalera<span style={{ color: "var(--accent-color)" }}>.</span>
+          Scalera
+          <span
+            style={{
+              color: "var(--accent-color)",
+              textShadow: "0 0 20px rgba(220,180,128,0.5)",
+            }}
+          >
+            .
+          </span>
         </div>
 
-        {/* Right Side: Actions (Desktop) / Toggle (Mobile) */}
+        {/* Right: CTA */}
         <div
           className="desktop-menu"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: scrolled ? "1rem" : "1.5rem",
-            fontSize: scrolled ? "0.85rem" : "0.95rem",
-            fontWeight: 500,
-            transition: "all 0.4s ease",
-            opacity: loading ? 0 : 1,
+            gap: "1rem",
             flex: 1,
             justifyContent: "flex-end",
           }}
         >
           <button
-            onClick={() => {
-              window.location.href = "/builder.html";
-            }}
+            onClick={() => { window.location.href = "/builder.html"; }}
+            className="btn-glass"
             style={{
-              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-              color: "#000",
-              background:
-                "linear-gradient(135deg, #f2e3c6 0%, var(--accent-color) 100%)",
-              padding: scrolled ? "6px 14px" : "8px 16px",
+              color: "#080808",
+              background: "linear-gradient(135deg, var(--accent-warm) 0%, var(--accent-color) 100%)",
+              padding: scrolled ? "7px 18px" : "9px 20px",
               borderRadius: "99px",
-              fontWeight: "700",
-              fontSize: scrolled ? "0.8rem" : "0.9rem",
+              fontWeight: 700,
+              fontSize: scrolled ? "0.78rem" : "0.86rem",
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              boxShadow: "0 0 15px rgba(220, 180, 128, 0.35)",
+              boxShadow: "0 4px 20px rgba(220,180,128,0.35), inset 0 1px 0 rgba(255,255,255,0.35)",
               cursor: "pointer",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+              border: "none",
+              fontFamily: "inherit",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
-              e.currentTarget.style.boxShadow =
-                "0 0 25px rgba(220, 180, 128, 0.55)";
+              e.currentTarget.style.boxShadow = "0 8px 30px rgba(220,180,128,0.55), inset 0 1px 0 rgba(255,255,255,0.35)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0) scale(1)";
-              e.currentTarget.style.boxShadow =
-                "0 0 15px rgba(220, 180, 128, 0.35)";
+              e.currentTarget.style.boxShadow = "0 4px 20px rgba(220,180,128,0.35), inset 0 1px 0 rgba(255,255,255,0.35)";
             }}
           >
-            Scalera AI <ExternalLink size={16} />
+            <Sparkles size={13} />
+            Scalera AI
           </button>
         </div>
 
-        {/* Hamburger Toggle */}
+        {/* Hamburger */}
         <button
           className="mobile-toggle"
           onClick={() => setIsOpen(!isOpen)}
@@ -271,138 +206,100 @@ const Navbar = ({ loading }) => {
             zIndex: 102,
             display: "none",
             flexDirection: "column",
-            gap: "6px",
+            gap: "5px",
             padding: "10px",
-            opacity: loading ? 0 : 1,
             flex: 1,
             alignItems: "flex-end",
             background: "none",
             border: "none",
           }}
         >
-          <span
-            style={{
-              width: "24px",
-              height: "2px",
-              background: "var(--text-primary)",
-              transition: "0.4s",
-              transform: isOpen ? "rotate(45deg) translate(5px, 6px)" : "none",
-            }}
-          />
-          <span
-            style={{
-              width: "24px",
-              height: "2px",
-              background: "var(--text-primary)",
-              opacity: isOpen ? 0 : 1,
-              transition: "0.2s",
-            }}
-          />
-          <span
-            style={{
-              width: "24px",
-              height: "2px",
-              background: "var(--text-primary)",
-              transition: "0.4s",
-              transform: isOpen
-                ? "rotate(-45deg) translate(5px, -6px)"
-                : "none",
-            }}
-          />
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              style={{
+                width: i === 1 ? "16px" : "24px",
+                height: "1.5px",
+                background: "var(--text-primary)",
+                borderRadius: 2,
+                transition: "0.4s cubic-bezier(0.16,1,0.3,1)",
+                transform:
+                  isOpen && i === 0 ? "rotate(45deg) translate(4.5px, 4.5px)"
+                  : isOpen && i === 2 ? "rotate(-45deg) translate(4.5px, -4.5px)"
+                  : "none",
+                opacity: isOpen && i === 1 ? 0 : 1,
+              }}
+            />
+          ))}
         </button>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile overlay */}
       <div
         ref={menuRef}
         style={{
           position: "fixed",
-          top: 0,
-          right: 0,
+          top: 0, right: 0,
           width: "100%",
           height: "100dvh",
-          background: "rgba(10, 10, 10, 0.98)",
-          backdropFilter: "blur(20px)",
+          background: "rgba(6,6,8,0.97)",
+          backdropFilter: "blur(40px)",
           zIndex: 101,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          gap: "3rem",
+          gap: "2.5rem",
           transform: "translateX(100%)",
-          pointerEvents: "auto",
+          borderLeft: "1px solid var(--border-glass)",
         }}
       >
-        <a
-          ref={(el) => (linksRef.current[0] = el)}
-          href="#about"
-          onClick={scrollTo("#about")}
-          className="mobile-nav-link"
-          style={{
-            fontSize: "3rem",
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
-            textTransform: "uppercase",
-          }}
-        >
-          About
-        </a>
-        <a
-          ref={(el) => (linksRef.current[1] = el)}
-          href="#services"
-          onClick={scrollTo("#services")}
-          className="mobile-nav-link"
-          style={{
-            fontSize: "3rem",
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
-            textTransform: "uppercase",
-          }}
-        >
-          Services
-        </a>
-        <a
-          ref={(el) => (linksRef.current[2] = el)}
-          href="#work"
-          onClick={scrollTo("#work")}
-          className="mobile-nav-link"
-          style={{
-            fontSize: "3rem",
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
-            textTransform: "uppercase",
-          }}
-        >
-          Work
-        </a>
+        {NAV_LINKS.map((link, i) => (
+          <a
+            key={link.label}
+            ref={(el) => (linksRef.current[i] = el)}
+            href={link.href}
+            onClick={scrollTo(link.href)}
+            className="mobile-nav-link"
+            style={{
+              fontSize: "3rem",
+              fontWeight: 600,
+              letterSpacing: "-0.03em",
+              textTransform: "uppercase",
+              fontFamily: "var(--font-display)",
+            }}
+          >
+            {link.label}
+          </a>
+        ))}
         <button
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
             setIsOpen(false);
             window.location.href = "/builder.html";
           }}
-          className="mobile-nav-link"
+          className="mobile-nav-link btn-glass"
           style={{
-            fontSize: "2.5rem",
+            fontSize: "2rem",
             fontWeight: 700,
             letterSpacing: "-0.02em",
             textTransform: "uppercase",
-            color: "#000",
-            background: "linear-gradient(135deg, #f2e3c6, var(--accent-color))",
-            padding: "12px 32px",
+            color: "#080808",
+            background: "linear-gradient(135deg, var(--accent-warm), var(--accent-color))",
+            padding: "14px 36px",
             borderRadius: "99px",
-            boxShadow: "0 0 20px rgba(220, 180, 128, 0.35)",
+            boxShadow: "0 0 30px rgba(220,180,128,0.35)",
             marginTop: "1rem",
             cursor: "pointer",
             border: "none",
-            textAlign: "center",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            gap: "12px",
+            gap: "10px",
+            fontFamily: "inherit",
           }}
         >
-          Scalera AI <ExternalLink size={28} />
+          <Sparkles size={24} />
+          Scalera AI
         </button>
       </div>
     </>
