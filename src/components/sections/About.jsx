@@ -64,7 +64,7 @@ const About = () => {
       id="about"
       ref={containerRef}
       className="section"
-      style={{ padding: "10rem 5%", position: "relative", overflow: "hidden" }}
+      style={{ padding: "clamp(5rem, 9vw, 8rem) 5%", position: "relative", overflow: "hidden" }}
     >
       {/* Background glow */}
       <div
@@ -79,7 +79,7 @@ const About = () => {
       <div style={{ maxWidth: 1400, margin: "0 auto", position: "relative", zIndex: 2 }}>
 
         {/* Section label */}
-        <div className="about-label section-label" style={{ marginBottom: "4rem" }}>
+        <div className="about-label section-label" style={{ marginBottom: "2.5rem" }}>
           <div className="section-label-dot" />
           Brand Positioning
         </div>
@@ -91,7 +91,7 @@ const About = () => {
             gap: isMobile ? "3rem" : "6rem",
             alignItems: "start",
             borderTop: "1px solid var(--border-subtle)",
-            paddingTop: "4rem",
+            paddingTop: "3rem",
           }}
         >
           {/* Left: headline */}
