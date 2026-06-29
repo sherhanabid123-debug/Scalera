@@ -71,7 +71,7 @@ const Testimonials = () => {
         {/* Label */}
         <div
           className="test-label section-label"
-          style={{ marginBottom: "4rem", justifyContent: "center" }}
+          style={{ marginBottom: "3rem", justifyContent: "center" }}
         >
           <div className="section-label-dot" />
           Client Feedback
