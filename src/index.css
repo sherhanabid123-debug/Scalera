@@ -1,22 +1,31 @@
 :root {
-  --bg-primary: #060608;
-  --bg-secondary: #0e0e12;
-  --text-primary: #f0f0f4;
-  --text-secondary: #68687a;
-  --accent-color: #dcb480;
-  --accent-warm: #f2e3c6;
-  --accent-glow: rgba(220, 180, 128, 0.10);
-  --accent-glow-strong: rgba(220, 180, 128, 0.28);
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-glass: rgba(255, 255, 255, 0.09);
-  --border-glass-bright: rgba(255, 255, 255, 0.18);
+  --bg-primary: #07070b;
+  --bg-secondary: #0e0e14;
+  --text-primary: #f4f4f8;
+  --text-secondary: #8a8a9c;
+  --accent-color: #e8c08a;
+  --accent-warm: #f7e9cd;
+  --accent-glow: rgba(232, 192, 138, 0.12);
+  --accent-glow-strong: rgba(232, 192, 138, 0.30);
+  --violet: #9b7cff;
+  --cyan: #6fd3e0;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-glass-bright: rgba(255, 255, 255, 0.22);
 
-  /* Liquid glass */
-  --glass-bg: rgba(255, 255, 255, 0.035);
-  --glass-bg-hover: rgba(255, 255, 255, 0.065);
-  --glass-blur: blur(28px) saturate(180%);
-  --glass-shadow: 0 8px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.09);
-  --glass-shadow-hover: 0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15);
+  /* Liquid glass — translucent material with specular edges */
+  --glass-bg: rgba(255, 255, 255, 0.045);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(40px) saturate(180%) brightness(1.05);
+  --glass-shadow:
+    0 12px 48px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 0 24px rgba(255,255,255,0.02);
+  --glass-shadow-hover:
+    0 28px 72px rgba(0,0,0,0.6),
+    0 0 48px rgba(232,192,138,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.28),
+    inset 0 0 32px rgba(255,255,255,0.04);
 
   --font-display: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
