@@ -86,10 +86,10 @@ const WhyScalera = () => {
           zIndex: 2,
           display: "grid",
           gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          gap: isMobile ? "4rem" : "8rem",
+          gap: isMobile ? "3rem" : "8rem",
           alignItems: "center",
           borderTop: "1px solid var(--border-subtle)",
-          paddingTop: "4rem",
+          paddingTop: "3rem",
         }}
       >
         {/* Left */}
