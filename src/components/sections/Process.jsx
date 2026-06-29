@@ -122,8 +122,8 @@ const Process = () => {
             flexDirection: isMobile ? "column" : "row",
             gap: "2rem",
             borderTop: "1px solid var(--border-subtle)",
-            paddingTop: "4rem",
-            marginBottom: "5rem",
+            paddingTop: "3rem",
+            marginBottom: "2.5rem",
           }}
         >
           <div className="process-label section-label">
