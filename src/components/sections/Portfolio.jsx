@@ -120,7 +120,7 @@ const Portfolio = () => {
       <div style={{ maxWidth: 1400, margin: "0 auto", position: "relative", zIndex: 2 }}>
 
         {/* Header */}
-        <div className="portfolio-header" style={{ marginBottom: "5rem" }}>
+        <div className="portfolio-header" style={{ marginBottom: "3.5rem" }}>
           <div className="section-label" style={{ marginBottom: "2.5rem" }}>
             <div className="section-label-dot" />
             Selected Work
