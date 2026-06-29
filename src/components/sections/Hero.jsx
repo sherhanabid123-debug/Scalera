@@ -38,16 +38,10 @@ const Hero = ({ loading }) => {
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
       tl.fromTo(
-        ".hero-label",
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 1.0 },
+        ".hero-word",
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1.8, stagger: 0.06 },
       )
-        .fromTo(
-          ".hero-word",
-          { yPercent: 110, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 1.8, stagger: 0.06 },
-          "-=0.6",
-        )
         .fromTo(
           ".hero-line",
           { scaleX: 0 },
