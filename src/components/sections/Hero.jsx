@@ -169,16 +169,15 @@ const Hero = ({ loading }) => {
         {/* Main headline */}
         <h1
           style={{
-            fontSize: "clamp(2.6rem, 5.6vw, 6.4rem)",
+            fontSize: "clamp(2.4rem, 5vw, 5.4rem)",
             fontWeight: 300,
-            lineHeight: 0.96,
+            lineHeight: 0.98,
             letterSpacing: "-0.04em",
             marginBottom: "2.25rem",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "uppercase",
-            maxWidth: 1080,
           }}
         >
           <div style={{ overflow: "hidden", paddingBottom: "0.15em" }}>
