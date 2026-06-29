@@ -92,35 +92,35 @@ p {
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.55;
+  filter: blur(80px);
+  opacity: 0.9;
   mix-blend-mode: screen;
   will-change: transform;
 }
 .aurora-blob.a {
-  width: 55vw; height: 55vw;
-  top: -12%; left: -6%;
-  background: radial-gradient(circle, rgba(232,192,138,0.32) 0%, transparent 65%);
+  width: 60vw; height: 60vw;
+  top: -18%; left: -8%;
+  background: radial-gradient(circle, rgba(232,192,138,0.55) 0%, rgba(232,192,138,0.12) 35%, transparent 68%);
   animation: auroraA 26s ease-in-out infinite alternate;
 }
 .aurora-blob.b {
-  width: 52vw; height: 52vw;
-  top: 28%; right: -12%;
-  background: radial-gradient(circle, rgba(155,124,255,0.24) 0%, transparent 65%);
+  width: 55vw; height: 55vw;
+  top: 22%; right: -14%;
+  background: radial-gradient(circle, rgba(155,124,255,0.42) 0%, rgba(155,124,255,0.1) 38%, transparent 68%);
   animation: auroraB 32s ease-in-out infinite alternate;
 }
 .aurora-blob.c {
-  width: 46vw; height: 46vw;
-  bottom: -18%; left: 22%;
-  background: radial-gradient(circle, rgba(111,211,224,0.16) 0%, transparent 65%);
+  width: 50vw; height: 50vw;
+  bottom: -20%; left: 20%;
+  background: radial-gradient(circle, rgba(111,211,224,0.30) 0%, rgba(111,211,224,0.08) 40%, transparent 68%);
   animation: auroraC 30s ease-in-out infinite alternate;
 }
 .aurora-veil {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,192,138,0.06), transparent 60%),
-    radial-gradient(ellipse 100% 60% at 50% 110%, rgba(7,7,11,0.85), transparent 65%);
+    radial-gradient(ellipse 70% 50% at 50% 38%, rgba(255,255,255,0.015), transparent 60%),
+    linear-gradient(180deg, rgba(7,7,11,0.35) 0%, transparent 25%, transparent 70%, rgba(7,7,11,0.55) 100%);
 }
 @keyframes auroraA {
   0% { transform: translate(0,0) scale(1); }
