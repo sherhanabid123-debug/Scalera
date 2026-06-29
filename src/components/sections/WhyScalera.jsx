@@ -62,7 +62,7 @@ const WhyScalera = () => {
       ref={containerRef}
       className="section"
       style={{
-        padding: "10rem 5%",
+        padding: "clamp(5rem, 9vw, 8rem) 5%",
         position: "relative",
         zIndex: 2,
         overflow: "hidden",

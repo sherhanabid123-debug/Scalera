@@ -99,7 +99,7 @@ const Services = () => {
       id="services"
       ref={containerRef}
       className="section"
-      style={{ padding: "10rem 5%", position: "relative", overflow: "hidden" }}
+      style={{ padding: "clamp(5rem, 9vw, 8rem) 5%", position: "relative", overflow: "hidden" }}
     >
       {/* Background glows */}
       <div
@@ -122,8 +122,8 @@ const Services = () => {
             flexDirection: isMobile ? "column" : "row",
             gap: "2rem",
             borderTop: "1px solid var(--border-subtle)",
-            paddingTop: "4rem",
-            marginBottom: "4rem",
+            paddingTop: "3rem",
+            marginBottom: "3rem",
           }}
         >
           <div className="services-label section-label">

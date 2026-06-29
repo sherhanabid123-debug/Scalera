@@ -101,7 +101,7 @@ const Portfolio = () => {
       id="work"
       ref={containerRef}
       style={{
-        padding: "10rem 5%",
+        padding: "clamp(5rem, 9vw, 8rem) 5%",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-subtle)",

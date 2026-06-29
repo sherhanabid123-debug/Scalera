@@ -49,7 +49,7 @@ const CTA = () => {
       ref={containerRef}
       className="section"
       style={{
-        padding: "8rem 5% 10rem",
+        padding: "clamp(5rem, 9vw, 8rem) 5% clamp(6rem, 10vw, 9rem)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

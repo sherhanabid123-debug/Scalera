@@ -99,7 +99,7 @@ const Process = () => {
       id="process"
       ref={containerRef}
       className="section"
-      style={{ padding: "10rem 5%", position: "relative", overflow: "hidden" }}
+      style={{ padding: "clamp(5rem, 9vw, 8rem) 5%", position: "relative", overflow: "hidden" }}
     >
       {/* Background glow */}
       <div
