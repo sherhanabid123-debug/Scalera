@@ -201,18 +201,18 @@ const Process = () => {
                   {/* Icon */}
                   <div
                     style={{
-                      width: 48, height: 48,
-                      borderRadius: 14,
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      width: 52, height: 52,
+                      borderRadius: 16,
+                      background: "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04))",
+                      border: "1px solid rgba(255,255,255,0.16)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       marginBottom: "1.5rem",
-                      boxShadow: `0 0 20px ${step.color}`,
+                      boxShadow: `0 6px 20px ${step.color}, inset 0 1px 0 rgba(255,255,255,0.22)`,
                     }}
                   >
-                    <Icon size={22} color={step.iconColor} strokeWidth={1.5} />
+                    <Icon size={24} color={step.iconColor} strokeWidth={1.7} />
                   </div>
 
                   <h3
