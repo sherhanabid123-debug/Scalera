@@ -69,6 +69,13 @@ function App() {
   return (
     <>
       <Background3D />
+      {/* Aurora atmosphere — colored light that the glass refracts */}
+      <div className="aurora" aria-hidden="true">
+        <div className="aurora-blob a" />
+        <div className="aurora-blob b" />
+        <div className="aurora-blob c" />
+        <div className="aurora-veil" />
+      </div>
       <div className="noise-bg" />
 
       <div
