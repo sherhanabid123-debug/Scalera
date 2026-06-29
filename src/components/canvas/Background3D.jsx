@@ -90,12 +90,12 @@ const Background3D = () => {
           willChange: "contents",
         }}
       />
-      {/* Vignette overlay for depth */}
+      {/* Subtle vignette for depth (kept light so the aurora reads) */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(6,6,8,0.6) 100%)",
+          background: "radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(5,5,9,0.45) 100%)",
           pointerEvents: "none",
         }}
       />
