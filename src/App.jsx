@@ -11,7 +11,7 @@ import Navbar from "./components/layout/Navbar";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
 import Services from "./components/sections/Services";
-import ScaleraAIShowcase from "./components/sections/ScaleraAIShowcase";
+import BriefPlanner from "./components/sections/BriefPlanner";
 import Process from "./components/sections/Process";
 import Portfolio from "./components/sections/Portfolio";
 import WhyScalera from "./components/sections/WhyScalera";
@@ -90,7 +90,7 @@ function App() {
           <Hero loading={loading} />
           <About />
           <Services />
-          <ScaleraAIShowcase />
+          <BriefPlanner />
           <Process />
           <Portfolio />
           <WhyScalera />

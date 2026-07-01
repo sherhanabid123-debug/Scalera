@@ -6,15 +6,24 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: "50+", label: "Projects Delivered" },
-  { value: "100%", label: "Client Retention" },
-  { value: "<60s", label: "AI Build Time" },
+  { value: "50+", label: "Bespoke Builds" },
+  { value: "98%+", label: "Lighthouse Speed" },
+  { value: "100%", label: "Custom Codebase" },
 ];
+
+const nicheDescriptions = {
+  "Business Website": "Tailoring custom corporate architecture, integrated SEO strategies, and responsive lead-generation forms.",
+  "Online Store": "Configuring secure payment checkouts, dynamic inventory grids, and conversion rate optimizations.",
+  "High-End Portfolio": "Structuring bespoke layouts, smooth GSAP transitions, and interactive digital art displays.",
+  "Custom Landing Page": "Designing high-impact single-page scroll layouts, interactive micro-animations, and direct user funnels.",
+  "Other": "Scoping custom backend systems, advanced web application features, and unique branding assets."
+};
 
 const Hero = ({ loading }) => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [selectedNiche, setSelectedNiche] = useState("Business Website");
 
   useEffect(() => {
     const move = (e) => {
@@ -64,13 +73,7 @@ const Hero = ({ loading }) => {
           ".hero-stat-card",
           { opacity: 0, y: 30, scale: 0.92 },
           { opacity: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.1, ease: "back.out(1.5)" },
-          "-=0.8",
-        )
-        .fromTo(
-          ".scroll-indicator",
-          { opacity: 0 },
-          { opacity: 1, duration: 1.5 },
-          "-=0.8",
+          "-=0.8"
         );
 
       gsap.to(".hero-content", {
@@ -84,18 +87,6 @@ const Hero = ({ loading }) => {
           scrub: true,
         },
       });
-
-      /* floating animation on stat cards */
-      gsap.utils.toArray(".hero-stat-card").forEach((el, i) => {
-        gsap.to(el, {
-          y: i % 2 === 0 ? -10 : 10,
-          duration: 3 + i * 0.4,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: i * 0.3,
-        });
-      });
     }, containerRef);
     return () => ctx.revert();
   }, [loading]);
@@ -108,9 +99,10 @@ const Hero = ({ loading }) => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flex-start",
+        padding: "clamp(8rem, 12vh, 10rem) var(--pad-x) 4rem",
+        position: "relative",
         overflow: "hidden",
-        padding: "0 5%",
       }}
     >
       {/* Cursor glow */}
@@ -162,7 +154,7 @@ const Hero = ({ loading }) => {
           textAlign: "center",
           maxWidth: 1400,
           margin: "0 auto",
-          marginTop: "6rem",
+          marginTop: "0rem",
           width: "100%",
         }}
       >
@@ -185,7 +177,7 @@ const Hero = ({ loading }) => {
               className="hero-word"
               style={{ display: "inline-block", transform: loading ? "translateY(110%)" : undefined }}
             >
-              Defining The Next Standard
+              We Design & Build
             </span>
           </div>
           <div
@@ -203,7 +195,7 @@ const Hero = ({ loading }) => {
               style={{
                 width: "clamp(40px, 8vw, 120px)",
                 height: "1px",
-                background: "linear-gradient(90deg, transparent, rgba(220,180,128,0.4), transparent)",
+                background: "linear-gradient(90deg, transparent, rgba(223,168,87,0.4), transparent)",
                 transform: loading ? "scaleX(0)" : undefined,
                 transformOrigin: "right",
               }}
@@ -216,14 +208,14 @@ const Hero = ({ loading }) => {
                 transform: loading ? "translateY(110%)" : undefined,
               }}
             >
-              In Digital Scale.
+              High-End Websites.
             </span>
             <div
               className="hero-line"
               style={{
                 width: "clamp(40px, 8vw, 120px)",
                 height: "1px",
-                background: "linear-gradient(90deg, transparent, rgba(220,180,128,0.4), transparent)",
+                background: "linear-gradient(90deg, transparent, rgba(223,168,87,0.4), transparent)",
                 transform: loading ? "scaleX(0)" : undefined,
                 transformOrigin: "left",
               }}
@@ -243,11 +235,10 @@ const Hero = ({ loading }) => {
             opacity: loading ? 0 : undefined,
           }}
         >
-          Engineering bespoke, high-performance digital ecosystems for global brands
-          demanding absolute technical excellence.
+          No templates. No corporate jargon. Just custom, premium websites built to convert clicks into buyers.
         </p>
 
-        {/* CTA Buttons */}
+        {/* CTA Configurator Section */}
         <div
           style={{
             display: "flex",
@@ -255,61 +246,136 @@ const Hero = ({ loading }) => {
             gap: "1.25rem",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: "4.5rem",
+            marginBottom: "2.5rem",
             width: "100%",
             opacity: loading ? 0 : undefined,
           }}
         >
-          {/* Liquid-glass AI prompt console */}
+          {/* Liquid-glass agency project brief starter */}
           <div
-            className="hero-btn glass-card glass-prism-border hero-console"
-            onClick={() => { window.location.href = "/builder.html"; }}
+            className="hero-btn glass-card hero-console"
             style={{
               width: "100%",
-              maxWidth: 620,
-              borderRadius: 18,
-              padding: "0.65rem 0.65rem 0.65rem 1.5rem",
+              maxWidth: 640,
+              borderRadius: 24,
+              padding: "1.25rem",
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               gap: "1rem",
-              cursor: "text",
+              alignItems: "stretch",
+              cursor: "default",
+              boxShadow: "var(--glass-shadow)",
             }}
           >
-            <Sparkles size={18} color="var(--accent-color)" style={{ flexShrink: 0 }} />
-            <span
-              style={{
-                flex: 1,
-                textAlign: "left",
-                color: "var(--text-secondary)",
-                fontSize: "clamp(0.85rem, 1.5vw, 1rem)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              Describe your dream website
-              <span className="hero-caret">|</span>
-            </span>
-            <span
-              className="hero-generate"
-              style={{
-                flexShrink: 0,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "7px",
-                background: "linear-gradient(135deg, var(--accent-warm) 0%, var(--accent-color) 100%)",
-                color: "#080808",
-                padding: "0.75rem 1.4rem",
-                borderRadius: 12,
-                fontWeight: 700,
-                fontSize: "0.8rem",
-                letterSpacing: "0.02em",
-                boxShadow: "0 4px 16px rgba(232,192,138,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
-                transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
-              }}
-            >
-              Generate <ArrowUpRight size={15} />
-            </span>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.85rem", color: "var(--accent-color)", fontWeight: 600, letterSpacing: "0.03em", textTransform: "uppercase" }}>
+              <Sparkles size={14} color="var(--accent-color)" />
+              <span>Interactive Project Brief Planner</span>
+            </div>
+            
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))",
+              gap: "0.6rem",
+              width: "100%",
+              padding: "0.2rem 0"
+            }}>
+              {["Business Website", "Online Store", "High-End Portfolio", "Custom Landing Page", "Other"].map((niche) => {
+                const active = selectedNiche === niche;
+                return (
+                  <button
+                    key={niche}
+                    onClick={() => setSelectedNiche(niche)}
+                    style={{
+                      padding: "0.75rem 0.4rem",
+                      borderRadius: "10px",
+                      background: active 
+                        ? "rgba(223, 168, 87, 0.12)" 
+                        : "rgba(255, 255, 255, 0.02)",
+                      border: "1px solid",
+                      borderColor: active 
+                        ? "rgba(223, 168, 87, 0.45)" 
+                        : "rgba(255, 255, 255, 0.06)",
+                      color: active ? "var(--accent-color)" : "var(--text-secondary)",
+                      fontSize: "0.8rem",
+                      fontWeight: active ? 700 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: active ? "0 4px 12px rgba(223,168,87,0.12)" : "none",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+                        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                        e.currentTarget.style.color = "var(--text-primary)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.02)";
+                        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.06)";
+                        e.currentTarget.style.color = "var(--text-secondary)";
+                      }
+                    }}
+                  >
+                    {niche}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ height: "1px", background: "var(--border-subtle)", margin: "0.25rem 0" }} />
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)", textAlign: "left", maxWidth: "340px", lineHeight: 1.4, display: "inline-block" }}>
+                {nicheDescriptions[selectedNiche] || "Tailoring custom design specifications, performance optimizations, and backend integrations."}
+              </span>
+              <button
+                onClick={() => {
+                  const planner = document.querySelector("#estimator");
+                  if (planner) {
+                    planner.scrollIntoView({ behavior: "smooth" });
+                    const event = new CustomEvent("setPlannerNiche", { detail: selectedNiche });
+                    window.dispatchEvent(event);
+                  }
+                }}
+                className="btn-glass"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  background: "rgba(223, 168, 87, 0.12)",
+                  border: "1px solid rgba(223, 168, 87, 0.35)",
+                  color: "#ffffff",
+                  padding: "0.85rem 1.6rem",
+                  borderRadius: 14,
+                  fontWeight: 700,
+                  fontSize: "0.82rem",
+                  letterSpacing: "0.02em",
+                  boxShadow: "0 4px 16px rgba(223, 168, 87, 0.1), inset 0 1px 0 rgba(255,255,255,0.15)",
+                  transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px) scale(1.03)";
+                  e.currentTarget.style.background = "rgba(223, 168, 87, 0.22)";
+                  e.currentTarget.style.borderColor = "rgba(223, 168, 87, 0.6)";
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(223, 168, 87, 0.25), inset 0 1px 0 rgba(255,255,255,0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0) scale(1)";
+                  e.currentTarget.style.background = "rgba(223, 168, 87, 0.12)";
+                  e.currentTarget.style.borderColor = "rgba(223, 168, 87, 0.35)";
+                  e.currentTarget.style.boxShadow = "0 4px 16px rgba(223, 168, 87, 0.1), inset 0 1px 0 rgba(255,255,255,0.15)";
+                }}
+              >
+                Estimate Cost <ArrowUpRight size={16} />
+              </button>
+            </div>
           </div>
 
           {/* Secondary link */}
@@ -337,21 +403,31 @@ const Hero = ({ loading }) => {
         <div
           style={{
             display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
             flexWrap: "wrap",
+            gap: "1.25rem",
+            justifyContent: "center",
             width: "100%",
             maxWidth: 700,
+            marginTop: "1.5rem",
           }}
         >
           {stats.map((s, i) => (
             <div
               key={i}
-              className="hero-stat-card stat-card"
+              className="hero-stat-card ios-border-shine"
               style={{
                 flex: "1 1 180px",
                 textAlign: "center",
                 opacity: loading ? 0 : undefined,
+                padding: "1.5rem 1rem",
+                borderRadius: 16,
+                height: "110px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                "--shine-duration": i === 0 ? "4.5s" : i === 1 ? "6.0s" : "5.0s",
+                "--shine-delay": i === 0 ? "0s" : i === 1 ? "-1.5s" : "-3.0s",
               }}
             >
               <div
@@ -382,57 +458,7 @@ const Hero = ({ loading }) => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div
-        className="scroll-indicator"
-        style={{
-          position: "absolute",
-          bottom: 40,
-          right: "5%",
-          display: "flex",
-          alignItems: "center",
-          gap: "1rem",
-          opacity: 0,
-        }}
-      >
-        <span
-          style={{
-            fontSize: "0.72rem",
-            textTransform: "uppercase",
-            letterSpacing: "0.2em",
-            color: "var(--text-secondary)",
-          }}
-        >
-          Explore
-        </span>
-        <div
-          style={{
-            width: 60,
-            height: 1,
-            background: "rgba(255,255,255,0.08)",
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: 1,
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 0, left: 0,
-              width: "100%", height: "100%",
-              background: "linear-gradient(90deg, transparent, var(--accent-color), transparent)",
-              animation: "scrollSlide 2.4s cubic-bezier(0.16,1,0.3,1) infinite",
-            }}
-          />
-        </div>
-        <style>{`
-          @keyframes scrollSlide {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
-            100% { transform: translateX(100%); }
-          }
-        `}</style>
-      </div>
+
     </section>
   );
 };

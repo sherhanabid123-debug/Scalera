@@ -164,37 +164,51 @@ const Navbar = ({ loading }) => {
           }}
         >
           <button
-            onClick={() => { window.location.href = "/builder.html"; }}
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.querySelector('#estimator');
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+              } else {
+                window.location.href = "/#estimator";
+              }
+            }}
             className="btn-glass"
             style={{
-              color: "#080808",
-              background: "linear-gradient(135deg, var(--accent-warm) 0%, var(--accent-color) 100%)",
+              color: "#ffffff",
+              background: "rgba(223, 168, 87, 0.12)",
+              border: "1px solid rgba(223, 168, 87, 0.35)",
               padding: scrolled ? "7px 18px" : "9px 20px",
-              borderRadius: "99px",
+              borderRadius: "100px",
               fontWeight: 700,
               fontSize: scrolled ? "0.78rem" : "0.86rem",
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              boxShadow: "0 4px 20px rgba(220,180,128,0.35), inset 0 1px 0 rgba(255,255,255,0.35)",
+              boxShadow: "0 4px 16px rgba(223, 168, 87, 0.1), inset 0 1px 0 rgba(255,255,255,0.15)",
               cursor: "pointer",
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
-              border: "none",
               fontFamily: "inherit",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
-              e.currentTarget.style.boxShadow = "0 8px 30px rgba(220,180,128,0.55), inset 0 1px 0 rgba(255,255,255,0.35)";
+              e.currentTarget.style.background = "rgba(223, 168, 87, 0.25)";
+              e.currentTarget.style.borderColor = "var(--accent-color)";
+              e.currentTarget.style.color = "#ffffff";
+              e.currentTarget.style.boxShadow = "0 8px 24px rgba(223, 168, 87, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0) scale(1)";
-              e.currentTarget.style.boxShadow = "0 4px 20px rgba(220,180,128,0.35), inset 0 1px 0 rgba(255,255,255,0.35)";
+              e.currentTarget.style.background = "rgba(223, 168, 87, 0.12)";
+              e.currentTarget.style.borderColor = "rgba(223, 168, 87, 0.35)";
+              e.currentTarget.style.color = "#ffffff";
+              e.currentTarget.style.boxShadow = "0 4px 16px rgba(223,168,87,0.1), inset 0 1px 0 rgba(255,255,255,0.15)";
             }}
           >
             <Sparkles size={13} />
-            Scalera AI
+            Start Project
           </button>
         </div>
 
@@ -276,7 +290,12 @@ const Navbar = ({ loading }) => {
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
             setIsOpen(false);
-            window.location.href = "/builder.html";
+            const el = document.querySelector('#estimator');
+            if (el) {
+              setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+            } else {
+              window.location.href = "/#estimator";
+            }
           }}
           className="mobile-nav-link btn-glass"
           style={{
@@ -288,7 +307,7 @@ const Navbar = ({ loading }) => {
             background: "linear-gradient(135deg, var(--accent-warm), var(--accent-color))",
             padding: "14px 36px",
             borderRadius: "99px",
-            boxShadow: "0 0 30px rgba(220,180,128,0.35)",
+            boxShadow: "0 0 30px rgba(223,168,87,0.3)",
             marginTop: "1rem",
             cursor: "pointer",
             border: "none",
@@ -299,7 +318,7 @@ const Navbar = ({ loading }) => {
           }}
         >
           <Sparkles size={24} />
-          Scalera AI
+          Start Project
         </button>
       </div>
     </>

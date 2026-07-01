@@ -6,7 +6,7 @@ const links = {
     { label: "Work", href: "#work" },
     { label: "Services", href: "#services" },
     { label: "Process", href: "#process" },
-    { label: "Scalera AI", href: "/builder.html" },
+    { label: "Project Planner", href: "#estimator" },
   ],
   Connect: [
     { label: "WhatsApp", href: "https://wa.me/917975242650", external: true },

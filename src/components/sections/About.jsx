@@ -5,10 +5,63 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const values = [
-  { label: "Design-First", desc: "Every pixel serves a purpose." },
-  { label: "Mobile-Native", desc: "Built for every screen from day one." },
-  { label: "Performance", desc: "Sub-2s loads, 95+ Lighthouse scores." },
+  { label: "Zero Templates. Ever.", desc: "We design every single pixel from scratch. No pre-made layouts, no code bloat. Your site will look unique and stand out from the noise." },
+  { label: "Lightning Fast Speeds", desc: "We build lightweight websites that load in the blink of an eye. 98+ Lighthouse scores keep users happy and Google loving your page." },
+  { label: "Engineered to Convert", desc: "Beautiful pages are useless if they don't sell. We structure layouts, buttons, and content flows to turn random clicks into paying buyers." },
 ];
+
+const AboutValueCard = ({ v, i }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        paddingTop: "1.5rem",
+        paddingBottom: "1.5rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+        position: "relative",
+        borderTop: "1px solid",
+        borderTopColor: isHovered ? "var(--accent-color)" : "rgba(255,255,255,0.08)",
+        transform: isHovered ? "translateY(-4px)" : "translateY(0)",
+        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        cursor: "default",
+      }}
+    >
+      <div style={{ fontSize: "0.78rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent-color)", letterSpacing: "0.1em" }}>
+        0{i + 1}.
+      </div>
+      
+      <h3
+        style={{
+          fontSize: "1.15rem",
+          fontWeight: 600,
+          letterSpacing: "-0.01em",
+          color: isHovered ? "var(--accent-color)" : "var(--text-primary)",
+          margin: 0,
+          transition: "color 0.4s ease",
+        }}
+      >
+        {v.label}
+      </h3>
+      
+      <p
+        style={{
+          fontSize: "0.86rem",
+          color: isHovered ? "var(--text-primary)" : "var(--text-secondary)",
+          lineHeight: 1.6,
+          margin: 0,
+          transition: "color 0.4s ease",
+        }}
+      >
+        {v.desc}
+      </p>
+    </div>
+  );
+};
 
 const About = () => {
   const containerRef = useRef();
@@ -64,7 +117,7 @@ const About = () => {
       id="about"
       ref={containerRef}
       className="section"
-      style={{ padding: "clamp(5rem, 9vw, 8rem) 5%", position: "relative", overflow: "hidden" }}
+      style={{ padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)", position: "relative", overflow: "hidden", borderTop: "1px solid var(--border-subtle)" }}
     >
       {/* Background glow */}
       <div
@@ -72,110 +125,73 @@ const About = () => {
         style={{
           top: "50%", left: "80%",
           width: 700, height: 700,
-          background: "radial-gradient(circle, rgba(140,100,255,0.04) 0%, transparent 65%)",
+          background: "radial-gradient(circle, rgba(223,168,87,0.04) 0%, transparent 65%)",
         }}
       />
 
       <div style={{ maxWidth: 1400, margin: "0 auto", position: "relative", zIndex: 2 }}>
 
-        {/* Section label */}
-        <div className="about-label section-label" style={{ marginBottom: "2.5rem" }}>
-          <div className="section-label-dot" />
-          Brand Positioning
+        {/* Unified Editorial Header */}
+        <div
+          style={{
+            marginBottom: "4rem",
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
+            gap: "2rem",
+            alignItems: "end",
+          }}
+        >
+          <div>
+            <div className="section-label" style={{ marginBottom: "1.5rem" }}>
+              <div className="section-label-dot" />
+              Brand Positioning
+            </div>
+            <h2
+              style={{
+                fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)",
+                fontWeight: 300,
+                letterSpacing: "-0.04em",
+                lineHeight: 1.05,
+                margin: 0,
+                textTransform: "uppercase",
+              }}
+            >
+              Built for Brands <br />
+              <span className="shimmer-text" style={{ fontWeight: 700 }}>
+                That Value Quality.
+              </span>
+            </h2>
+          </div>
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "1.05rem",
+              lineHeight: 1.6,
+              maxWidth: 480,
+              margin: 0,
+            }}
+          >
+            Your website isn't just a page online — it's your brand's first impression.
+            We create structured, mobile-first websites designed for clarity, trust,
+            and measurable performance.
+          </p>
         </div>
 
+        {/* Value cards - 3 Column Layout for Symmetry */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-            gap: isMobile ? "3rem" : "6rem",
-            alignItems: "start",
-            borderTop: "1px solid var(--border-subtle)",
-            paddingTop: "3rem",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+            gap: "1.5rem",
           }}
         >
-          {/* Left: headline */}
-          <div className="about-headline">
-            <h2
-              style={{
-                fontSize: "clamp(2.8rem, 5vw, 4.5rem)",
-                fontWeight: 300,
-                lineHeight: 1.15,
-                letterSpacing: "-0.03em",
-                margin: 0,
-              }}
-            >
-              <div style={{ overflow: "hidden", paddingBottom: "0.1em" }}>
-                <span style={{ display: "block", fontStyle: "italic", color: "var(--text-secondary)" }}>
-                  Built for Brands
-                </span>
-              </div>
-              <div style={{ overflow: "hidden", paddingBottom: "0.1em" }}>
-                <span style={{ display: "block" }}>That Value Quality.</span>
-              </div>
-            </h2>
-
-            {/* Decorative accent line */}
-            <div
-              style={{
-                marginTop: "2rem",
-                width: 60,
-                height: 2,
-                background: "linear-gradient(90deg, var(--accent-color), transparent)",
-                borderRadius: 2,
-              }}
+          {values.map((v, i) => (
+            <AboutValueCard
+              key={i}
+              v={v}
+              i={i}
             />
-          </div>
-
-          {/* Right: body + value cards */}
-          <div>
-            <p
-              className="about-desc"
-              style={{
-                fontSize: "clamp(1rem, 1.8vw, 1.2rem)",
-                lineHeight: 1.75,
-                color: "var(--text-secondary)",
-                marginBottom: "3rem",
-                maxWidth: 520,
-              }}
-            >
-              Your website isn't just a page online — it's your brand's first impression.
-              We create structured, mobile-first websites designed for clarity, trust,
-              and measurable performance.
-            </p>
-
-            {/* Value cards */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {values.map((v, i) => (
-                <div
-                  key={i}
-                  className="about-value-card glass-card"
-                  style={{ padding: "1.25rem 1.5rem", borderRadius: 14 }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span
-                      style={{
-                        fontSize: "0.9rem",
-                        fontWeight: 600,
-                        letterSpacing: "-0.01em",
-                        color: "var(--text-primary)",
-                      }}
-                    >
-                      {v.label}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: "0.8rem",
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      {v.desc}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
