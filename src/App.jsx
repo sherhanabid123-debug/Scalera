@@ -35,11 +35,14 @@ function App() {
     });
 
     window.lenis = lenis;
+    let rafId;
+    function raf(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
     lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
 
     const tl = gsap.timeline({
       onComplete: () => setLoading(false),
@@ -61,7 +64,8 @@ function App() {
 
     return () => {
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      cancelAnimationFrame(rafId);
+      window.lenis = null;
       tl.kill();
       clearTimeout(failsafe);
     };
