@@ -43,21 +43,20 @@ function App() {
 
     const tl = gsap.timeline({
       onComplete: () => setLoading(false),
-      delay: 0.2, // Slight delay to ensure DOM is ready
     });
 
     tl.to(
       ".preloader",
       {
         opacity: 0,
-        duration: 0.6,
-        ease: "power3.inOut",
+        duration: 0.25,
+        ease: "power2.out",
       }
     );
 
     // Failsafe: never let the preloader trap the page if RAF/GSAP stalls
     // (backgrounded tab, throttled device, reduced-motion engines, etc.)
-    const failsafe = setTimeout(() => setLoading(false), 1600);
+    const failsafe = setTimeout(() => setLoading(false), 400);
 
     return () => {
       lenis.destroy();

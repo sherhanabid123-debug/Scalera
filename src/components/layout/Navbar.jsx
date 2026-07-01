@@ -26,12 +26,12 @@ const Navbar = ({ loading }) => {
       gsap.fromTo(
         ".desktop-menu > *",
         { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, stagger: 0.08, ease: "expo.out", delay: 0.2 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: "expo.out", delay: 0.05 },
       );
       gsap.fromTo(
         ".mobile-toggle",
         { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "expo.out", delay: 0.2 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "expo.out", delay: 0.05 },
       );
     });
     return () => ctx.revert();
