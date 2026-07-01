@@ -340,7 +340,7 @@ const Hero = ({ loading }) => {
                   const planner = document.querySelector("#estimator");
                   if (planner) {
                     if (window.lenis) {
-                      window.lenis.scrollTo("#estimator", { duration: 1.2 });
+                      window.lenis.scrollTo("#estimator", { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) });
                     } else {
                       planner.scrollIntoView({ behavior: "smooth" });
                     }

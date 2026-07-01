@@ -59,7 +59,7 @@ const Navbar = ({ loading }) => {
     
     const triggerScroll = () => {
       if (window.lenis) {
-        window.lenis.scrollTo(id, { duration: 1.2 });
+        window.lenis.scrollTo(id, { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) });
       } else {
         const el = document.querySelector(id);
         if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -168,7 +168,7 @@ const Navbar = ({ loading }) => {
             onClick={(e) => {
               e.preventDefault();
               if (window.lenis) {
-                window.lenis.scrollTo('#estimator', { duration: 1.2 });
+                window.lenis.scrollTo('#estimator', { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) });
               } else {
                 const el = document.querySelector('#estimator');
                 if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -293,7 +293,7 @@ const Navbar = ({ loading }) => {
           onClick={() => {
             setIsOpen(false);
             if (window.lenis) {
-              setTimeout(() => window.lenis.scrollTo('#estimator', { duration: 1.2 }), 300);
+              setTimeout(() => window.lenis.scrollTo('#estimator', { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) }), 300);
             } else {
               const el = document.querySelector('#estimator');
               if (el) {
