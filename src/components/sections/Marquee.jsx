@@ -2,11 +2,12 @@ import React, { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Marquee = () => {
   const containerRef = useRef();
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
     let ctx = gsap.context(() => {
       gsap.to(".marquee-inner", {
         xPercent: -50,
@@ -27,8 +28,8 @@ const Marquee = () => {
       ref={containerRef}
       style={{
         overflow: "hidden",
-        padding: "120px 0",
-        background: "var(--bg-secondary)",
+        padding: "100px 0",
+        background: "linear-gradient(180deg, transparent 0%, rgba(220,180,128,0.015) 50%, transparent 100%)",
         borderTop: "1px solid var(--border-subtle)",
         borderBottom: "1px solid var(--border-subtle)",
         position: "relative",
@@ -37,42 +38,28 @@ const Marquee = () => {
     >
       <div
         className="marquee-inner"
-        style={{ display: "flex", width: "200vw" }}
+        style={{ display: "flex", width: "200vw", userSelect: "none" }}
       >
-        <h2
-          style={{
-            fontSize: "clamp(6rem, 20vw, 20rem)",
-            fontWeight: 900,
-            whiteSpace: "nowrap",
-            textTransform: "uppercase",
-            color: "transparent",
-            WebkitTextStroke: "2px rgba(248, 250, 252, 0.05)",
-            paddingRight: "5vw",
-            lineHeight: 1,
-            letterSpacing: "-0.02em",
-            margin: 0,
-          }}
-        >
-          SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL
-          AGENCY • SCALERA DIGITAL AGENCY •
-        </h2>
-        <h2
-          style={{
-            fontSize: "clamp(6rem, 20vw, 20rem)",
-            fontWeight: 900,
-            whiteSpace: "nowrap",
-            textTransform: "uppercase",
-            color: "transparent",
-            WebkitTextStroke: "2px rgba(248, 250, 252, 0.05)",
-            paddingRight: "5vw",
-            lineHeight: 1,
-            letterSpacing: "-0.02em",
-            margin: 0,
-          }}
-        >
-          SCALERA DIGITAL AGENCY • SCALERA DIGITAL AGENCY • SCALERA DIGITAL
-          AGENCY • SCALERA DIGITAL AGENCY •
-        </h2>
+        {[0, 1].map((k) => (
+          <h2
+            key={k}
+            style={{
+              fontSize: "clamp(5rem, 18vw, 18rem)",
+              fontWeight: 900,
+              whiteSpace: "nowrap",
+              textTransform: "uppercase",
+              color: "transparent",
+              WebkitTextStroke: "1.5px rgba(220, 180, 128, 0.07)",
+              paddingRight: "5vw",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              margin: 0,
+              fontFamily: "var(--font-display)",
+            }}
+          >
+            SCALERA DIGITAL STUDIO &nbsp;•&nbsp; SCALERA DIGITAL STUDIO &nbsp;•&nbsp; SCALERA DIGITAL STUDIO &nbsp;•&nbsp;
+          </h2>
+        ))}
       </div>
     </section>
   );

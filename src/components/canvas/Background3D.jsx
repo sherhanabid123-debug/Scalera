@@ -5,11 +5,10 @@ const Background3D = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d", { alpha: false }); // Optimization: no alpha channel if background is solid
+    const ctx = canvas.getContext("2d", { alpha: false });
     let animationFrameId;
     let time = 0;
 
-    // Performance optimization: render at lower resolution and scale up
     const renderScale = window.innerWidth < 768 ? 0.5 : 0.75;
 
     const resize = () => {
@@ -20,50 +19,27 @@ const Background3D = () => {
     window.addEventListener("resize", resize);
     resize();
 
-    // Fewer waves for better performance on slow devices
     const waves = [
-      {
-        amplitude: 100,
-        frequency: 0.0015,
-        speed: 0.004,
-        opacity: 0.04,
-        yOffset: 0.6,
-      },
-      {
-        amplitude: 130,
-        frequency: 0.001,
-        speed: 0.003,
-        opacity: 0.03,
-        yOffset: 0.65,
-      },
-      {
-        amplitude: 80,
-        frequency: 0.002,
-        speed: 0.005,
-        opacity: 0.02,
-        yOffset: 0.55,
-      },
+      { amplitude: 120, frequency: 0.0014, speed: 0.0035, opacity: 0.055, yOffset: 0.62 },
+      { amplitude: 150, frequency: 0.0009, speed: 0.0025, opacity: 0.04, yOffset: 0.68 },
+      { amplitude: 90, frequency: 0.0018, speed: 0.0045, opacity: 0.025, yOffset: 0.56 },
+      { amplitude: 60, frequency: 0.0022, speed: 0.006, opacity: 0.015, yOffset: 0.50 },
     ];
 
     const draw = () => {
-      // Draw dark background directly instead of clearRect for performance
-      ctx.fillStyle = "#0a0a0a";
+      ctx.fillStyle = "#060608";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       waves.forEach((wave, index) => {
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
 
-        // Lower density for sine curve drawing
-        const step = window.innerWidth < 768 ? 40 : 30;
+        const step = window.innerWidth < 768 ? 40 : 25;
         for (let x = 0; x <= canvas.width + step; x += step) {
           const y =
             Math.sin(
-              x * (wave.frequency / renderScale) +
-                time * wave.speed +
-                index * 10,
-            ) *
-            (wave.amplitude * renderScale);
+              x * (wave.frequency / renderScale) + time * wave.speed + index * 8,
+            ) * (wave.amplitude * renderScale);
           ctx.lineTo(x, canvas.height * wave.yOffset + y);
         }
 
@@ -71,15 +47,18 @@ const Background3D = () => {
         ctx.lineTo(0, canvas.height);
         ctx.closePath();
 
-        ctx.fillStyle = `rgba(220, 180, 128, ${wave.opacity})`;
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        grad.addColorStop(0, `rgba(220, 180, 128, ${wave.opacity * 0.5})`);
+        grad.addColorStop(0.5, `rgba(220, 180, 128, ${wave.opacity})`);
+        grad.addColorStop(1, `rgba(140, 100, 200, ${wave.opacity * 0.7})`);
+        ctx.fillStyle = grad;
         ctx.fill();
       });
 
-      time += 1.2;
+      time += 1.0;
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    // Simple throttle for low-end devices
     draw();
 
     return () => {
@@ -92,13 +71,11 @@ const Background3D = () => {
     <div
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
+        top: 0, left: 0,
+        width: "100vw", height: "100vh",
         zIndex: 0,
         pointerEvents: "none",
-        background: "#0a0a0a",
+        background: "#060608",
         overflow: "hidden",
       }}
     >
@@ -106,28 +83,19 @@ const Background3D = () => {
         ref={canvasRef}
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          filter: "blur(8px)",
+          top: 0, left: 0,
+          width: "100%", height: "100%",
+          filter: "blur(10px)",
           transform: "scale(1.05)",
           willChange: "contents",
         }}
       />
-
-      {/* Reduced complexity noise overlay */}
+      {/* Subtle vignette for depth (kept light so the aurora reads) */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          opacity: 0.02,
-          mixBlendMode: "overlay",
+          inset: 0,
+          background: "radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(5,5,9,0.45) 100%)",
           pointerEvents: "none",
         }}
       />
