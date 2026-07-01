@@ -295,10 +295,6 @@ const WhyScalera = () => {
                       
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", fontFamily: "monospace", color: "rgba(255,255,255,0.4)" }}>
-                          <span>DIAGNOSTIC_CODE:</span>
-                          <span style={{ color: reason.accent }}>{reason.code}</span>
-                        </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", fontFamily: "monospace", color: "rgba(255,255,255,0.4)" }}>
                           <span>{reason.statName}:</span>
                           <span style={{ color: reason.accent, fontWeight: 600 }}>{reason.statVal}</span>
                         </div>

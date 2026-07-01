@@ -480,7 +480,7 @@ const BriefPlanner = () => {
 
                   {/* STEP 3: PRICE SUMMARY & LEAD CAPTURE */}
                   {step === 3 && (
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "1.5rem" : "3rem", alignItems: "start" }}>
                       
                       {/* Left: Summary */}
                       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
