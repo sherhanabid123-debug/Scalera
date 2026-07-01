@@ -33,7 +33,7 @@ const feedbacks = [
     id: 4,
     quote: "An artistic masterpiece. They captured our bohemian spirit and translated it into a luxurious web experience that captivates every guest.",
     highlight: "captured our bohemian spirit",
-    author: "Zoya Sen",
+    author: "Manesha",
     role: "Creative Director · Fridah",
     accent: "#eb5757", // Crimson Red
   },
