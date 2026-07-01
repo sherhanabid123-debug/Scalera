@@ -18,8 +18,7 @@ jobs:
           curl -H "Content-Type: application/json" \
           -X POST \
           -d "{
-            \"username\":\"Scalera CI\",
-            \"avatar_url\":\"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",
+            \"username\":\"Scalera Github\",
             \"embeds\":[{
               \"title\":\"🚀 New Push\",
               \"url\":\"https://github.com/${{ github.repository }}/commit/${{ github.sha }}\",
