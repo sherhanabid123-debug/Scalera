@@ -1,0 +1,101 @@
+name: 🚀 Deployment Notifications
+
+on:
+  deployment_status:
+
+jobs:
+  notify:
+    if: github.event.deployment_status.state == 'success' || github.event.deployment_status.state == 'failure'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Deployment Status
+        id: status
+        run: |
+          if [[ "${{ github.event.deployment_status.state }}" == "success" ]]; then
+            echo "TITLE=🚀 Deployment Successful" >> $GITHUB_ENV
+            echo "COLOR=5763719" >> $GITHUB_ENV
+          else
+            echo "TITLE=❌ Deployment Failed" >> $GITHUB_ENV
+            echo "COLOR=15158332" >> $GITHUB_ENV
+          fi
+
+      - name: Send Discord Notification
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK }}
+
+          REPOSITORY: ${{ github.repository }}
+          REPO_NAME: ${{ github.event.repository.name }}
+
+          AUTHOR: ${{ github.actor }}
+
+          ENVIRONMENT: ${{ github.event.deployment.environment }}
+          DEPLOY_URL: ${{ github.event.deployment_status.environment_url }}
+
+          TITLE: ${{ env.TITLE }}
+          COLOR: ${{ env.COLOR }}
+
+        run: |
+          payload=$(jq -n \
+            --arg title "$TITLE" \
+            --argjson color "$COLOR" \
+            --arg repo "$REPO_NAME" \
+            --arg author "$AUTHOR" \
+            --arg env "$ENVIRONMENT" \
+            --arg url "$DEPLOY_URL" \
+            '{
+              username: "Scalera Deployments",
+
+              avatar_url: "https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png",
+
+              embeds: [
+                {
+                  title: $title,
+                  description: "A new deployment has completed.",
+                  color: $color,
+
+                  thumbnail: {
+                    url: "https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png"
+                  },
+
+                  fields: [
+                    {
+                      name: "📦 Repository",
+                      value: ("`" + $repo + "`"),
+                      inline: true
+                    },
+                    {
+                      name: "🌍 Environment",
+                      value: $env,
+                      inline: true
+                    },
+                    {
+                      name: "👤 Triggered By",
+                      value: $author,
+                      inline: true
+                    },
+                    {
+                      name: "🚀 Deployment",
+                      value: (
+                        if ($url == "") then
+                          "Deployment URL unavailable."
+                        else
+                          "[Open Deployment](" + $url + ")"
+                        end
+                      ),
+                      inline: false
+                    }
+                  ],
+
+                  footer: {
+                    text: "Scalera • Vercel Deployments"
+                  }
+                }
+              ]
+            }')
+
+          curl \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$payload" \
+            "$WEBHOOK"
