@@ -19,7 +19,7 @@ const nicheDescriptions = {
   "Other": "Scoping custom backend systems, advanced web application features, and unique branding assets."
 };
 
-const Hero = ({ loading }) => {
+const Hero = () => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -42,38 +42,40 @@ const Hero = ({ loading }) => {
   }, []);
 
   useLayoutEffect(() => {
-    if (loading) return;
+    // Animate in immediately on mount (runs underneath the preloader),
+    // so the hero is already fully revealed by the time the preloader
+    // fades out — no visible delay after the page "loads".
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
       tl.fromTo(
         ".hero-word",
         { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.5, stagger: 0.02 },
+        { yPercent: 0, opacity: 1, duration: 0.4, stagger: 0.012 },
       )
         .fromTo(
           ".hero-line",
           { scaleX: 0 },
-          { scaleX: 1, duration: 0.4, transformOrigin: "left", ease: "expo.inOut" },
-          "-=0.35",
+          { scaleX: 1, duration: 0.3, transformOrigin: "left", ease: "expo.inOut" },
+          "-=0.28",
         )
         .fromTo(
           ".hero-sub",
           { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4 },
-          "-=0.3",
+          { y: 0, opacity: 1, duration: 0.3 },
+          "-=0.22",
         )
         .fromTo(
           ".hero-btn",
           { y: 24, opacity: 0, scale: 0.96 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.35, stagger: 0.04, ease: "back.out(1.4)" },
-          "-=0.25",
+          { y: 0, opacity: 1, scale: 1, duration: 0.28, stagger: 0.03, ease: "back.out(1.4)" },
+          "-=0.18",
         )
         .fromTo(
           ".hero-stat-card",
           { opacity: 0, y: 30, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.35, stagger: 0.04, ease: "back.out(1.5)" },
-          "-=0.2"
+          { opacity: 1, y: 0, scale: 1, duration: 0.28, stagger: 0.03, ease: "back.out(1.5)" },
+          "-=0.14"
         );
 
       gsap.to(".hero-content", {
@@ -89,7 +91,7 @@ const Hero = ({ loading }) => {
       });
     }, containerRef);
     return () => ctx.revert();
-  }, [loading]);
+  }, []);
 
   return (
     <section
@@ -175,7 +177,7 @@ const Hero = ({ loading }) => {
           <div style={{ overflow: "hidden", paddingBottom: "0.15em" }}>
             <span
               className="hero-word"
-              style={{ display: "inline-block", transform: loading ? "translateY(110%)" : undefined }}
+              style={{ display: "inline-block", transform: "translateY(110%)" }}
             >
               We Design & Build
             </span>
@@ -196,7 +198,7 @@ const Hero = ({ loading }) => {
                 width: "clamp(40px, 8vw, 120px)",
                 height: "1px",
                 background: "linear-gradient(90deg, transparent, rgba(223,168,87,0.4), transparent)",
-                transform: loading ? "scaleX(0)" : undefined,
+                transform: "scaleX(0)",
                 transformOrigin: "right",
               }}
             />
@@ -205,7 +207,7 @@ const Hero = ({ loading }) => {
               style={{
                 display: "inline-block",
                 fontWeight: 600,
-                transform: loading ? "translateY(110%)" : undefined,
+                transform: "translateY(110%)",
               }}
             >
               High End Websites
@@ -216,7 +218,7 @@ const Hero = ({ loading }) => {
                 width: "clamp(40px, 8vw, 120px)",
                 height: "1px",
                 background: "linear-gradient(90deg, transparent, rgba(223,168,87,0.4), transparent)",
-                transform: loading ? "scaleX(0)" : undefined,
+                transform: "scaleX(0)",
                 transformOrigin: "left",
               }}
             />
@@ -232,7 +234,7 @@ const Hero = ({ loading }) => {
             maxWidth: 700,
             lineHeight: 1.7,
             marginBottom: "3.5rem",
-            opacity: loading ? 0 : undefined,
+            opacity: 0,
           }}
         >
           No templates. No corporate jargon. Just custom, premium websites built to convert clicks into buyers.
@@ -248,7 +250,7 @@ const Hero = ({ loading }) => {
             justifyContent: "center",
             marginBottom: "2.5rem",
             width: "100%",
-            opacity: loading ? 0 : undefined,
+            opacity: 0,
           }}
         >
           {/* Liquid-glass agency project brief starter */}
@@ -422,7 +424,7 @@ const Hero = ({ loading }) => {
               style={{
                 flex: "1 1 180px",
                 textAlign: "center",
-                opacity: loading ? 0 : undefined,
+                opacity: 0,
                 padding: "1.5rem 1rem",
                 borderRadius: 16,
                 height: "110px",

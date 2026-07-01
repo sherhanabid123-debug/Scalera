@@ -87,7 +87,7 @@ function App() {
         />
 
         <main style={{ pointerEvents: "auto" }}>
-          <Hero loading={loading} />
+          <Hero />
           <About />
           <Services />
           <BriefPlanner />
