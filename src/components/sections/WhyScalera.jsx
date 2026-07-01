@@ -380,8 +380,7 @@ const WhyScalera = () => {
 
                     {/* Numeric parameters list */}
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 12, padding: "1.25rem" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: "rgba(255,255,255,0.3)" }}>DIAG_REGISTER:</span>
+                      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                         <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: activeReason.accent }}>{activeReason.code}</span>
                       </div>
 
