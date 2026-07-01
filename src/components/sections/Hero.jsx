@@ -240,7 +240,6 @@ const Hero = () => {
           No templates. No corporate jargon. Just custom, premium websites built to convert clicks into buyers.
         </p>
 
-        {/* CTA Configurator Section */}
         <div
           style={{
             display: "flex",
@@ -250,7 +249,6 @@ const Hero = () => {
             justifyContent: "center",
             marginBottom: "2.5rem",
             width: "100%",
-            opacity: 0,
           }}
         >
           {/* Liquid-glass agency project brief starter */}
