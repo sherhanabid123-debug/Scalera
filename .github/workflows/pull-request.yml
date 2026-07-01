@@ -1,0 +1,100 @@
+name: 🔀 Pull Request Notifications
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - closed
+      - ready_for_review
+      - review_requested
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Embed Color & Title
+        id: embed
+        run: |
+          if [[ "${{ github.event.action }}" == "opened" ]]; then
+            echo "title=🔀 Pull Request Opened" >> $GITHUB_OUTPUT
+            echo "color=10181046" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            echo "title=♻️ Pull Request Reopened" >> $GITHUB_OUTPUT
+            echo "color=10181046" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            echo "title=✅ Pull Request Merged" >> $GITHUB_OUTPUT
+            echo "color=5763719" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "closed" ]]; then
+            echo "title=❌ Pull Request Closed" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "ready_for_review" ]]; then
+            echo "title=👀 Ready For Review" >> $GITHUB_OUTPUT
+            echo "color=15844367" >> $GITHUB_OUTPUT
+          else
+            echo "title=📢 Pull Request Updated" >> $GITHUB_OUTPUT
+            echo "color=3447003" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Discord Embed
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_PR_WEBHOOK }}
+        run: |
+          curl -X POST "$WEBHOOK" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "username":"Scalera Pipeline",
+            "avatar_url":"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+            "embeds":[
+              {
+                "title":"${{ steps.embed.outputs.title }}",
+                "url":"${{ github.event.pull_request.html_url }}",
+                "color":${{ steps.embed.outputs.color }},
+                "thumbnail":{
+                  "url":"${{ github.event.pull_request.user.avatar_url }}"
+                },
+                "fields":[
+                  {
+                    "name":"📦 Repository",
+                    "value":"`${{ github.event.repository.name }}`",
+                    "inline":true
+                  },
+                  {
+                    "name":"🌿 Branch",
+                    "value":"`${{ github.event.pull_request.head.ref }}`",
+                    "inline":true
+                  },
+                  {
+                    "name":"🎯 Target",
+                    "value":"`${{ github.event.pull_request.base.ref }}`",
+                    "inline":true
+                  },
+                  {
+                    "name":"👤 Author",
+                    "value":"${{ github.actor }}",
+                    "inline":true
+                  },
+                  {
+                    "name":"📄 Title",
+                    "value":"${{ github.event.pull_request.title }}",
+                    "inline":false
+                  },
+                  {
+                    "name":"💬 Description",
+                    "value":"${{ github.event.pull_request.body || 'No description provided.' }}",
+                    "inline":false
+                  },
+                  {
+                    "name":"🔗 Pull Request",
+                    "value":"[Open Pull Request](${{ github.event.pull_request.html_url }})",
+                    "inline":false
+                  }
+                ],
+                "footer":{
+                  "text":"Scalera • Development Pipeline"
+                },
+                "timestamp":"${{ github.event.pull_request.updated_at }}"
+              }
+            ]
+          }'
