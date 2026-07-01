@@ -49,31 +49,31 @@ const Hero = ({ loading }) => {
       tl.fromTo(
         ".hero-word",
         { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.04 },
+        { yPercent: 0, opacity: 1, duration: 0.5, stagger: 0.02 },
       )
         .fromTo(
           ".hero-line",
           { scaleX: 0 },
-          { scaleX: 1, duration: 0.6, transformOrigin: "left", ease: "expo.inOut" },
-          "-=0.6",
+          { scaleX: 1, duration: 0.4, transformOrigin: "left", ease: "expo.inOut" },
+          "-=0.35",
         )
         .fromTo(
           ".hero-sub",
           { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6 },
-          "-=0.5",
+          { y: 0, opacity: 1, duration: 0.4 },
+          "-=0.3",
         )
         .fromTo(
           ".hero-btn",
           { y: 24, opacity: 0, scale: 0.96 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.06, ease: "back.out(1.4)" },
-          "-=0.4",
+          { y: 0, opacity: 1, scale: 1, duration: 0.35, stagger: 0.04, ease: "back.out(1.4)" },
+          "-=0.25",
         )
         .fromTo(
           ".hero-stat-card",
           { opacity: 0, y: 30, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.05, ease: "back.out(1.5)" },
-          "-=0.3"
+          { opacity: 1, y: 0, scale: 1, duration: 0.35, stagger: 0.04, ease: "back.out(1.5)" },
+          "-=0.2"
         );
 
       gsap.to(".hero-content", {
