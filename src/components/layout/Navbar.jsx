@@ -54,9 +54,23 @@ const Navbar = ({ loading }) => {
 
   const scrollTo = (id) => (e) => {
     e.preventDefault();
+    const wasOpen = isOpen;
     setIsOpen(false);
-    const el = document.querySelector(id);
-    if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+    
+    const triggerScroll = () => {
+      if (window.lenis) {
+        window.lenis.scrollTo(id, { duration: 1.2 });
+      } else {
+        const el = document.querySelector(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    if (wasOpen) {
+      setTimeout(triggerScroll, 300);
+    } else {
+      triggerScroll();
+    }
   };
 
   return (
@@ -153,11 +167,11 @@ const Navbar = ({ loading }) => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              const el = document.querySelector('#estimator');
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
+              if (window.lenis) {
+                window.lenis.scrollTo('#estimator', { duration: 1.2 });
               } else {
-                window.location.href = "/#estimator";
+                const el = document.querySelector('#estimator');
+                if (el) el.scrollIntoView({ behavior: "smooth" });
               }
             }}
             className="btn-glass"
@@ -278,11 +292,13 @@ const Navbar = ({ loading }) => {
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
             setIsOpen(false);
-            const el = document.querySelector('#estimator');
-            if (el) {
-              setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+            if (window.lenis) {
+              setTimeout(() => window.lenis.scrollTo('#estimator', { duration: 1.2 }), 300);
             } else {
-              window.location.href = "/#estimator";
+              const el = document.querySelector('#estimator');
+              if (el) {
+                setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+              }
             }
           }}
           className="mobile-nav-link btn-glass"

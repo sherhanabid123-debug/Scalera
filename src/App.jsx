@@ -34,6 +34,7 @@ function App() {
       touchMultiplier: 2,
     });
 
+    window.lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);

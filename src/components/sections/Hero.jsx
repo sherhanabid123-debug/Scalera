@@ -339,7 +339,11 @@ const Hero = ({ loading }) => {
                 onClick={() => {
                   const planner = document.querySelector("#estimator");
                   if (planner) {
-                    planner.scrollIntoView({ behavior: "smooth" });
+                    if (window.lenis) {
+                      window.lenis.scrollTo("#estimator", { duration: 1.2 });
+                    } else {
+                      planner.scrollIntoView({ behavior: "smooth" });
+                    }
                     const event = new CustomEvent("setPlannerNiche", { detail: selectedNiche });
                     window.dispatchEvent(event);
                   }
