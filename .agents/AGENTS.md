@@ -1,3 +1,3 @@
 # Workspace Customizations & Rules
 
-- **Git Branch Target**: All changes must be made, committed, and pushed only to the `sherhan` branch (which tracks `origin/sherhan`). Do not push to `main` or any other branch.
+- **Git Branch Target**: Push changes to `sherhan` or `main` as instructed by the user.
