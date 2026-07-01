@@ -1422,7 +1422,7 @@ ${js}
             <div className="chat-main-area">
               <div className="chat-header-row">
                 <div className="model-selector-wrapper">
-                  <div className="model-icon">✨</div>
+                  <div className="model-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Sparkles size={14} color="var(--accent-color)" /></div>
                   <select
                     className="model-select-dropdown"
                     defaultValue="scalera-omni"
@@ -1895,7 +1895,7 @@ ${js}
                   className="action-btn-pill btn-edit-ai"
                   onClick={openAIEditor}
                 >
-                  <Sparkles size={16} /> Edit with AI ✨
+                  <Sparkles size={16} /> Edit with AI
                 </button>
                 <button
                   className="action-btn-pill btn-secondary"
@@ -2103,7 +2103,7 @@ ${js}
                     handleGenerateClick();
                   }}
                 >
-                  Generate Website ✨
+                  Generate Website
                 </button>
               </div>
             </div>
@@ -2557,7 +2557,7 @@ ${js}
                     fontSize: "0.85rem",
                   }}
                 >
-                  AI is updating section content... ✨
+                  AI is updating section content...
                 </div>
               )}
             </div>
@@ -2569,7 +2569,7 @@ ${js}
                   onClick={applySectionEdit}
                   disabled={!sectionEditPrompt.trim()}
                 >
-                  Rewrite Section ✨
+                  Rewrite Section
                 </button>
               ) : (
                 <div style={{ display: "flex", gap: "10px", width: "100%" }}>
