@@ -25,6 +25,7 @@ const STYLES = [
   { id: "Liquid Glass", label: "Liquid Glass (Refractive)", desc: "Immersive glass overlays, soft specular lighting.", addPrice: 3000 },
   { id: "Dark Cyber", label: "Dark Cyber (High Motion)", desc: "Dense text styles, responsive cursor trails, high animation.", addPrice: 6000 },
   { id: "Ultra-Luxury", label: "Ultra-Luxury (Gold Accent)", desc: "Gilded color palettes, thin outlines, smooth transitions.", addPrice: 9000 },
+  { id: "Custom Aesthetic", label: "Custom Choice", desc: "Describe your own brand theme, custom colors, and design vision.", addPrice: 5000 },
 ];
 
 const CURRENCIES = {
@@ -41,6 +42,7 @@ const BriefPlanner = () => {
   const [niche, setNiche] = useState("Business Website");
   const [scale, setScale] = useState("3-5 Pages");
   const [style, setStyle] = useState("Liquid Glass");
+  const [customStyleText, setCustomStyleText] = useState("");
   const [currency, setCurrency] = useState("INR");
   
   // Lead info
@@ -160,7 +162,7 @@ const BriefPlanner = () => {
           email: email,
           project_niche: niche,
           project_scale: scale,
-          project_style: style,
+          project_style: style === "Custom Aesthetic" && customStyleText ? `Custom Choice: ${customStyleText}` : style,
           estimated_cost: `${symbol}${convertedMin.toLocaleString()} - ${symbol}${convertedMax.toLocaleString()} (${currency})`
         })
       });
@@ -451,6 +453,33 @@ const BriefPlanner = () => {
                           </div>
                         ))}
                       </div>
+                      
+                      {style === "Custom Aesthetic" && (
+                        <div style={{ marginTop: "2rem" }}>
+                          <label style={{ display: "block", fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
+                            Describe your custom design vision & colors:
+                          </label>
+                          <textarea
+                            value={customStyleText}
+                            onChange={(e) => setCustomStyleText(e.target.value)}
+                            placeholder="e.g. Claymorphism details, soft pastel colors, bold neon retro gradients, or customized layout layouts..."
+                            style={{
+                              width: "100%",
+                              minHeight: "100px",
+                              padding: "1rem",
+                              borderRadius: 12,
+                              background: "rgba(255, 255, 255, 0.02)",
+                              border: "1px solid rgba(255, 255, 255, 0.1)",
+                              color: "var(--text-primary)",
+                              outline: "none",
+                              fontSize: "0.9rem",
+                              lineHeight: 1.5,
+                              fontFamily: "inherit",
+                              resize: "vertical"
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -468,7 +497,7 @@ const BriefPlanner = () => {
                           {[
                             { label: "Niche Theme", value: niche },
                             { label: "Project Scale", value: scale },
-                            { label: "Aesthetic Direction", value: style },
+                            { label: "Aesthetic Direction", value: style === "Custom Aesthetic" && customStyleText ? `Custom: "${customStyleText.length > 25 ? customStyleText.slice(0, 22) + '...' : customStyleText}"` : style },
                             { label: "SEO Foundation", value: "Included Standard" },
                             { label: "Lighthouse Tuning", value: "Included Standard" }
                           ].map((item, idx) => (
