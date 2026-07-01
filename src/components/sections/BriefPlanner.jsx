@@ -42,7 +42,6 @@ const BriefPlanner = () => {
   const [niche, setNiche] = useState("Business Website");
   const [scale, setScale] = useState("3-5 Pages");
   const [style, setStyle] = useState("Liquid Glass");
-  const [customStyleText, setCustomStyleText] = useState("");
   const [currency, setCurrency] = useState("INR");
   
   // Lead info
@@ -162,7 +161,7 @@ const BriefPlanner = () => {
           email: email,
           project_niche: niche,
           project_scale: scale,
-          project_style: style === "Custom Aesthetic" && customStyleText ? `Custom Choice: ${customStyleText}` : style,
+          project_style: style === "Custom Aesthetic" ? "Custom Choice (Meeting to be scheduled)" : style,
           estimated_cost: `${symbol}${convertedMin.toLocaleString()} - ${symbol}${convertedMax.toLocaleString()} (${currency})`
         })
       });
@@ -455,29 +454,25 @@ const BriefPlanner = () => {
                       </div>
                       
                       {style === "Custom Aesthetic" && (
-                        <div style={{ marginTop: "2rem" }}>
-                          <label style={{ display: "block", fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
-                            Describe your custom design vision & colors:
-                          </label>
-                          <textarea
-                            value={customStyleText}
-                            onChange={(e) => setCustomStyleText(e.target.value)}
-                            placeholder="e.g. Claymorphism details, soft pastel colors, bold neon retro gradients, or customized layout layouts..."
-                            style={{
-                              width: "100%",
-                              minHeight: "100px",
-                              padding: "1rem",
-                              borderRadius: 12,
-                              background: "rgba(255, 255, 255, 0.02)",
-                              border: "1px solid rgba(255, 255, 255, 0.1)",
-                              color: "var(--text-primary)",
-                              outline: "none",
-                              fontSize: "0.9rem",
-                              lineHeight: 1.5,
-                              fontFamily: "inherit",
-                              resize: "vertical"
-                            }}
-                          />
+                        <div 
+                          style={{ 
+                            marginTop: "2rem", 
+                            padding: "1.25rem", 
+                            borderRadius: 12, 
+                            background: "rgba(223, 168, 87, 0.05)", 
+                            border: "1px solid rgba(223, 168, 87, 0.2)",
+                            fontSize: "0.9rem",
+                            color: "var(--text-primary)",
+                            lineHeight: 1.5,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px"
+                          }}
+                        >
+                          <Sparkles size={18} color="var(--accent-color)" style={{ flexShrink: 0 }} />
+                          <span>
+                            We'll schedule a dedicated design consultation meeting after brief submission to architect your custom aesthetic and brand theme.
+                          </span>
                         </div>
                       )}
                     </div>
@@ -497,7 +492,7 @@ const BriefPlanner = () => {
                           {[
                             { label: "Niche Theme", value: niche },
                             { label: "Project Scale", value: scale },
-                            { label: "Aesthetic Direction", value: style === "Custom Aesthetic" && customStyleText ? `Custom: "${customStyleText.length > 25 ? customStyleText.slice(0, 22) + '...' : customStyleText}"` : style },
+                            { label: "Aesthetic Direction", value: style === "Custom Aesthetic" ? "Custom (Meeting scheduled)" : style },
                             { label: "SEO Foundation", value: "Included Standard" },
                             { label: "Lighthouse Tuning", value: "Included Standard" }
                           ].map((item, idx) => (
