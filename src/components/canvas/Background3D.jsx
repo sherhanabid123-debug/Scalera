@@ -9,18 +9,15 @@ const Background3D = () => {
     let animationFrameId;
     let time = 0;
 
-    // Performance detection: target low core count, low memory, or mobile/tablet browsers
-    const isLowEnd = typeof navigator !== "undefined" && 
-      ((navigator.hardwareConcurrency && navigator.hardwareConcurrency < 6) || 
-       (navigator.deviceMemory && navigator.deviceMemory < 4) ||
-       /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
+    // Mobile view performance detection
+    const isMobile = window.innerWidth < 768 || (typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
 
-    const renderScale = window.innerWidth < 768 ? 0.35 : (isLowEnd ? 0.5 : 0.65);
+    const renderScale = isMobile ? 0.35 : 0.75;
 
     const resize = () => {
       canvas.width = window.innerWidth * renderScale;
       canvas.height = window.innerHeight * renderScale;
-      if (isLowEnd) {
+      if (isMobile) {
         // Redraw static wave frame once on resize
         drawStatic();
       }
@@ -44,7 +41,7 @@ const Background3D = () => {
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
 
-        const step = window.innerWidth < 768 ? 60 : 40;
+        const step = isMobile ? 60 : 25;
         for (let x = 0; x <= canvas.width + step; x += step) {
           const y =
             Math.sin(
@@ -72,7 +69,7 @@ const Background3D = () => {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    if (isLowEnd) {
+    if (isMobile) {
       drawStatic();
     } else {
       draw();
