@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const values = [
-  { label: "Zero Templates. Ever.", desc: "We design every single pixel from scratch. No pre-made layouts, no code bloat. Your site will look unique and stand out from the noise." },
+  { label: "Zero Templates. Ever.", desc: "We design every single page from scratch. No pre made layouts. Your site will look unique and stand out from the noise." },
   { label: "Lightning Fast Speeds", desc: "We build lightweight websites that load in the blink of an eye. 98+ Lighthouse scores keep users happy and Google loving your page." },
   { label: "Engineered to Convert", desc: "Beautiful pages are useless if they don't sell. We structure layouts, buttons, and content flows to turn random clicks into paying buyers." },
 ];
@@ -171,9 +171,7 @@ const About = () => {
               margin: 0,
             }}
           >
-            Your website isn't just a page online, it's your brand's first impression.
-            We create structured, mobile-first websites designed for clarity, trust,
-            and measurable performance.
+            Your website is not just a page on the Internet, it’s the first impression of your brand. We create structured, mobile first websites that communicate clearly, build trust and are proven to perform.
           </p>
         </div>
 

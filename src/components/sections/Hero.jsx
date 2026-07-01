@@ -12,7 +12,7 @@ const stats = [
 ];
 
 const nicheDescriptions = {
-  "Business Website": "Tailoring custom corporate architecture, integrated SEO strategies, and responsive lead-generation forms.",
+  "Business Website": "Custom corporate architecture designed for your specific needs, integrated SEO strategies and responsive lead-generation forms.",
   "Online Store": "Configuring secure payment checkouts, dynamic inventory grids, and conversion rate optimizations.",
   "High-End Portfolio": "Structuring bespoke layouts, smooth GSAP transitions, and interactive digital art displays.",
   "Custom Landing Page": "Designing high-impact single-page scroll layouts, interactive micro-animations, and direct user funnels.",
@@ -208,7 +208,7 @@ const Hero = ({ loading }) => {
                 transform: loading ? "translateY(110%)" : undefined,
               }}
             >
-              High-End Websites.
+              High End Websites
             </span>
             <div
               className="hero-line"

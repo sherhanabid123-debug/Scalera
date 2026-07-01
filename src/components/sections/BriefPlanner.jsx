@@ -248,7 +248,7 @@ const BriefPlanner = () => {
               margin: 0,
             }}
           >
-            Select your project specifications below to calculate an instant cost range. No templates, no artificial limitations. Pure bespoke agency engineering.
+            Select your project specifications below to calculate an instant cost range. No templates, no artificial limitations. Pure custom agency engineering.
           </p>
         </div>
 

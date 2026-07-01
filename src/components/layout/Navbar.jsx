@@ -77,6 +77,7 @@ const Navbar = ({ loading }) => {
           zIndex: 110,
           transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
           background: !scrolled ? "transparent" : undefined,
+          pointerEvents: "auto",
         }}
       >
         {/* Left nav links */}
@@ -95,23 +96,9 @@ const Navbar = ({ loading }) => {
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
+              className="nav-desktop-link"
               href={link.href}
               onClick={scrollTo(link.href)}
-              style={{
-                color: "var(--text-secondary)",
-                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                display: "inline-block",
-                position: "relative",
-                paddingBottom: 2,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "var(--text-primary)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "var(--text-secondary)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
             >
               {link.label}
             </a>
@@ -266,6 +253,7 @@ const Navbar = ({ loading }) => {
           gap: "2.5rem",
           transform: "translateX(100%)",
           borderLeft: "1px solid var(--border-glass)",
+          pointerEvents: "auto",
         }}
       >
         {NAV_LINKS.map((link, i) => (
