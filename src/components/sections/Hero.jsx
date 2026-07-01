@@ -6,7 +6,7 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: "50+", label: "Bespoke Builds" },
+  { value: "50+", label: "Custom Builds" },
   { value: "98%+", label: "Lighthouse Speed" },
   { value: "100%", label: "Custom Codebase" },
 ];
