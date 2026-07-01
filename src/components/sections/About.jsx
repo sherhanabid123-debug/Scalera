@@ -171,7 +171,7 @@ const About = () => {
               margin: 0,
             }}
           >
-            Your website isn't just a page online — it's your brand's first impression.
+            Your website isn't just a page online, it's your brand's first impression.
             We create structured, mobile-first websites designed for clarity, trust,
             and measurable performance.
           </p>
