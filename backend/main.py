@@ -76,6 +76,7 @@ async def generate(request: GenerateRequest):
         "html": result["html"],
         "css": result["css"],
         "js": result["js"],
+        "debug_data": result.get("debug_data"),
     }
 
 

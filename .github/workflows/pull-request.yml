@@ -1,0 +1,153 @@
+name: 🔀 Pull Request Notifications
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - closed
+      - ready_for_review
+      - review_requested
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set PR Status
+        id: status
+        run: |
+          if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            echo "title=✅ Pull Request Merged" >> $GITHUB_OUTPUT
+            echo "color=5763719" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "opened" ]]; then
+            echo "title=🔀 Pull Request Opened" >> $GITHUB_OUTPUT
+            echo "color=10181046" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            echo "title=♻️ Pull Request Reopened" >> $GITHUB_OUTPUT
+            echo "color=10181046" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "closed" ]]; then
+            echo "title=❌ Pull Request Closed" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.action }}" == "ready_for_review" ]]; then
+            echo "title=👀 Ready For Review" >> $GITHUB_OUTPUT
+            echo "color=15844367" >> $GITHUB_OUTPUT
+          else
+            echo "title=📢 Pull Request Updated" >> $GITHUB_OUTPUT
+            echo "color=3447003" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Discord Notification
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_PR_WEBHOOK }}
+
+          REPOSITORY: ${{ github.repository }}
+          REPO_NAME: ${{ github.event.repository.name }}
+
+          AUTHOR: ${{ github.actor }}
+          AUTHOR_AVATAR: ${{ github.event.pull_request.user.avatar_url }}
+
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+
+          SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
+          TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+
+          PR_URL: ${{ github.event.pull_request.html_url }}
+
+          TIMESTAMP: ${{ github.event.pull_request.updated_at }}
+
+          EMBED_TITLE: ${{ steps.status.outputs.title }}
+          EMBED_COLOR: ${{ steps.status.outputs.color }}
+
+        run: |
+          if [ -z "$BODY" ]; then
+            BODY="No description provided."
+          fi
+
+          payload=$(jq -n \
+            --arg title "$EMBED_TITLE" \
+            --argjson color "$EMBED_COLOR" \
+            --arg repository "$REPOSITORY" \
+            --arg repo "$REPO_NAME" \
+            --arg author "$AUTHOR" \
+            --arg avatar "$AUTHOR_AVATAR" \
+            --arg prtitle "$TITLE" \
+            --arg body "$BODY" \
+            --arg source "$SOURCE_BRANCH" \
+            --arg target "$TARGET_BRANCH" \
+            --arg url "$PR_URL" \
+            --arg ts "$TIMESTAMP" \
+            '{
+              username: "Scalera Development",
+              avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+
+              embeds: [
+                {
+                  title: $title,
+                  url: $url,
+                  color: $color,
+
+                  author: {
+                    name: $author,
+                    icon_url: $avatar
+                  },
+
+                  thumbnail: {
+                    url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                  },
+
+                  fields: [
+
+                    {
+                      name: "📦 Repository",
+                      value: ("`" + $repo + "`"),
+                      inline: true
+                    },
+
+                    {
+                      name: "🌿 Source",
+                      value: ("`" + $source + "`"),
+                      inline: true
+                    },
+
+                    {
+                      name: "🎯 Target",
+                      value: ("`" + $target + "`"),
+                      inline: true
+                    },
+
+                    {
+                      name: "📄 Title",
+                      value: $prtitle,
+                      inline: false
+                    },
+
+                    {
+                      name: "💬 Description",
+                      value: $body,
+                      inline: false
+                    },
+
+                    {
+                      name: "🔗 View Pull Request",
+                      value: ("[Open Pull Request](" + $url + ")"),
+                      inline: false
+                    }
+
+                  ],
+
+                  footer: {
+                    text: "Scalera • Development Pipeline"
+                  },
+
+                  timestamp: $ts
+                }
+              ]
+            }')
+
+          curl \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$payload" \
+            "$WEBHOOK"
