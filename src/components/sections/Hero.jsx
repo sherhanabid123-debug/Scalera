@@ -83,17 +83,21 @@ const Hero = () => {
           "-=0.14"
         );
 
-      gsap.to(".hero-content", {
-        yPercent: 20,
-        opacity: 0.3,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+      // Scroll-scrub parallax ties work to every scroll frame — skip it on
+      // weak devices where native scrolling should stay buttery.
+      if (!PERF_LITE) {
+        gsap.to(".hero-content", {
+          yPercent: 20,
+          opacity: 0.3,
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
     }, containerRef);
     return () => ctx.revert();
   }, []);
