@@ -80,7 +80,11 @@ function App() {
 
   return (
     <>
-      <Background3D />
+      {/* Canvas is GPU/device-dependent — isolate it so a failure can never
+          blank the whole page (aurora + solid bg still carry the look). */}
+      <ErrorBoundary>
+        <Background3D />
+      </ErrorBoundary>
       {/* Aurora atmosphere — colored light that the glass refracts */}
       <div className="aurora" aria-hidden="true">
         <div className="aurora-blob a" />
