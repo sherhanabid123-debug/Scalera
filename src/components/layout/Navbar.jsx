@@ -1,9 +1,19 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ChevronDown } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "About", href: "#about" },
+  {
+    label: "About",
+    href: "#about",
+    children: [
+      { label: "Our Studio", href: "#about", desc: "Who we are" },
+      { label: "Our Process", href: "#process", desc: "How we work" },
+      { label: "Why Scalera", href: "#why", desc: "What sets us apart" },
+      { label: "Testimonials", href: "#testimonials", desc: "Client results" },
+      { label: "FAQ", href: "#faq", desc: "Common questions" },
+    ],
+  },
   { label: "Services", href: "#services" },
   { label: "Work", href: "#work" },
 ];
