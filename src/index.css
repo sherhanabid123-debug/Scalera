@@ -16,7 +16,7 @@
   /* Liquid glass — deep translucent material with refraction, specularity, and gold hue shifts */
   --glass-bg: rgba(255, 255, 255, 0.025);
   --glass-bg-hover: rgba(255, 255, 255, 0.05);
-  --glass-blur: blur(28px) saturate(180%) brightness(1.02);
+  --glass-blur: blur(18px) saturate(150%);
   --glass-shadow:
     0 16px 40px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
@@ -245,7 +245,6 @@ img {
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-glass);
   box-shadow: var(--glass-shadow);
-  will-change: transform, opacity;
 }
 
 .glass-card {
@@ -304,13 +303,12 @@ img {
 }
 
 .glass-nav {
-  background: rgba(6, 6, 8, 0.78);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  background: rgba(6, 6, 8, 0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid var(--border-glass);
   border-radius: 100px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
-  will-change: transform, opacity;
 }
 
 /* ── SHIMMER ── */
@@ -400,8 +398,8 @@ img {
 /* ── STAT CARD ── */
 .stat-card {
   background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   padding: 1.5rem 2rem;
@@ -683,6 +681,510 @@ body {
 .nav-desktop-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+/* ── NAV DROPDOWN (hover to reveal About sub-sections) ── */
+.nav-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.nav-dropdown-caret {
+  opacity: 0.55;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.nav-dropdown:hover .nav-dropdown-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+/* keep the underline from spanning the caret */
+.nav-dropdown-trigger::after { display: none; }
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: -14px;
+  padding-top: 28px; /* gap below the navbar (doubles as the hover bridge) */
+  min-width: 236px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-dropdown-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #24242c 0%, #17171d 100%);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+/* specular top edge to match the site's glass cards */
+.nav-dropdown-inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(223, 168, 87, 0.4), transparent);
+  pointer-events: none;
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background 0.3s ease, padding-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-dropdown-item-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  flex-shrink: 0;
+  opacity: 0.4;
+  transform: scale(0.75);
+  box-shadow: 0 0 0 rgba(223, 168, 87, 0);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-dropdown-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.2;
+}
+.nav-dropdown-item-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  transition: color 0.3s ease;
+}
+.nav-dropdown-item-desc {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s ease;
+}
+.nav-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.045);
+  padding-left: 18px;
+}
+.nav-dropdown-item:hover .nav-dropdown-item-dot {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 10px rgba(223, 168, 87, 0.7);
+}
+.nav-dropdown-item:hover .nav-dropdown-item-label {
+  color: var(--text-primary);
+}
+.nav-dropdown-item:hover .nav-dropdown-item-desc {
+  color: var(--text-secondary);
+}
+
+/* Perf-lite: drop the blur, keep it readable. */
+.perf-lite .nav-dropdown-inner {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: #1c1c23 !important;
+}
+
+/* ── FLOATING CHAT FAB (collapsed pill → expands on hover) ── */
+.chat-fab {
+  --fab-pad: 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--fab-pad);
+  border-radius: 100px;
+  background: rgba(6, 6, 8, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    gap 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.8s ease,
+    box-shadow 0.8s ease;
+}
+
+.chat-fab-icon {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #37e07a 0%, #23c55e 55%, #17a34a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 14px rgba(37, 211, 102, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: box-shadow 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Live "ping" ring radiating from the icon */
+.chat-fab-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(37, 211, 102, 0.55);
+  animation: fabPing 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
+}
+@keyframes fabPing {
+  0% { transform: scale(1); opacity: 0.55; }
+  70% { opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* Gentle idle pulse so the collapsed dot invites attention */
+@keyframes fabPulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(37, 211, 102, 0.45); }
+  50% { box-shadow: 0 0 22px rgba(37, 211, 102, 0.7); }
+}
+.chat-fab-icon { animation: fabPulse 2.8s ease-in-out infinite; }
+
+.chat-fab-label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-6px);
+  transition:
+    max-width 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.7s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chat-fab:hover {
+  gap: 11px;
+  padding: var(--fab-pad) 22px var(--fab-pad) var(--fab-pad);
+  transform: translateY(-3px);
+  border-color: rgba(37, 211, 102, 0.4);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5), 0 0 24px rgba(37, 211, 102, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.chat-fab:hover .chat-fab-icon {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.65);
+}
+.chat-fab:hover .chat-fab-label {
+  max-width: 220px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Touch devices can't hover — show the full label so the CTA stays clear. */
+@media (hover: none) {
+  .chat-fab {
+    gap: 11px;
+    padding: var(--fab-pad) 22px var(--fab-pad) var(--fab-pad);
+  }
+  .chat-fab-label {
+    max-width: 220px;
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── CHAT INVITE CARD (rises above the FAB on hover) ── */
+.chat-widget {
+  position: relative;
+  display: inline-flex;
+}
+
+.chat-pop {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  padding-bottom: 16px; /* transparent bridge → no hover gap to the FAB */
+  width: 288px;
+  pointer-events: none;
+}
+.chat-widget:hover .chat-pop {
+  pointer-events: auto;
+}
+
+.chat-pop-card {
+  display: block;
+  text-decoration: none;
+  padding: 16px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(22, 22, 28, 0.92) 0%, rgba(12, 12, 16, 0.94) 100%);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform-origin: bottom right;
+  opacity: 0;
+  transform: translateY(14px) scale(0.94);
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.chat-widget:hover .chat-pop-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+/* little pointer tail toward the FAB */
+.chat-pop-card::after {
+  content: "";
+  position: absolute;
+  right: 20px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: rgba(13, 13, 17, 0.94);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+}
+
+.chat-pop-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 12px;
+}
+.chat-pop-avatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(145deg, #37e07a 0%, #23c55e 55%, #17a34a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 14px rgba(37, 211, 102, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.chat-pop-online {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22e06a;
+  border: 2px solid #14141a;
+  box-shadow: 0 0 8px rgba(34, 224, 106, 0.8);
+}
+.chat-pop-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.chat-pop-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-transform: none;
+}
+.chat-pop-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.chat-pop-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22e06a;
+  box-shadow: 0 0 8px rgba(34, 224, 106, 0.8);
+  animation: chatOnlinePulse 2s ease-in-out infinite;
+}
+@keyframes chatOnlinePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.chat-pop-bubble {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px 14px 14px 14px;
+  padding: 12px 14px 14px;
+  font-size: 0.83rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.82);
+  text-transform: none;
+  margin-bottom: 14px;
+}
+.chat-typing {
+  display: flex;
+  gap: 4px;
+  margin-top: 9px;
+}
+.chat-typing i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.85);
+  animation: chatTyping 1.3s ease-in-out infinite;
+}
+.chat-typing i:nth-child(2) { animation-delay: 0.18s; }
+.chat-typing i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes chatTyping {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.chat-pop-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #37e07a;
+  transition: gap 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.chat-pop-card:hover .chat-pop-cta {
+  gap: 10px;
+}
+
+/* Popover is a desktop-hover flourish; hide on touch. */
+@media (hover: none) {
+  .chat-pop { display: none; }
+}
+
+/* Perf-lite: drop blur + freeze the live micro-animations. */
+.perf-lite .chat-pop-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(16, 16, 20, 0.96) !important;
+}
+.perf-lite .chat-fab-icon::before,
+.perf-lite .chat-pop-dot,
+.perf-lite .chat-typing i {
+  animation: none !important;
+}
+.perf-lite .chat-fab-icon::before { opacity: 0 !important; }
+
+/* =====================================================================
+   PERFORMANCE — LITE MODE
+   Applied (via <html class="perf-lite">) on phones, weak hardware, slow
+   networks, or reduced-motion. Drops the GPU-crushing effects — heavy
+   backdrop blur repaints and always-on compositing animations — so the
+   site stays at 60fps everywhere. The layout and content are untouched.
+   ===================================================================== */
+
+/* 1) Kill backdrop-filter everywhere (class-based AND inline styles) and
+      give the glass a near-opaque fill so cards still read cleanly. */
+.perf-lite .glass,
+.perf-lite .glass-card,
+.perf-lite .glass-nav,
+.perf-lite .stat-card,
+.perf-lite .chat-fab,
+.perf-lite [style*="backdrop-filter"],
+.perf-lite [style*="backdropFilter"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.perf-lite .glass-card {
+  background: rgba(20, 20, 26, 0.72) !important;
+}
+.perf-lite .glass,
+.perf-lite .stat-card {
+  background: rgba(20, 20, 26, 0.66) !important;
+}
+.perf-lite .glass-nav {
+  background: rgba(8, 8, 12, 0.94) !important;
+}
+
+/* 2) Freeze always-on compositing animations (biggest scroll-time cost). */
+.perf-lite .aurora-blob,
+.perf-lite .glow-orb,
+.perf-lite .glass-animated-border,
+.perf-lite .shimmer-text,
+.perf-lite .hero-caret,
+.perf-lite .section-label-dot,
+.perf-lite .chat-fab-icon {
+  animation: none !important;
+}
+.perf-lite .ios-border-shine::before,
+.perf-lite .glass-prism-border::after {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+/* 3) Aurora: keep a soft static tint but cut the ruinous blur radius and
+      drop the screen-blend + layer promotion. */
+.perf-lite .aurora-blob {
+  filter: blur(45px) !important;
+  opacity: 0.4 !important;
+  mix-blend-mode: normal !important;
+  will-change: auto !important;
+}
+.perf-lite .aurora-blob.c {
+  display: none; /* third blob is the least visible — skip it entirely */
+}
+
+/* 4) Shimmer text: fall back to a flat gilded fill (no animated gradient). */
+.perf-lite .shimmer-text {
+  background: none !important;
+  -webkit-text-fill-color: var(--accent-warm) !important;
+  color: var(--accent-warm) !important;
+}
+
+/* (The animated wave canvas is switched to a single static frame in JS on
+   perf-lite — see Background3D — so it costs nothing after first paint.) */
+
+/* =====================================================================
+   ACCESSIBILITY / MOTION — honour prefers-reduced-motion
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 

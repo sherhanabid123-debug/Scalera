@@ -10,12 +10,46 @@
       content="Scalera is a premium digital growth and web development agency crafting high-performance, conversion-focused websites."
     />
     <meta name="theme-color" content="#000000" />
+
+    <!-- Performance capability detection (runs before first paint, no FOUC) -->
+    <script>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var mm = window.matchMedia;
+          var reduce = mm && mm("(prefers-reduced-motion: reduce)").matches;
+          var mobile = mm && mm("(max-width: 768px)").matches;
+          var cores = navigator.hardwareConcurrency || 8;
+          var mem = navigator.deviceMemory || 8;
+          var conn = navigator.connection || {};
+          var slowNet =
+            conn.saveData === true ||
+            /(^|\b)(slow-2g|2g|3g)$/.test(conn.effectiveType || "");
+          var lowHW = cores <= 4 || mem <= 4;
+          // "Lite" mode drops the most expensive GPU effects (heavy blur,
+          // infinite compositing animations) so the site stays smooth on
+          // phones, weak hardware, or bad connections.
+          if (mobile || lowHW || slowNet || reduce) d.classList.add("perf-lite");
+          if (reduce) d.classList.add("reduce-motion");
+        } catch (e) {}
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Non-blocking font load so slow networks paint content immediately (display=swap avoids invisible text) -->
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
   </head>
 
   <body>
