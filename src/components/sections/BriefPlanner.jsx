@@ -213,7 +213,7 @@ const BriefPlanner = () => {
           style={{
             marginBottom: "3.5rem",
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "1.15fr 1fr",
+            gridTemplateColumns: isMobile ? "1fr" : "1.35fr 1fr",
             gap: isMobile ? "1.25rem" : "3rem",
             alignItems: "end",
           }}
