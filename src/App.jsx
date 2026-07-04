@@ -8,6 +8,7 @@ import { PERF_LITE } from "./utils/perf";
 gsap.registerPlugin(ScrollTrigger);
 
 import Background3D from "./components/canvas/Background3D";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Navbar from "./components/layout/Navbar";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
