@@ -19,18 +19,6 @@ const Background3D = () => {
 
     const renderScale = staticMode ? 0.35 : 0.75;
 
-    const resize = () => {
-      canvas.width = window.innerWidth * renderScale;
-      canvas.height = window.innerHeight * renderScale;
-      if (staticMode) {
-        // Redraw static wave frame once on resize
-        drawStatic();
-      }
-    };
-
-    window.addEventListener("resize", resize);
-    resize();
-
     const waves = [
       { amplitude: 120, frequency: 0.0014, speed: 0.0035, opacity: 0.055, yOffset: 0.62 },
       { amplitude: 150, frequency: 0.0009, speed: 0.0025, opacity: 0.04, yOffset: 0.68 },
