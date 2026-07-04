@@ -225,12 +225,13 @@ const BriefPlanner = () => {
             </div>
             <h2
               style={{
-                fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)",
+                fontSize: "clamp(2.2rem, 4vw, 3.3rem)",
                 fontWeight: 300,
                 letterSpacing: "-0.04em",
-                lineHeight: 1.05,
+                lineHeight: 1.06,
                 margin: 0,
                 textTransform: "uppercase",
+                whiteSpace: "nowrap",
               }}
             >
               Design Your <br />
