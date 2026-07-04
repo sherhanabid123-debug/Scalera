@@ -3,6 +3,7 @@ import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MessageCircle } from "lucide-react";
+import { PERF_LITE } from "./utils/perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
