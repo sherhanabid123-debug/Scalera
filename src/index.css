@@ -683,6 +683,97 @@ body {
   transform-origin: left;
 }
 
+/* ── FLOATING CHAT FAB (collapsed pill → expands on hover) ── */
+.chat-fab {
+  --fab-pad: 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--fab-pad);
+  border-radius: 100px;
+  background: rgba(6, 6, 8, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    gap 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    padding 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.chat-fab-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 14px rgba(37, 211, 102, 0.45);
+  transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Gentle idle pulse so the collapsed dot invites attention */
+@keyframes fabPulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(37, 211, 102, 0.45); }
+  50% { box-shadow: 0 0 22px rgba(37, 211, 102, 0.7); }
+}
+.chat-fab-icon { animation: fabPulse 2.8s ease-in-out infinite; }
+
+.chat-fab-label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-4px);
+  transition:
+    max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s ease,
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chat-fab:hover {
+  gap: 11px;
+  padding: var(--fab-pad) 22px var(--fab-pad) var(--fab-pad);
+  transform: translateY(-3px);
+  border-color: rgba(37, 211, 102, 0.4);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5), 0 0 24px rgba(37, 211, 102, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.chat-fab:hover .chat-fab-icon {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.65);
+}
+.chat-fab:hover .chat-fab-label {
+  max-width: 220px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Touch devices can't hover — show the full label so the CTA stays clear. */
+@media (hover: none) {
+  .chat-fab {
+    gap: 11px;
+    padding: var(--fab-pad) 22px var(--fab-pad) var(--fab-pad);
+  }
+  .chat-fab-label {
+    max-width: 220px;
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* =====================================================================
    PERFORMANCE — LITE MODE
    Applied (via <html class="perf-lite">) on phones, weak hardware, slow
