@@ -62,6 +62,17 @@ const Background3D = () => {
       animationFrameId = requestAnimationFrame(draw);
     };
 
+    // Defined + invoked here (after drawStatic/waves exist) to avoid a
+    // temporal-dead-zone crash when staticMode calls drawStatic on resize.
+    const resize = () => {
+      canvas.width = window.innerWidth * renderScale;
+      canvas.height = window.innerHeight * renderScale;
+      if (staticMode) drawStatic();
+    };
+
+    window.addEventListener("resize", resize);
+    resize();
+
     if (staticMode) {
       drawStatic();
     } else {
