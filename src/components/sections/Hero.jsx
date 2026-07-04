@@ -23,22 +23,26 @@ const nicheDescriptions = {
 const Hero = () => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [selectedNiche, setSelectedNiche] = useState("Business Website");
 
   useEffect(() => {
+    // Cursor-follow glow: desktop / full-fx only. It's meaningless on touch
+    // and the old version also called setState on every mousemove, forcing a
+    // full React re-render per pixel — removed. Now it only nudges a ref via
+    // GSAP (transform-only, no re-render, no layout).
+    if (PERF_LITE || REDUCE_MOTION) return;
     const move = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
       if (cursorGlowRef.current) {
         gsap.to(cursorGlowRef.current, {
           x: e.clientX - 200,
           y: e.clientY - 200,
           duration: 1.2,
           ease: "power2.out",
+          overwrite: true,
         });
       }
     };
-    window.addEventListener("mousemove", move);
+    window.addEventListener("mousemove", move, { passive: true });
     return () => window.removeEventListener("mousemove", move);
   }, []);
 
