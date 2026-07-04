@@ -723,6 +723,7 @@ body {
 }
 
 .nav-dropdown-inner {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -738,7 +739,7 @@ body {
 .nav-dropdown-inner::before {
   content: "";
   position: absolute;
-  top: 16px;
+  top: 0;
   left: 20%;
   right: 20%;
   height: 1px;
