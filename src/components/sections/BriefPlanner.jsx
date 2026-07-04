@@ -206,15 +206,15 @@ const BriefPlanner = () => {
         }}
       />
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
-        
+      <div style={{ maxWidth: 1040, margin: "0 auto", position: "relative", zIndex: 2 }}>
+
         {/* Unified Editorial Header */}
         <div
           style={{
-            marginBottom: "4rem",
+            marginBottom: "3.5rem",
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
-            gap: "2rem",
+            gridTemplateColumns: isMobile ? "1fr" : "1.15fr 1fr",
+            gap: isMobile ? "1.25rem" : "3rem",
             alignItems: "end",
           }}
         >
