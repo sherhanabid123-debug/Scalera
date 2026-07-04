@@ -290,19 +290,9 @@ const WhyScalera = () => {
 
                   {isOpen && (
                     <div style={{ marginTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1rem", animation: "fadeSlideUp 0.3s ease forwards" }}>
-                      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: "0 0 1.25rem 0" }}>
+                      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
                         {reason.sub}
                       </p>
-                      
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", fontFamily: "monospace", color: "rgba(255,255,255,0.4)" }}>
-                          <span>{reason.statName}:</span>
-                          <span style={{ color: reason.accent, fontWeight: 600 }}>{reason.statVal}</span>
-                        </div>
-                        <div style={{ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden", marginTop: "0.25rem" }}>
-                          <div style={{ height: "100%", width: `${reason.progress}%`, background: reason.accent, borderRadius: 2 }} />
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
@@ -364,44 +354,9 @@ const WhyScalera = () => {
                       </h4>
                     </div>
 
-                    <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: "0 0 1.5rem 0", minHeight: "68px" }}>
+                    <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0, minHeight: "68px" }}>
                       {activeReason.sub}
                     </p>
-
-                    {/* Numeric parameters list */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 12, padding: "1.25rem" }}>
-                      <div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", marginBottom: "0.4rem" }}>
-                          <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: "rgba(255,255,255,0.3)" }}>
-                            {activeReason.statName}
-                          </span>
-                          <span
-                            className="terminal-glow"
-                            style={{
-                              fontSize: "1rem",
-                              fontFamily: "monospace",
-                              fontWeight: 600,
-                              color: activeReason.accent,
-                              "--glow-color": activeReason.accent,
-                            }}
-                          >
-                            {activeReason.statVal}
-                          </span>
-                        </div>
-                        <div style={{ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
-                          <div
-                            style={{
-                              height: "100%",
-                              width: `${activeReason.progress}%`,
-                              background: activeReason.accent,
-                              boxShadow: `0 0 10px ${activeReason.accent}`,
-                              borderRadius: 2,
-                              transition: "width 0.8s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s ease",
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   {/* Compact HUD Radar screen */}
