@@ -245,7 +245,6 @@ img {
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-glass);
   box-shadow: var(--glass-shadow);
-  will-change: transform, opacity;
 }
 
 .glass-card {
