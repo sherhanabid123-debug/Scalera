@@ -398,8 +398,8 @@ img {
 /* ── STAT CARD ── */
 .stat-card {
   background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   padding: 1.5rem 2rem;
