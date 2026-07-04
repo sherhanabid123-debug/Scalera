@@ -214,10 +214,14 @@ const ServiceCard = ({ service, index, activeCard, setActiveCard, isMobile }) =>
 const Services = () => {
   const containerRef = useRef();
   const [isMobile, setIsMobile] = useState(false);
+  const [isPhone, setIsPhone] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      setIsPhone(window.innerWidth < 768);
+    };
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
