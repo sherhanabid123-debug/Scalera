@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { PERF_LITE } from "../../utils/perf";
 
 const Background3D = () => {
   const canvasRef = useRef(null);
@@ -12,19 +13,11 @@ const Background3D = () => {
     // Mobile view performance detection
     const isMobile = window.innerWidth < 768 || (typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
 
-    const renderScale = isMobile ? 0.35 : 0.75;
+    // Weak devices / slow networks / reduced-motion get ONE static frame and
+    // no rAF loop — the animated wave fill is the single heaviest GPU cost.
+    const staticMode = isMobile || PERF_LITE;
 
-    const resize = () => {
-      canvas.width = window.innerWidth * renderScale;
-      canvas.height = window.innerHeight * renderScale;
-      if (isMobile) {
-        // Redraw static wave frame once on resize
-        drawStatic();
-      }
-    };
-
-    window.addEventListener("resize", resize);
-    resize();
+    const renderScale = staticMode ? 0.35 : 0.75;
 
     const waves = [
       { amplitude: 120, frequency: 0.0014, speed: 0.0035, opacity: 0.055, yOffset: 0.62 },
@@ -41,7 +34,7 @@ const Background3D = () => {
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
 
-        const step = isMobile ? 60 : 25;
+        const step = staticMode ? 60 : 25;
         for (let x = 0; x <= canvas.width + step; x += step) {
           const y =
             Math.sin(
@@ -69,7 +62,18 @@ const Background3D = () => {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    if (isMobile) {
+    // Defined + invoked here (after drawStatic/waves exist) to avoid a
+    // temporal-dead-zone crash when staticMode calls drawStatic on resize.
+    const resize = () => {
+      canvas.width = window.innerWidth * renderScale;
+      canvas.height = window.innerHeight * renderScale;
+      if (staticMode) drawStatic();
+    };
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    if (staticMode) {
       drawStatic();
     } else {
       draw();
@@ -101,9 +105,10 @@ const Background3D = () => {
           position: "absolute",
           top: 0, left: 0,
           width: "100%", height: "100%",
-          filter: "blur(10px)",
+          filter: PERF_LITE ? "blur(6px)" : "blur(10px)",
           transform: "scale(1.05)",
-          willChange: "contents",
+          // Only hint the compositor when we're actually animating each frame.
+          willChange: PERF_LITE ? "auto" : "contents",
         }}
       />
       {/* Subtle vignette for depth (kept light so the aurora reads) */}

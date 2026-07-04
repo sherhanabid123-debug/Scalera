@@ -149,6 +149,7 @@ const Testimonials = () => {
 
   return (
     <section
+      id="testimonials"
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsPaused(true)}

@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ArrowUpRight } from "lucide-react";
+import { PERF_LITE } from "./utils/perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
 import Background3D from "./components/canvas/Background3D";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Navbar from "./components/layout/Navbar";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
@@ -17,29 +19,70 @@ import Portfolio from "./components/sections/Portfolio";
 import WhyScalera from "./components/sections/WhyScalera";
 import Testimonials from "./components/sections/Testimonials";
 import CTA from "./components/sections/CTA";
+import FAQ from "./components/sections/FAQ";
 import Footer from "./components/layout/Footer";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const chatDockRef = useRef(null);
+
+  // Keep the floating chat button from overlapping the footer: it stays fixed
+  // at the bottom while scrolling, then docks just above the footer's top edge
+  // and rides up with it — never covering the footer content.
+  useEffect(() => {
+    const dock = chatDockRef.current;
+    if (!dock) return;
+    const BASE = 30; // resting distance from viewport bottom (matches CSS)
+    const GAP = 24; // breathing room to keep above the footer
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      const footer = document.querySelector("footer");
+      if (!footer) return;
+      const footerTop = footer.getBoundingClientRect().top;
+      const bottomEdge = window.innerHeight - BASE; // button's resting bottom
+      const shift = Math.max(0, bottomEdge - (footerTop - GAP));
+      dock.style.transform = `translate3d(0, ${-shift}px, 0)`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: "vertical",
-      gestureDirection: "vertical",
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    });
+    // On weak devices, skip Lenis entirely. Its rAF loop + scroll virtualization
+    // is a constant per-frame cost and native scrolling is far smoother there.
+    // ScrollTrigger works fine against native scroll without any wiring.
+    let lenis = null;
+    let lenisTick = null;
+    if (!PERF_LITE) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
 
-    window.lenis = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
+      window.lenis = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      lenisTick = (time) => lenis.raf(time * 1000);
+      gsap.ticker.add(lenisTick);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     const tl = gsap.timeline({
       onComplete: () => setLoading(false),
@@ -59,8 +102,11 @@ function App() {
     const failsafe = setTimeout(() => setLoading(false), 400);
 
     return () => {
-      lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      if (lenis) {
+        lenis.destroy();
+        if (lenisTick) gsap.ticker.remove(lenisTick);
+        window.lenis = undefined;
+      }
       tl.kill();
       clearTimeout(failsafe);
     };
@@ -68,7 +114,11 @@ function App() {
 
   return (
     <>
-      <Background3D />
+      {/* Canvas is GPU/device-dependent — isolate it so a failure can never
+          blank the whole page (aurora + solid bg still carry the look). */}
+      <ErrorBoundary>
+        <Background3D />
+      </ErrorBoundary>
       {/* Aurora atmosphere — colored light that the glass refracts */}
       <div className="aurora" aria-hidden="true">
         <div className="aurora-blob a" />
@@ -76,7 +126,6 @@ function App() {
         <div className="aurora-blob c" />
         <div className="aurora-veil" />
       </div>
-      <div className="noise-bg" />
 
       <div
         className="main-content"
@@ -95,67 +144,73 @@ function App() {
           <Portfolio />
           <WhyScalera />
           <Testimonials />
+          <FAQ />
           <CTA />
         </main>
 
         <Footer />
 
-        {/* Floating WhatsApp Action */}
-        <a
-          href="https://wa.me/917975242650"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Floating WhatsApp Action — fixed wrapper docks above the footer */}
+        <div
+          ref={chatDockRef}
           style={{
             position: "fixed",
             bottom: "30px",
             right: "30px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "12px 20px 12px 16px",
-            borderRadius: "100px",
-            background: "rgba(6,6,8,0.85)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "#fff",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
             zIndex: 9999,
-            pointerEvents: "auto",
-            transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-            textDecoration: "none",
-            fontSize: "0.8rem",
-            fontWeight: 600,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-3px) scale(1.03)";
-            e.currentTarget.style.borderColor = "rgba(37, 211, 102, 0.4)";
-            e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(37,211,102,0.15), inset 0 1px 0 rgba(255,255,255,0.08)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0) scale(1)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)";
+            pointerEvents: "none",
+            willChange: "transform",
           }}
         >
-          <div
-            style={{
-              width: 32, height: 32,
-              borderRadius: "50%",
-              background: "#25D366",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-              boxShadow: "0 0 12px rgba(37,211,102,0.4)",
-            }}
-          >
-            <MessageCircle size={16} color="#fff" />
+          <div className="chat-widget">
+            {/* Hover-revealed invite card */}
+            <div className="chat-pop">
+              <a
+                href="https://wa.me/917975242650"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="chat-pop-card"
+              >
+                <div className="chat-pop-head">
+                  <span className="chat-pop-avatar">
+                    <MessageCircle size={17} color="#fff" />
+                    <span className="chat-pop-online" />
+                  </span>
+                  <span className="chat-pop-meta">
+                    <span className="chat-pop-name">Scalera Team</span>
+                    <span className="chat-pop-status">
+                      <span className="chat-pop-dot" /> Online · replies in minutes
+                    </span>
+                  </span>
+                </div>
+                <div className="chat-pop-bubble">
+                  Hey there! 👋 Have a project in mind? Message us — real humans,
+                  fast replies.
+                  <span className="chat-typing" aria-hidden="true">
+                    <i /><i /><i />
+                  </span>
+                </div>
+                <span className="chat-pop-cta">
+                  Start the conversation <ArrowUpRight size={14} />
+                </span>
+              </a>
+            </div>
+
+            {/* The FAB trigger */}
+            <a
+              href="https://wa.me/917975242650"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="chat-fab"
+              aria-label="Chat with us on WhatsApp"
+            >
+              <span className="chat-fab-icon">
+                <MessageCircle size={17} color="#fff" />
+              </span>
+              <span className="chat-fab-label">Chat With Us</span>
+            </a>
           </div>
-          Chat With Us
-        </a>
+        </div>
       </div>
 
       {/* Cinematic Branded Preloader */}

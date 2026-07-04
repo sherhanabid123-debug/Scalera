@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { PERF_LITE, REDUCE_MOTION } from "../../utils/perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,22 +23,26 @@ const nicheDescriptions = {
 const Hero = () => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [selectedNiche, setSelectedNiche] = useState("Business Website");
 
   useEffect(() => {
+    // Cursor-follow glow: desktop / full-fx only. It's meaningless on touch
+    // and the old version also called setState on every mousemove, forcing a
+    // full React re-render per pixel — removed. Now it only nudges a ref via
+    // GSAP (transform-only, no re-render, no layout).
+    if (PERF_LITE || REDUCE_MOTION) return;
     const move = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
       if (cursorGlowRef.current) {
         gsap.to(cursorGlowRef.current, {
           x: e.clientX - 200,
           y: e.clientY - 200,
           duration: 1.2,
           ease: "power2.out",
+          overwrite: true,
         });
       }
     };
-    window.addEventListener("mousemove", move);
+    window.addEventListener("mousemove", move, { passive: true });
     return () => window.removeEventListener("mousemove", move);
   }, []);
 
@@ -78,17 +83,21 @@ const Hero = () => {
           "-=0.14"
         );
 
-      gsap.to(".hero-content", {
-        yPercent: 20,
-        opacity: 0.3,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+      // Scroll-scrub parallax ties work to every scroll frame — skip it on
+      // weak devices where native scrolling should stay buttery.
+      if (!PERF_LITE) {
+        gsap.to(".hero-content", {
+          yPercent: 20,
+          opacity: 0.3,
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
     }, containerRef);
     return () => ctx.revert();
   }, []);
@@ -177,7 +186,7 @@ const Hero = () => {
           <div style={{ overflow: "hidden", paddingBottom: "0.15em" }}>
             <span
               className="hero-word"
-              style={{ display: "inline-block", transform: "translateY(110%)" }}
+              style={{ display: "inline-block", opacity: 0 }}
             >
               We Design & Build
             </span>
@@ -207,7 +216,7 @@ const Hero = () => {
               style={{
                 display: "inline-block",
                 fontWeight: 600,
-                transform: "translateY(110%)",
+                opacity: 0,
               }}
             >
               High End Websites

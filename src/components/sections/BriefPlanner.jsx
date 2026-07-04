@@ -3,21 +3,21 @@ import gsap from "gsap";
 import { Sparkles, Calendar, Layers, Palette, ArrowRight, Check, MessageSquare } from "lucide-react";
 
 const NICHES = [
-  { id: "Custom Landing Page", label: "Custom Landing Page", desc: "High-converting single scroll experiences for ad campaigns.", basePrice: 10000 },
-  { id: "High-End Portfolio", label: "High-End Portfolio", desc: "For agencies, studios, designers, and luxury creators.", basePrice: 14000 },
-  { id: "Business Website", label: "Business Website", desc: "Perfect for startups, corporate brands, and professional services.", basePrice: 18000 },
-  { id: "Digital Publisher", label: "Digital Publisher / News", desc: "High-content portals, digital magazines, and resource hubs.", basePrice: 22000 },
-  { id: "Corporate SaaS", label: "Corporate SaaS Platform", desc: "Startups, software products, and complex tech B2B brands.", basePrice: 26000 },
-  { id: "Online Store", label: "Online Store (E-Commerce)", desc: "High-performance storefronts designed to sell products seamlessly.", basePrice: 30000 },
-  { id: "Luxury Brand", label: "Luxury Brand Showcase", desc: "Premium fashion, jewelry, high-end real estate, and art.", basePrice: 35000 },
-  { id: "Other", label: "Other / Custom Project", desc: "A custom platform, complex application, or unique requirement.", basePrice: 25000 },
+  { id: "Custom Landing Page", label: "Custom Landing Page", desc: "High-converting single scroll experiences for ad campaigns.", basePrice: 4000 },
+  { id: "High-End Portfolio", label: "High-End Portfolio", desc: "For agencies, studios, designers, and luxury creators.", basePrice: 5600 },
+  { id: "Business Website", label: "Business Website", desc: "Perfect for startups, corporate brands, and professional services.", basePrice: 7200 },
+  { id: "Digital Publisher", label: "Digital Publisher / News", desc: "High-content portals, digital magazines, and resource hubs.", basePrice: 8800 },
+  { id: "Corporate SaaS", label: "Corporate SaaS Platform", desc: "Startups, software products, and complex tech B2B brands.", basePrice: 10400 },
+  { id: "Online Store", label: "Online Store (E-Commerce)", desc: "High-performance storefronts designed to sell products seamlessly.", basePrice: 12000 },
+  { id: "Luxury Brand", label: "Luxury Brand Showcase", desc: "Premium fashion, jewelry, high-end real estate, and art.", basePrice: 14000 },
+  { id: "Other", label: "Other / Custom Project", desc: "A custom platform, complex application, or unique requirement.", basePrice: 10000 },
 ];
 
 const SCALES = [
   { id: "1 Page", label: "Single Page Landing", desc: "High-impact single-scroll landing page.", addPrice: 0 },
-  { id: "3-5 Pages", label: "Startup Site (3-5 pages)", desc: "Home, Services, About, Contact, Case Studies.", addPrice: 5000 },
-  { id: "5-10 Pages", label: "Brand Presence (5-10 pages)", desc: "Comprehensive page setup with custom layouts.", addPrice: 10000 },
-  { id: "10+ Pages", label: "Enterprise Scale (10+ pages)", desc: "Deep site architectures and bespoke template integrations.", addPrice: 16000 },
+  { id: "3-5 Pages", label: "Startup Site (3-5 pages)", desc: "Home, Services, About, Contact, Case Studies.", addPrice: 2000 },
+  { id: "5-10 Pages", label: "Brand Presence (5-10 pages)", desc: "Comprehensive page setup with custom layouts.", addPrice: 4000 },
+  { id: "10+ Pages", label: "Enterprise Scale (10+ pages)", desc: "Deep site architectures and bespoke template integrations.", addPrice: 6400 },
 ];
 
 const STYLES = [
@@ -190,7 +190,7 @@ const BriefPlanner = () => {
       id="estimator"
       className="section"
       style={{
-        padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
+        padding: "clamp(7rem, 11vw, 10rem) var(--pad-x) clamp(5rem, 8vw, 7rem)",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-subtle)",
@@ -206,15 +206,15 @@ const BriefPlanner = () => {
         }}
       />
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
-        
+      <div style={{ maxWidth: 1040, margin: "0 auto", position: "relative", zIndex: 2 }}>
+
         {/* Unified Editorial Header */}
         <div
           style={{
-            marginBottom: "4rem",
+            marginBottom: "3.5rem",
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
-            gap: "2rem",
+            gridTemplateColumns: isMobile ? "1fr" : "1.35fr 1fr",
+            gap: isMobile ? "1.25rem" : "3rem",
             alignItems: "end",
           }}
         >
@@ -225,12 +225,13 @@ const BriefPlanner = () => {
             </div>
             <h2
               style={{
-                fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)",
+                fontSize: "clamp(2.2rem, 4vw, 3.3rem)",
                 fontWeight: 300,
                 letterSpacing: "-0.04em",
-                lineHeight: 1.05,
+                lineHeight: 1.06,
                 margin: 0,
                 textTransform: "uppercase",
+                whiteSpace: isMobile ? "normal" : "nowrap",
               }}
             >
               Design Your <br />
@@ -256,8 +257,7 @@ const BriefPlanner = () => {
         <div
           className="glass-card glass-animated-border"
           style={{
-            maxWidth: 960,
-            margin: "0 auto",
+            width: "100%",
             borderRadius: 28,
             border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "var(--glass-shadow)",

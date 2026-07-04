@@ -135,6 +135,7 @@ const WhyScalera = () => {
 
   return (
     <section
+      id="why"
       ref={containerRef}
       style={{
         padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
