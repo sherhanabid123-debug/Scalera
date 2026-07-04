@@ -729,7 +729,7 @@ body {
   gap: 2px;
   padding: 8px;
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(30, 30, 38, 0.98) 0%, rgba(22, 22, 28, 0.98) 100%);
+  background: linear-gradient(180deg, #24242c 0%, #17171d 100%);
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.14);
