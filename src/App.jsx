@@ -25,23 +25,29 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: "vertical",
-      gestureDirection: "vertical",
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    });
+    // On weak devices, skip Lenis entirely. Its rAF loop + scroll virtualization
+    // is a constant per-frame cost and native scrolling is far smoother there.
+    // ScrollTrigger works fine against native scroll without any wiring.
+    let lenis = null;
+    let lenisTick = null;
+    if (!PERF_LITE) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
 
-    window.lenis = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
+      window.lenis = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      lenisTick = (time) => lenis.raf(time * 1000);
+      gsap.ticker.add(lenisTick);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     const tl = gsap.timeline({
       onComplete: () => setLoading(false),
@@ -61,8 +67,11 @@ function App() {
     const failsafe = setTimeout(() => setLoading(false), 400);
 
     return () => {
-      lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      if (lenis) {
+        lenis.destroy();
+        if (lenisTick) gsap.ticker.remove(lenisTick);
+        window.lenis = undefined;
+      }
       tl.kill();
       clearTimeout(failsafe);
     };
