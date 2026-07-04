@@ -245,7 +245,7 @@ const Hero = () => {
             opacity: 0,
           }}
         >
-          No templates. No corporate jargon. Just custom, premium websites built to convert clicks into buyers.
+          No templates. No business speaks. Just custom, premium websites built to convert clicks into buyers.
         </p>
 
         <div
