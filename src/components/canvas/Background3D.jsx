@@ -106,9 +106,10 @@ const Background3D = () => {
           position: "absolute",
           top: 0, left: 0,
           width: "100%", height: "100%",
-          filter: "blur(10px)",
+          filter: PERF_LITE ? "blur(6px)" : "blur(10px)",
           transform: "scale(1.05)",
-          willChange: "contents",
+          // Only hint the compositor when we're actually animating each frame.
+          willChange: PERF_LITE ? "auto" : "contents",
         }}
       />
       {/* Subtle vignette for depth (kept light so the aurora reads) */}
