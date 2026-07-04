@@ -788,6 +788,7 @@ body {
 .perf-lite .glass-card,
 .perf-lite .glass-nav,
 .perf-lite .stat-card,
+.perf-lite .chat-fab,
 .perf-lite [style*="backdrop-filter"],
 .perf-lite [style*="backdropFilter"] {
   backdrop-filter: none !important;
