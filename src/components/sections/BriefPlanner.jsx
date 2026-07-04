@@ -231,7 +231,7 @@ const BriefPlanner = () => {
                 lineHeight: 1.06,
                 margin: 0,
                 textTransform: "uppercase",
-                whiteSpace: "nowrap",
+                whiteSpace: isMobile ? "normal" : "nowrap",
               }}
             >
               Design Your <br />
