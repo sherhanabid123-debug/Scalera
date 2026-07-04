@@ -278,8 +278,21 @@ const Testimonials = () => {
           </div>
         </div>
 
-        {/* Typographic Navigation capsule */}
-        <div style={{ display: "flex", justifyContent: "center", zIndex: 3, position: "relative" }}>
+        {/* Typographic Navigation capsule — scrolls horizontally when wider
+            than the viewport (phones), centered when it fits */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            zIndex: 3,
+            position: "relative",
+            overflowX: "auto",
+            maxWidth: "100%",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            padding: "4px 2px",
+          }}
+        >
           <div
             style={{
               display: "inline-flex",
@@ -291,6 +304,8 @@ const Testimonials = () => {
               padding: "6px",
               boxShadow: "0 24px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02)",
               position: "relative",
+              margin: "0 auto",
+              flexShrink: 0,
             }}
           >
             {/* Sliding background highlight pill container */}
