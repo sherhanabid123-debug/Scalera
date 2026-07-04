@@ -177,7 +177,7 @@ const Hero = () => {
           <div style={{ overflow: "hidden", paddingBottom: "0.15em" }}>
             <span
               className="hero-word"
-              style={{ display: "inline-block", transform: "translateY(110%)" }}
+              style={{ display: "inline-block", opacity: 0 }}
             >
               We Design & Build
             </span>
@@ -207,7 +207,7 @@ const Hero = () => {
               style={{
                 display: "inline-block",
                 fontWeight: 600,
-                transform: "translateY(110%)",
+                opacity: 0,
               }}
             >
               High End Websites
