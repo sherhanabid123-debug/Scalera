@@ -542,7 +542,22 @@ body {
   pointer-events: none;
 }
 
-/* Responsive Navigation */
+/* Responsive Navigation - Tablet */
+@media (max-width: 1024px) {
+  .desktop-menu {
+    display: none !important;
+  }
+
+  .mobile-toggle {
+    display: flex !important;
+  }
+
+  .mobile-nav-placeholder {
+    display: block !important;
+  }
+}
+
+/* Responsive Navigation - Mobile */
 @media (max-width: 768px) {
   .desktop-menu {
     display: none !important;
@@ -550,6 +565,30 @@ body {
 
   .mobile-toggle {
     display: flex !important;
+  }
+
+  .mobile-nav-placeholder {
+    display: block !important;
+  }
+}
+
+/* Tablet layout adjustments */
+@media (max-width: 1024px) {
+  .section {
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+  }
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 480px) {
+  .section {
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+  }
+
+  .mobile-nav-link {
+    font-size: 2.2rem !important;
   }
 }
 
@@ -617,15 +656,7 @@ body {
   left: 100%;
 }
 
-/* Responsive Nav Centering */
-@media (max-width: 768px) {
-  .mobile-nav-placeholder {
-    display: block !important;
-  }
-  .mobile-toggle {
-    display: flex !important;
-  }
-}
+
 
 @keyframes fadeSlideUp {
   from {
@@ -1185,6 +1216,31 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Custom Scrollbar matching Scalera's yellow/gold logo dot */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 50px;
+  border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f1c27d; /* Slightly brighter warm yellow on hover */
+}
+
+/* Firefox Scrollbar support */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--bg-primary);
 }
 
 
