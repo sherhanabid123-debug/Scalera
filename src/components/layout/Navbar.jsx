@@ -117,16 +117,51 @@ const Navbar = ({ loading }) => {
             flex: 1,
           }}
         >
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              className="nav-desktop-link"
-              href={link.href}
-              onClick={scrollTo(link.href)}
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.children ? (
+              <div className="nav-dropdown" key={link.label}>
+                <a
+                  className="nav-desktop-link nav-dropdown-trigger"
+                  href={link.href}
+                  onClick={scrollTo(link.href)}
+                >
+                  {link.label}
+                  <ChevronDown size={13} className="nav-dropdown-caret" />
+                </a>
+                <div className="nav-dropdown-menu">
+                  <div className="nav-dropdown-inner">
+                    {link.children.map((child) => (
+                      <a
+                        key={child.label}
+                        className="nav-dropdown-item"
+                        href={child.href}
+                        onClick={scrollTo(child.href)}
+                      >
+                        <span className="nav-dropdown-item-dot" />
+                        <span className="nav-dropdown-item-text">
+                          <span className="nav-dropdown-item-label">
+                            {child.label}
+                          </span>
+                          <span className="nav-dropdown-item-desc">
+                            {child.desc}
+                          </span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <a
+                key={link.label}
+                className="nav-desktop-link"
+                href={link.href}
+                onClick={scrollTo(link.href)}
+              >
+                {link.label}
+              </a>
+            ),
+          )}
         </div>
 
         {/* Mobile placeholder */}
