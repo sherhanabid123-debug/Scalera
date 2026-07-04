@@ -46,7 +46,7 @@ const Background3D = () => {
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
 
-        const step = isMobile ? 60 : 25;
+        const step = staticMode ? 60 : 25;
         for (let x = 0; x <= canvas.width + step; x += step) {
           const y =
             Math.sin(
