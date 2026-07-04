@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { PERF_LITE } from "../../utils/perf";
 
 const Background3D = () => {
   const canvasRef = useRef(null);
@@ -12,12 +13,16 @@ const Background3D = () => {
     // Mobile view performance detection
     const isMobile = window.innerWidth < 768 || (typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
 
-    const renderScale = isMobile ? 0.35 : 0.75;
+    // Weak devices / slow networks / reduced-motion get ONE static frame and
+    // no rAF loop — the animated wave fill is the single heaviest GPU cost.
+    const staticMode = isMobile || PERF_LITE;
+
+    const renderScale = staticMode ? 0.35 : 0.75;
 
     const resize = () => {
       canvas.width = window.innerWidth * renderScale;
       canvas.height = window.innerHeight * renderScale;
-      if (isMobile) {
+      if (staticMode) {
         // Redraw static wave frame once on resize
         drawStatic();
       }
