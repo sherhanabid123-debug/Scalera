@@ -256,8 +256,7 @@ const BriefPlanner = () => {
         <div
           className="glass-card glass-animated-border"
           style={{
-            maxWidth: 960,
-            margin: "0 auto",
+            width: "100%",
             borderRadius: 28,
             border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "var(--glass-shadow)",
