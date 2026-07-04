@@ -17,6 +17,7 @@ import Portfolio from "./components/sections/Portfolio";
 import WhyScalera from "./components/sections/WhyScalera";
 import Testimonials from "./components/sections/Testimonials";
 import CTA from "./components/sections/CTA";
+import FAQ from "./components/sections/FAQ";
 import Footer from "./components/layout/Footer";
 
 function App() {
@@ -95,6 +96,7 @@ function App() {
           <Portfolio />
           <WhyScalera />
           <Testimonials />
+          <FAQ />
           <CTA />
         </main>
 
