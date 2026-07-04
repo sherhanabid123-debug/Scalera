@@ -150,62 +150,70 @@ function App() {
 
         <Footer />
 
-        {/* Floating WhatsApp Action */}
-        <a
-          href="https://wa.me/917975242650"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Floating WhatsApp Action — fixed wrapper docks above the footer */}
+        <div
+          ref={chatDockRef}
           style={{
             position: "fixed",
             bottom: "30px",
             right: "30px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "12px 20px 12px 16px",
-            borderRadius: "100px",
-            background: "rgba(6,6,8,0.85)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "#fff",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
             zIndex: 9999,
-            pointerEvents: "auto",
-            transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-            textDecoration: "none",
-            fontSize: "0.8rem",
-            fontWeight: 600,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-3px) scale(1.03)";
-            e.currentTarget.style.borderColor = "rgba(37, 211, 102, 0.4)";
-            e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(37,211,102,0.15), inset 0 1px 0 rgba(255,255,255,0.08)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0) scale(1)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)";
+            pointerEvents: "none",
+            willChange: "transform",
           }}
         >
-          <div
+          <a
+            href="https://wa.me/917975242650"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              width: 32, height: 32,
-              borderRadius: "50%",
-              background: "#25D366",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-              boxShadow: "0 0 12px rgba(37,211,102,0.4)",
+              gap: "10px",
+              padding: "12px 20px 12px 16px",
+              borderRadius: "100px",
+              background: "rgba(6,6,8,0.85)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "#fff",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
+              pointerEvents: "auto",
+              transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease",
+              textDecoration: "none",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-3px) scale(1.03)";
+              e.currentTarget.style.borderColor = "rgba(37, 211, 102, 0.4)";
+              e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(37,211,102,0.15), inset 0 1px 0 rgba(255,255,255,0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0) scale(1)";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+              e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)";
             }}
           >
-            <MessageCircle size={16} color="#fff" />
-          </div>
-          Chat With Us
-        </a>
+            <div
+              style={{
+                width: 32, height: 32,
+                borderRadius: "50%",
+                background: "#25D366",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                boxShadow: "0 0 12px rgba(37,211,102,0.4)",
+              }}
+            >
+              <MessageCircle size={16} color="#fff" />
+            </div>
+            Chat With Us
+          </a>
+        </div>
       </div>
 
       {/* Cinematic Branded Preloader */}
