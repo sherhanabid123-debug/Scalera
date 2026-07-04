@@ -748,11 +748,8 @@ body {
   color: var(--accent-warm) !important;
 }
 
-/* 5) The animated wave canvas is heaviest on weak GPUs — hide it and let
-      the static background/aurora carry the mood. */
-.perf-lite .bg-canvas {
-  display: none !important;
-}
+/* (The animated wave canvas is switched to a single static frame in JS on
+   perf-lite — see Background3D — so it costs nothing after first paint.) */
 
 /* =====================================================================
    ACCESSIBILITY / MOTION — honour prefers-reduced-motion
