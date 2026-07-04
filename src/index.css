@@ -709,7 +709,7 @@ body {
   position: absolute;
   top: 100%;
   left: -14px;
-  padding-top: 16px; /* transparent bridge so hover doesn't drop into the gap */
+  padding-top: 28px; /* gap below the navbar (doubles as the hover bridge) */
   min-width: 236px;
   pointer-events: none;
   opacity: 0;
