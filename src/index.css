@@ -812,7 +812,8 @@ body {
 .perf-lite .glass-animated-border,
 .perf-lite .shimmer-text,
 .perf-lite .hero-caret,
-.perf-lite .section-label-dot {
+.perf-lite .section-label-dot,
+.perf-lite .chat-fab-icon {
   animation: none !important;
 }
 .perf-lite .ios-border-shine::before,
