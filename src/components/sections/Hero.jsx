@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { PERF_LITE, REDUCE_MOTION } from "../../utils/perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
