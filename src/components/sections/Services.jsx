@@ -322,11 +322,15 @@ const Services = () => {
           </p>
         </div>
 
-        {/* Service cards grid */}
+        {/* Service cards grid: 1-col phone, 2-col tablet, 3-col desktop */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+            gridTemplateColumns: isPhone
+              ? "1fr"
+              : isMobile
+                ? "repeat(2, 1fr)"
+                : "repeat(3, 1fr)",
             gap: "1.5rem",
           }}
         >
