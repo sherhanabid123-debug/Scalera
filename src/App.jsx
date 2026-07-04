@@ -162,18 +162,54 @@ function App() {
             willChange: "transform",
           }}
         >
-          <a
-            href="https://wa.me/917975242650"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="chat-fab"
-            aria-label="Chat with us on WhatsApp"
-          >
-            <span className="chat-fab-icon">
-              <MessageCircle size={17} color="#fff" />
-            </span>
-            <span className="chat-fab-label">Chat With Us</span>
-          </a>
+          <div className="chat-widget">
+            {/* Hover-revealed invite card */}
+            <div className="chat-pop">
+              <a
+                href="https://wa.me/917975242650"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="chat-pop-card"
+              >
+                <div className="chat-pop-head">
+                  <span className="chat-pop-avatar">
+                    <MessageCircle size={17} color="#fff" />
+                    <span className="chat-pop-online" />
+                  </span>
+                  <span className="chat-pop-meta">
+                    <span className="chat-pop-name">Scalera Team</span>
+                    <span className="chat-pop-status">
+                      <span className="chat-pop-dot" /> Online · replies in minutes
+                    </span>
+                  </span>
+                </div>
+                <div className="chat-pop-bubble">
+                  Hey there! 👋 Have a project in mind? Message us — real humans,
+                  fast replies.
+                  <span className="chat-typing" aria-hidden="true">
+                    <i /><i /><i />
+                  </span>
+                </div>
+                <span className="chat-pop-cta">
+                  Start the conversation <ArrowUpRight size={14} />
+                </span>
+              </a>
+            </div>
+
+            {/* The FAB trigger */}
+            <a
+              href="https://wa.me/917975242650"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="chat-fab"
+              aria-label="Chat with us on WhatsApp"
+            >
+              <span className="chat-fab-icon">
+                <MessageCircle size={17} color="#fff" />
+              </span>
+              <span className="chat-fab-label">Chat With Us</span>
+            </a>
+          </div>
         </div>
       </div>
 
