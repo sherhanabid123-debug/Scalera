@@ -24,6 +24,40 @@ import Footer from "./components/layout/Footer";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const chatDockRef = useRef(null);
+
+  // Keep the floating chat button from overlapping the footer: it stays fixed
+  // at the bottom while scrolling, then docks just above the footer's top edge
+  // and rides up with it — never covering the footer content.
+  useEffect(() => {
+    const dock = chatDockRef.current;
+    if (!dock) return;
+    const BASE = 30; // resting distance from viewport bottom (matches CSS)
+    const GAP = 24; // breathing room to keep above the footer
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      const footer = document.querySelector("footer");
+      if (!footer) return;
+      const footerTop = footer.getBoundingClientRect().top;
+      const bottomEdge = window.innerHeight - BASE; // button's resting bottom
+      const shift = Math.max(0, bottomEdge - (footerTop - GAP));
+      dock.style.transform = `translate3d(0, ${-shift}px, 0)`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useEffect(() => {
     // On weak devices, skip Lenis entirely. Its rAF loop + scroll virtualization
