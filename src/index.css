@@ -777,14 +777,14 @@ body {
   font-size: 0.88rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.92);
   transition: color 0.3s ease;
 }
 .nav-dropdown-item-desc {
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.3s ease;
 }
 .nav-dropdown-item:hover {
