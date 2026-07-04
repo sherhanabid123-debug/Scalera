@@ -214,10 +214,14 @@ const ServiceCard = ({ service, index, activeCard, setActiveCard, isMobile }) =>
 const Services = () => {
   const containerRef = useRef();
   const [isMobile, setIsMobile] = useState(false);
+  const [isPhone, setIsPhone] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      setIsPhone(window.innerWidth < 768);
+    };
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -318,11 +322,15 @@ const Services = () => {
           </p>
         </div>
 
-        {/* Service cards grid */}
+        {/* Service cards grid: 1-col phone, 2-col tablet, 3-col desktop */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+            gridTemplateColumns: isPhone
+              ? "1fr"
+              : isMobile
+                ? "repeat(2, 1fr)"
+                : "repeat(3, 1fr)",
             gap: "1.5rem",
           }}
         >
