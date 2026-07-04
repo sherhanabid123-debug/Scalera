@@ -165,7 +165,6 @@ const ScaleraAIShowcase = () => {
               <span className="text-gradient-accent" style={{ fontWeight: 700 }}>
                 Scalera AI
               </span>
-              <span style={{ fontSize: "0.6em" }}> ✨</span>
             </h2>
 
             {/* Description */}

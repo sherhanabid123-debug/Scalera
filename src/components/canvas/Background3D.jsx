@@ -9,11 +9,18 @@ const Background3D = () => {
     let animationFrameId;
     let time = 0;
 
-    const renderScale = window.innerWidth < 768 ? 0.5 : 0.75;
+    // Mobile view performance detection
+    const isMobile = window.innerWidth < 768 || (typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
+
+    const renderScale = isMobile ? 0.35 : 0.75;
 
     const resize = () => {
       canvas.width = window.innerWidth * renderScale;
       canvas.height = window.innerHeight * renderScale;
+      if (isMobile) {
+        // Redraw static wave frame once on resize
+        drawStatic();
+      }
     };
 
     window.addEventListener("resize", resize);
@@ -26,7 +33,7 @@ const Background3D = () => {
       { amplitude: 60, frequency: 0.0022, speed: 0.006, opacity: 0.015, yOffset: 0.50 },
     ];
 
-    const draw = () => {
+    const drawStatic = () => {
       ctx.fillStyle = "#060608";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -34,7 +41,7 @@ const Background3D = () => {
         ctx.beginPath();
         ctx.moveTo(0, canvas.height);
 
-        const step = window.innerWidth < 768 ? 40 : 25;
+        const step = isMobile ? 60 : 25;
         for (let x = 0; x <= canvas.width + step; x += step) {
           const y =
             Math.sin(
@@ -54,16 +61,25 @@ const Background3D = () => {
         ctx.fillStyle = grad;
         ctx.fill();
       });
+    };
 
+    const draw = () => {
+      drawStatic();
       time += 1.0;
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    draw();
+    if (isMobile) {
+      drawStatic();
+    } else {
+      draw();
+    }
 
     return () => {
       window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 

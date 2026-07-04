@@ -1,0 +1,94 @@
+name: 🚀 GitHub Push Notifications
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Push Notification
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          REPOSITORY: ${{ github.repository }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          BRANCH: ${{ github.ref_name }}
+          AUTHOR: ${{ github.actor }}
+          COMMIT: ${{ github.event.head_commit.message }}
+          SHA: ${{ github.sha }}
+          TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+          AUTHOR_AVATAR: ${{ github.event.sender.avatar_url }}
+        run: |
+          payload=$(jq -n \
+            --arg repository "$REPOSITORY" \
+            --arg repo "$REPO_NAME" \
+            --arg branch "$BRANCH" \
+            --arg author "$AUTHOR" \
+            --arg commit "$COMMIT" \
+            --arg sha "$SHA" \
+            --arg ts "$TIMESTAMP" \
+            --arg avatar "$AUTHOR_AVATAR" \
+            '{
+              username: "Scalera Development",
+              avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+              embeds: [
+                {
+                  title: "🚀 New Push",
+                  description: "A new commit has been pushed.",
+                  color: 3447003,
+
+                  author: {
+                    name: $author,
+                    icon_url: $avatar
+                  },
+
+                  thumbnail: {
+                    url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                  },
+
+                  fields: [
+                    {
+                      name: "📦 Repository",
+                      value: ("`" + $repo + "`"),
+                      inline: true
+                    },
+                    {
+                      name: "🌿 Branch",
+                      value: ("`" + $branch + "`"),
+                      inline: true
+                    },
+                    {
+                      name: "👤 Author",
+                      value: $author,
+                      inline: true
+                    },
+                    {
+                      name: "📝 Commit",
+                      value: $commit,
+                      inline: false
+                    },
+                    {
+                      name: "🔗 View Commit",
+                      value: ("https://github.com/" + $repository + "/commit/" + $sha),
+                      inline: false
+                    }
+                  ],
+
+                  footer: {
+                    text: "Scalera • Development Pipeline"
+                  },
+
+                  timestamp: $ts
+                }
+              ]
+            }')
+
+          curl \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$payload" \
+            "$WEBHOOK"

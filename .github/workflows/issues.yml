@@ -1,0 +1,119 @@
+name: 🐞 Issue Notifications
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - closed
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Issue Status
+        id: status
+        run: |
+          if [[ "${{ github.event.action }}" == "opened" ]]; then
+            echo "TITLE=🐞 New Issue Opened" >> $GITHUB_ENV
+            echo "COLOR=15105570" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            echo "TITLE=♻️ Issue Reopened" >> $GITHUB_ENV
+            echo "COLOR=15844367" >> $GITHUB_ENV
+          else
+            echo "TITLE=✅ Issue Closed" >> $GITHUB_ENV
+            echo "COLOR=5763719" >> $GITHUB_ENV
+          fi
+
+      - name: Send Discord Notification
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_BUG_WEBHOOK }}
+
+          REPO_NAME: ${{ github.event.repository.name }}
+          AUTHOR: ${{ github.actor }}
+          AUTHOR_AVATAR: ${{ github.event.issue.user.avatar_url }}
+
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+
+          TIMESTAMP: ${{ github.event.issue.updated_at }}
+
+        run: |
+          if [ -z "$ISSUE_BODY" ]; then
+            ISSUE_BODY="No description provided."
+          fi
+
+          payload=$(jq -n \
+            --arg title "$TITLE" \
+            --argjson color "$COLOR" \
+            --arg repo "$REPO_NAME" \
+            --arg author "$AUTHOR" \
+            --arg avatar "$AUTHOR_AVATAR" \
+            --arg issue "$ISSUE_TITLE" \
+            --arg body "$ISSUE_BODY" \
+            --arg url "$ISSUE_URL" \
+            --arg ts "$TIMESTAMP" \
+            '{
+              username:"Scalera Issues",
+
+              avatar_url:"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+
+              embeds:[
+                {
+                  title:$title,
+                  url:$url,
+                  color:$color,
+
+                  author:{
+                    name:$author,
+                    icon_url:$avatar
+                  },
+
+                  thumbnail:{
+                    url:"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                  },
+
+                  fields:[
+                    {
+                      name:"📦 Repository",
+                      value:("`"+$repo+"`"),
+                      inline:true
+                    },
+                    {
+                      name:"👤 Reported By",
+                      value:$author,
+                      inline:true
+                    },
+                    {
+                      name:"🐞 Issue",
+                      value:$issue,
+                      inline:false
+                    },
+                    {
+                      name:"📝 Description",
+                      value:$body,
+                      inline:false
+                    },
+                    {
+                      name:"🔗 View Issue",
+                      value:("[Open Issue]("+$url+")"),
+                      inline:false
+                    }
+                  ],
+
+                  footer:{
+                    text:"Scalera • Issue Tracker"
+                  },
+
+                  timestamp:$ts
+                }
+              ]
+            }')
+
+          curl \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$payload" \
+            "$WEBHOOK"

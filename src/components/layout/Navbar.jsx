@@ -26,12 +26,12 @@ const Navbar = ({ loading }) => {
       gsap.fromTo(
         ".desktop-menu > *",
         { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, stagger: 0.08, ease: "expo.out", delay: 0.2 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: "expo.out", delay: 0.05 },
       );
       gsap.fromTo(
         ".mobile-toggle",
         { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "expo.out", delay: 0.2 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "expo.out", delay: 0.05 },
       );
     });
     return () => ctx.revert();
@@ -54,9 +54,23 @@ const Navbar = ({ loading }) => {
 
   const scrollTo = (id) => (e) => {
     e.preventDefault();
+    const wasOpen = isOpen;
     setIsOpen(false);
-    const el = document.querySelector(id);
-    if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+    
+    const triggerScroll = () => {
+      if (window.lenis) {
+        window.lenis.scrollTo(id, { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) });
+      } else {
+        const el = document.querySelector(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    if (wasOpen) {
+      setTimeout(triggerScroll, 300);
+    } else {
+      triggerScroll();
+    }
   };
 
   return (
@@ -77,6 +91,7 @@ const Navbar = ({ loading }) => {
           zIndex: 110,
           transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
           background: !scrolled ? "transparent" : undefined,
+          pointerEvents: "auto",
         }}
       >
         {/* Left nav links */}
@@ -95,23 +110,9 @@ const Navbar = ({ loading }) => {
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
+              className="nav-desktop-link"
               href={link.href}
               onClick={scrollTo(link.href)}
-              style={{
-                color: "var(--text-secondary)",
-                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                display: "inline-block",
-                position: "relative",
-                paddingBottom: 2,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "var(--text-primary)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "var(--text-secondary)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
             >
               {link.label}
             </a>
@@ -166,11 +167,11 @@ const Navbar = ({ loading }) => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              const el = document.querySelector('#estimator');
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
+              if (window.lenis) {
+                window.lenis.scrollTo('#estimator', { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) });
               } else {
-                window.location.href = "/#estimator";
+                const el = document.querySelector('#estimator');
+                if (el) el.scrollIntoView({ behavior: "smooth" });
               }
             }}
             className="btn-glass"
@@ -266,6 +267,7 @@ const Navbar = ({ loading }) => {
           gap: "2.5rem",
           transform: "translateX(100%)",
           borderLeft: "1px solid var(--border-glass)",
+          pointerEvents: "auto",
         }}
       >
         {NAV_LINKS.map((link, i) => (
@@ -290,11 +292,13 @@ const Navbar = ({ loading }) => {
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
             setIsOpen(false);
-            const el = document.querySelector('#estimator');
-            if (el) {
-              setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+            if (window.lenis) {
+              setTimeout(() => window.lenis.scrollTo('#estimator', { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) }), 300);
             } else {
-              window.location.href = "/#estimator";
+              const el = document.querySelector('#estimator');
+              if (el) {
+                setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+              }
             }
           }}
           className="mobile-nav-link btn-glass"

@@ -314,7 +314,7 @@ const Services = () => {
               margin: 0,
             }}
           >
-            We offer custom design, full-stack engineering, and dynamic interaction systems that help your brand command authority online and drive high-converting performance.
+            We help your brand command authority online and drive high converting performance with custom design, full stack engineering and dynamic interaction systems
           </p>
         </div>
 

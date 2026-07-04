@@ -6,20 +6,20 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: "50+", label: "Bespoke Builds" },
+  { value: "50+", label: "Custom Builds" },
   { value: "98%+", label: "Lighthouse Speed" },
   { value: "100%", label: "Custom Codebase" },
 ];
 
 const nicheDescriptions = {
-  "Business Website": "Tailoring custom corporate architecture, integrated SEO strategies, and responsive lead-generation forms.",
+  "Business Website": "Custom corporate architecture designed for your specific needs, integrated SEO strategies and responsive lead-generation forms.",
   "Online Store": "Configuring secure payment checkouts, dynamic inventory grids, and conversion rate optimizations.",
   "High-End Portfolio": "Structuring bespoke layouts, smooth GSAP transitions, and interactive digital art displays.",
   "Custom Landing Page": "Designing high-impact single-page scroll layouts, interactive micro-animations, and direct user funnels.",
   "Other": "Scoping custom backend systems, advanced web application features, and unique branding assets."
 };
 
-const Hero = ({ loading }) => {
+const Hero = () => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -42,38 +42,40 @@ const Hero = ({ loading }) => {
   }, []);
 
   useLayoutEffect(() => {
-    if (loading) return;
+    // Animate in immediately on mount (runs underneath the preloader),
+    // so the hero is already fully revealed by the time the preloader
+    // fades out — no visible delay after the page "loads".
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
       tl.fromTo(
         ".hero-word",
         { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 1.8, stagger: 0.06 },
+        { yPercent: 0, opacity: 1, duration: 0.4, stagger: 0.012 },
       )
         .fromTo(
           ".hero-line",
           { scaleX: 0 },
-          { scaleX: 1, duration: 1.4, transformOrigin: "left", ease: "expo.inOut" },
-          "-=1.4",
+          { scaleX: 1, duration: 0.3, transformOrigin: "left", ease: "expo.inOut" },
+          "-=0.28",
         )
         .fromTo(
           ".hero-sub",
           { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1.4 },
-          "-=1.2",
+          { y: 0, opacity: 1, duration: 0.3 },
+          "-=0.22",
         )
         .fromTo(
           ".hero-btn",
           { y: 24, opacity: 0, scale: 0.96 },
-          { y: 0, opacity: 1, scale: 1, duration: 1.2, stagger: 0.12, ease: "back.out(1.4)" },
-          "-=1.0",
+          { y: 0, opacity: 1, scale: 1, duration: 0.28, stagger: 0.03, ease: "back.out(1.4)" },
+          "-=0.18",
         )
         .fromTo(
           ".hero-stat-card",
           { opacity: 0, y: 30, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.1, ease: "back.out(1.5)" },
-          "-=0.8"
+          { opacity: 1, y: 0, scale: 1, duration: 0.28, stagger: 0.03, ease: "back.out(1.5)" },
+          "-=0.14"
         );
 
       gsap.to(".hero-content", {
@@ -89,7 +91,7 @@ const Hero = ({ loading }) => {
       });
     }, containerRef);
     return () => ctx.revert();
-  }, [loading]);
+  }, []);
 
   return (
     <section
@@ -175,7 +177,7 @@ const Hero = ({ loading }) => {
           <div style={{ overflow: "hidden", paddingBottom: "0.15em" }}>
             <span
               className="hero-word"
-              style={{ display: "inline-block", transform: loading ? "translateY(110%)" : undefined }}
+              style={{ display: "inline-block", transform: "translateY(110%)" }}
             >
               We Design & Build
             </span>
@@ -196,7 +198,7 @@ const Hero = ({ loading }) => {
                 width: "clamp(40px, 8vw, 120px)",
                 height: "1px",
                 background: "linear-gradient(90deg, transparent, rgba(223,168,87,0.4), transparent)",
-                transform: loading ? "scaleX(0)" : undefined,
+                transform: "scaleX(0)",
                 transformOrigin: "right",
               }}
             />
@@ -205,10 +207,10 @@ const Hero = ({ loading }) => {
               style={{
                 display: "inline-block",
                 fontWeight: 600,
-                transform: loading ? "translateY(110%)" : undefined,
+                transform: "translateY(110%)",
               }}
             >
-              High-End Websites.
+              High End Websites
             </span>
             <div
               className="hero-line"
@@ -216,7 +218,7 @@ const Hero = ({ loading }) => {
                 width: "clamp(40px, 8vw, 120px)",
                 height: "1px",
                 background: "linear-gradient(90deg, transparent, rgba(223,168,87,0.4), transparent)",
-                transform: loading ? "scaleX(0)" : undefined,
+                transform: "scaleX(0)",
                 transformOrigin: "left",
               }}
             />
@@ -232,13 +234,12 @@ const Hero = ({ loading }) => {
             maxWidth: 700,
             lineHeight: 1.7,
             marginBottom: "3.5rem",
-            opacity: loading ? 0 : undefined,
+            opacity: 0,
           }}
         >
           No templates. No corporate jargon. Just custom, premium websites built to convert clicks into buyers.
         </p>
 
-        {/* CTA Configurator Section */}
         <div
           style={{
             display: "flex",
@@ -248,7 +249,6 @@ const Hero = ({ loading }) => {
             justifyContent: "center",
             marginBottom: "2.5rem",
             width: "100%",
-            opacity: loading ? 0 : undefined,
           }}
         >
           {/* Liquid-glass agency project brief starter */}
@@ -339,7 +339,11 @@ const Hero = ({ loading }) => {
                 onClick={() => {
                   const planner = document.querySelector("#estimator");
                   if (planner) {
-                    planner.scrollIntoView({ behavior: "smooth" });
+                    if (window.lenis) {
+                      window.lenis.scrollTo("#estimator", { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 4) });
+                    } else {
+                      planner.scrollIntoView({ behavior: "smooth" });
+                    }
                     const event = new CustomEvent("setPlannerNiche", { detail: selectedNiche });
                     window.dispatchEvent(event);
                   }
@@ -418,7 +422,7 @@ const Hero = ({ loading }) => {
               style={{
                 flex: "1 1 180px",
                 textAlign: "center",
-                opacity: loading ? 0 : undefined,
+                opacity: 0,
                 padding: "1.5rem 1rem",
                 borderRadius: 16,
                 height: "110px",

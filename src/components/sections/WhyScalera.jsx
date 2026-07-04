@@ -295,10 +295,6 @@ const WhyScalera = () => {
                       
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", fontFamily: "monospace", color: "rgba(255,255,255,0.4)" }}>
-                          <span>DIAGNOSTIC_CODE:</span>
-                          <span style={{ color: reason.accent }}>{reason.code}</span>
-                        </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", fontFamily: "monospace", color: "rgba(255,255,255,0.4)" }}>
                           <span>{reason.statName}:</span>
                           <span style={{ color: reason.accent, fontWeight: 600 }}>{reason.statVal}</span>
                         </div>
@@ -333,14 +329,7 @@ const WhyScalera = () => {
                   boxShadow: "0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.03)",
                 }}
               >
-                {/* Console header */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: "1rem", marginBottom: "1.75rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: activeReason.accent, boxShadow: `0 0 8px ${activeReason.accent}`, transition: "background 0.5s ease" }} />
-                    <span style={{ fontSize: "0.62rem", fontFamily: "monospace", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)" }}>TERMINAL_SPEC_CONSOLE</span>
-                  </div>
-                  <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: "rgba(255,255,255,0.25)" }}>[ MONITORING_ON ]</span>
-                </div>
+
 
                 {/* Splitscreen inside the console */}
                 <div
@@ -380,12 +369,7 @@ const WhyScalera = () => {
 
                     {/* Numeric parameters list */}
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 12, padding: "1.25rem" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: "rgba(255,255,255,0.3)" }}>DIAG_REGISTER:</span>
-                        <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: activeReason.accent }}>{activeReason.code}</span>
-                      </div>
-
-                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: "0.85rem" }}>
+                      <div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", marginBottom: "0.4rem" }}>
                           <span style={{ fontSize: "0.62rem", fontFamily: "monospace", color: "rgba(255,255,255,0.3)" }}>
                             {activeReason.statName}

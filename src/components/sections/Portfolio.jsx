@@ -51,7 +51,7 @@ const projects = [
     category: "Immersive Restaurant",
     summary: "An immersive digital journey through bohemian luxury, custom animations, and artisanal multicuisine.",
     link: "https://fridah-by-bohemians.vercel.app/#",
-    img: "/assets/fridah-preview-v2.png",
+    img: "/assets/fridah-preview-v2.jpg",
     tag: "Luxury",
     accent: "#eb5757", // Crimson Red
     accentGlow: "radial-gradient(circle, rgba(235, 87, 87, 0.06) 0%, transparent 70%)",

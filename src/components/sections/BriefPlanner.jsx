@@ -22,9 +22,10 @@ const SCALES = [
 
 const STYLES = [
   { id: "Minimalist & Clean", label: "Minimalist & Clean", desc: "High-contrast typography, ample white space.", addPrice: 0 },
-  { id: "Liquid Glass", label: "Liquid Glass (Refractive)", desc: "Immersive glass overlays, soft specular lighting.", addPrice: 1200 },
-  { id: "Dark Cyber", label: "Dark Cyber (High Motion)", desc: "Dense text styles, responsive cursor trails, high animation.", addPrice: 2400 },
-  { id: "Ultra-Luxury", label: "Ultra-Luxury (Gold Accent)", desc: "Gilded color palettes, thin outlines, smooth transitions.", addPrice: 3600 },
+  { id: "Liquid Glass", label: "Liquid Glass (Refractive)", desc: "Immersive glass overlays, soft specular lighting.", addPrice: 3000 },
+  { id: "Dark Cyber", label: "Dark Cyber (High Motion)", desc: "Dense text styles, responsive cursor trails, high animation.", addPrice: 6000 },
+  { id: "Ultra-Luxury", label: "Ultra-Luxury (Gold Accent)", desc: "Gilded color palettes, thin outlines, smooth transitions.", addPrice: 9000 },
+  { id: "Custom Aesthetic", label: "Custom Choice", desc: "Describe your own brand theme, custom colors, and design vision.", addPrice: 5000 },
 ];
 
 const CURRENCIES = {
@@ -160,7 +161,7 @@ const BriefPlanner = () => {
           email: email,
           project_niche: niche,
           project_scale: scale,
-          project_style: style,
+          project_style: style === "Custom Aesthetic" ? "Custom Choice (Meeting to be scheduled)" : style,
           estimated_cost: `${symbol}${convertedMin.toLocaleString()} - ${symbol}${convertedMax.toLocaleString()} (${currency})`
         })
       });
@@ -247,7 +248,7 @@ const BriefPlanner = () => {
               margin: 0,
             }}
           >
-            Select your project specifications below to calculate an instant cost range. No templates, no artificial limitations. Pure bespoke agency engineering.
+            Select your project specifications below to calculate an instant cost range. No templates, no artificial limitations. Pure custom agency engineering.
           </p>
         </div>
 
@@ -451,12 +452,35 @@ const BriefPlanner = () => {
                           </div>
                         ))}
                       </div>
+                      
+                      {style === "Custom Aesthetic" && (
+                        <div 
+                          style={{ 
+                            marginTop: "2rem", 
+                            padding: "1.25rem", 
+                            borderRadius: 12, 
+                            background: "rgba(223, 168, 87, 0.05)", 
+                            border: "1px solid rgba(223, 168, 87, 0.2)",
+                            fontSize: "0.9rem",
+                            color: "var(--text-primary)",
+                            lineHeight: 1.5,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px"
+                          }}
+                        >
+                          <Sparkles size={18} color="var(--accent-color)" style={{ flexShrink: 0 }} />
+                          <span>
+                            We'll schedule a dedicated design consultation meeting after brief submission to architect your custom aesthetic and brand theme.
+                          </span>
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {/* STEP 3: PRICE SUMMARY & LEAD CAPTURE */}
                   {step === 3 && (
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "1.5rem" : "3rem", alignItems: "start" }}>
                       
                       {/* Left: Summary */}
                       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
@@ -468,7 +492,7 @@ const BriefPlanner = () => {
                           {[
                             { label: "Niche Theme", value: niche },
                             { label: "Project Scale", value: scale },
-                            { label: "Aesthetic Direction", value: style },
+                            { label: "Aesthetic Direction", value: style === "Custom Aesthetic" ? "Custom (Meeting scheduled)" : style },
                             { label: "SEO Foundation", value: "Included Standard" },
                             { label: "Lighthouse Tuning", value: "Included Standard" }
                           ].map((item, idx) => (
