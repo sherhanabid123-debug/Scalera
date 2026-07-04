@@ -683,6 +683,132 @@ body {
   transform-origin: left;
 }
 
+/* ── NAV DROPDOWN (hover to reveal About sub-sections) ── */
+.nav-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.nav-dropdown-caret {
+  opacity: 0.55;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.nav-dropdown:hover .nav-dropdown-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+/* keep the underline from spanning the caret */
+.nav-dropdown-trigger::after { display: none; }
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: -14px;
+  padding-top: 16px; /* transparent bridge so hover doesn't drop into the gap */
+  min-width: 236px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-dropdown-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border-radius: 18px;
+  background: rgba(12, 12, 16, 0.9);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+/* specular top edge to match the site's glass cards */
+.nav-dropdown-inner::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(223, 168, 87, 0.4), transparent);
+  pointer-events: none;
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background 0.3s ease, padding-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-dropdown-item-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  flex-shrink: 0;
+  opacity: 0.25;
+  transform: scale(0.7);
+  box-shadow: 0 0 0 rgba(223, 168, 87, 0);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-dropdown-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.2;
+}
+.nav-dropdown-item-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+.nav-dropdown-item-desc {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.32);
+  transition: color 0.3s ease;
+}
+.nav-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.045);
+  padding-left: 18px;
+}
+.nav-dropdown-item:hover .nav-dropdown-item-dot {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 10px rgba(223, 168, 87, 0.7);
+}
+.nav-dropdown-item:hover .nav-dropdown-item-label {
+  color: var(--text-primary);
+}
+.nav-dropdown-item:hover .nav-dropdown-item-desc {
+  color: var(--text-secondary);
+}
+
+/* Perf-lite: drop the blur, keep it readable. */
+.perf-lite .nav-dropdown-inner {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(14, 14, 18, 0.97) !important;
+}
+
 /* ── FLOATING CHAT FAB (collapsed pill → expands on hover) ── */
 .chat-fab {
   --fab-pad: 9px;
