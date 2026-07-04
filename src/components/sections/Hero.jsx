@@ -111,7 +111,7 @@ const Hero = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
-        padding: "clamp(8rem, 12vh, 10rem) var(--pad-x) 4rem",
+        padding: "clamp(10rem, 14vh, 12rem) var(--pad-x) 4rem",
         position: "relative",
         overflow: "hidden",
       }}
@@ -186,9 +186,9 @@ const Hero = () => {
           <div style={{ overflow: "hidden", paddingBottom: "0.15em" }}>
             <span
               className="hero-word"
-              style={{ display: "inline-block", opacity: 0 }}
+              style={{ display: "inline-block" }}
             >
-              We Design & Build
+              Defining The Next Standard
             </span>
           </div>
           <div
@@ -216,10 +216,9 @@ const Hero = () => {
               style={{
                 display: "inline-block",
                 fontWeight: 600,
-                opacity: 0,
               }}
             >
-              High End Websites
+              In Digital Scale.
             </span>
             <div
               className="hero-line"

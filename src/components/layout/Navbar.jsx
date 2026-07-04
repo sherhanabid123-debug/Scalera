@@ -30,22 +30,7 @@ const Navbar = ({ loading }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useLayoutEffect(() => {
-    if (loading) return;
-    let ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".desktop-menu > *",
-        { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: "expo.out", delay: 0.05 },
-      );
-      gsap.fromTo(
-        ".mobile-toggle",
-        { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: "expo.out", delay: 0.05 },
-      );
-    });
-    return () => ctx.revert();
-  }, [loading]);
+
 
   useEffect(() => {
     if (isOpen) {
@@ -86,7 +71,6 @@ const Navbar = ({ loading }) => {
   return (
     <>
       <nav
-        className={scrolled ? "glass-nav" : ""}
         style={{
           position: "fixed",
           top: scrolled ? 20 : 0,
@@ -99,8 +83,13 @@ const Navbar = ({ loading }) => {
           justifyContent: "space-between",
           alignItems: "center",
           zIndex: 110,
-          transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-          background: !scrolled ? "transparent" : undefined,
+          transition: "all 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+          background: scrolled ? "rgba(6, 6, 8, 0.78)" : "transparent",
+          backdropFilter: scrolled ? "blur(32px) saturate(180%)" : "blur(0px) saturate(100%)",
+          WebkitBackdropFilter: scrolled ? "blur(32px) saturate(180%)" : "blur(0px) saturate(100%)",
+          border: scrolled ? "1px solid var(--border-glass)" : "1px solid transparent",
+          borderRadius: scrolled ? "100px" : "0px",
+          boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)" : "none",
           pointerEvents: "auto",
         }}
       >
@@ -113,7 +102,7 @@ const Navbar = ({ loading }) => {
             gap: scrolled ? "1.75rem" : "2.5rem",
             fontSize: scrolled ? "0.82rem" : "0.92rem",
             fontWeight: 500,
-            transition: "all 0.4s ease",
+            transition: "all 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
             flex: 1,
           }}
         >
@@ -180,7 +169,8 @@ const Navbar = ({ loading }) => {
             display: "flex",
             justifyContent: "center",
             fontFamily: "var(--font-display)",
-            transition: "font-size 0.4s ease",
+            transition: "font-size 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+            opacity: loading ? 0 : 1,
           }}
           onClick={() => {
             if (isOpen) setIsOpen(false);
