@@ -92,7 +92,6 @@ function App() {
         <div className="aurora-blob c" />
         <div className="aurora-veil" />
       </div>
-      <div className="noise-bg" />
 
       <div
         className="main-content"
