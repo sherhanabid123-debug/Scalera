@@ -74,7 +74,7 @@ const Background3D = () => {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    if (isMobile) {
+    if (staticMode) {
       drawStatic();
     } else {
       draw();
