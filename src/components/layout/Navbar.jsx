@@ -395,10 +395,10 @@ const Navbar = ({ loading }) => {
                       letterSpacing: "-0.01em",
                       fontFamily: "var(--font-display)",
                       opacity: mobileAboutOpen ? 1 : 0,
-                      transform: mobileAboutOpen ? "translateY(0)" : "translateY(-10px)",
+                      transform: mobileAboutOpen ? "translateY(0)" : "translateY(-12px)",
                       transition:
-                        "opacity 0.45s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1)",
-                      transitionDelay: mobileAboutOpen ? `${0.08 + ci * 0.055}s` : "0s",
+                        "opacity 0.8s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
+                      transitionDelay: mobileAboutOpen ? `${0.15 + ci * 0.09}s` : "0s",
                     }}
                   >
                     {child.label}
