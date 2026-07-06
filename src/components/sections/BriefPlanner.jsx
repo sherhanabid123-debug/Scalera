@@ -353,7 +353,7 @@ const BriefPlanner = () => {
           </div>
 
           {/* Card Body */}
-          <div style={{ padding: "3rem 2.5rem" }}>
+          <div style={{ padding: isMobile ? "1.75rem 1.25rem" : "3rem 2.5rem" }}>
             
             {!submitted ? (
               <div className="planner-card-inner">
