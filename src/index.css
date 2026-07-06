@@ -1444,8 +1444,13 @@ body {
     gap: 2.75rem;
   }
   .footer-bottom {
-    justify-content: flex-start;
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .footer-bottom .footer-copy,
+  .footer-bottom .footer-legal,
+  .footer-bottom .footer-top-btn {
+    justify-self: start;
   }
 }
 
