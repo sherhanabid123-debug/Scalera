@@ -60,6 +60,7 @@ const Navbar = ({ loading }) => {
     } else {
       document.body.style.overflow = "auto";
       gsap.to(menuRef.current, { x: "100%", duration: 0.6, ease: "expo.in" });
+      setMobileAboutOpen(false);
     }
   }, [isOpen]);
 
