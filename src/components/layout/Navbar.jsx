@@ -363,7 +363,7 @@ const Navbar = ({ loading }) => {
                   size={26}
                   style={{
                     opacity: 0.7,
-                    transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+                    transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
                     transform: mobileAboutOpen ? "rotate(180deg)" : "none",
                   }}
                 />
