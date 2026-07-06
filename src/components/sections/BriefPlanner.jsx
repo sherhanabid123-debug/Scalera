@@ -503,37 +503,41 @@ const BriefPlanner = () => {
                   {/* STEP 2: VISUAL STYLE */}
                   {step === 2 && (
                     <div>
-                      <h3 style={{ fontSize: "1.5rem", fontWeight: 400, marginBottom: "2rem", display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Palette size={20} color="var(--accent-color)" /> Select a visual design aesthetic
+                      <h3 style={{ fontSize: isMobile ? "1.15rem" : "1.5rem", fontWeight: 400, marginBottom: isMobile ? "1.25rem" : "2rem", display: "flex", alignItems: "center", gap: "10px", lineHeight: 1.3 }}>
+                        <Palette size={isMobile ? 17 : 20} color="var(--accent-color)" style={{ flexShrink: 0 }} /> Select a visual design aesthetic
                       </h3>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                        {STYLES.map((st) => (
-                          <div
-                            key={st.id}
-                            onClick={() => setStyle(st.id)}
-                            className="glass-card"
-                            style={{
-                              padding: "1.75rem",
-                              borderRadius: 16,
-                              cursor: "pointer",
-                              border: "1px solid",
-                              borderColor: style === st.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                              background: style === st.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
-                              boxShadow: style === st.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
-                              transition: "all 0.35s ease",
-                            }}
-                          >
-                            <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: style === st.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
-                              {st.label}
-                            </h4>
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {st.desc}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                      
+
+                      {isMobile ? (
+                        <MobileChoiceGrid items={STYLES} selected={style} onSelect={setStyle} />
+                      ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+                          {STYLES.map((st) => (
+                            <div
+                              key={st.id}
+                              onClick={() => setStyle(st.id)}
+                              className="glass-card"
+                              style={{
+                                padding: "1.75rem",
+                                borderRadius: 16,
+                                cursor: "pointer",
+                                border: "1px solid",
+                                borderColor: style === st.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
+                                background: style === st.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                                boxShadow: style === st.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
+                                transition: "all 0.35s ease",
+                              }}
+                            >
+                              <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: style === st.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
+                                {st.label}
+                              </h4>
+                              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+                                {st.desc}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       {style === "Custom Aesthetic" && (
                         <div 
                           style={{ 
