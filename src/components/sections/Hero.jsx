@@ -13,11 +13,11 @@ const stats = [
 ];
 
 const nicheDescriptions = {
-  "Business Website": "Custom corporate architecture designed for your specific needs, integrated SEO strategies and responsive lead-generation forms.",
-  "Online Store": "Configuring secure payment checkouts, dynamic inventory grids, and conversion rate optimizations.",
-  "High-End Portfolio": "Structuring bespoke layouts, smooth GSAP transitions, and interactive digital art displays.",
-  "Custom Landing Page": "Designing high-impact single-page scroll layouts, interactive micro-animations, and direct user funnels.",
-  "Other": "Scoping custom backend systems, advanced web application features, and unique branding assets."
+  "Business Website": "Custom corporate sites with built-in SEO and lead capture.",
+  "Online Store": "Secure checkouts and dynamic inventory built to convert.",
+  "High-End Portfolio": "Bespoke layouts with smooth, interactive motion.",
+  "Custom Landing Page": "High-impact single-page funnels that drive action.",
+  "Other": "Custom platforms, web apps, and unique brand builds."
 };
 
 const Hero = () => {
