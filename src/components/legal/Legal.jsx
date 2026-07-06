@@ -315,7 +315,7 @@ const Legal = () => {
   }, []);
 
   return (
-    <div className="legal-page">
+    <div className="legal-page" ref={rootRef}>
       {/* Ambient atmosphere */}
       <div className="legal-bg" aria-hidden="true">
         <div className="legal-blob a" />
