@@ -356,6 +356,7 @@ const Legal = () => {
                   <a
                     key={d.id}
                     href={`#${d.id}`}
+                    onClick={handleTocClick(d.id)}
                     className={`legal-toc-link${active === d.id ? " is-active" : ""}`}
                   >
                     <Icon size={15} strokeWidth={1.7} />
