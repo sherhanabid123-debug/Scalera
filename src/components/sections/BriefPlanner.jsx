@@ -362,35 +362,57 @@ const BriefPlanner = () => {
                   {/* STEP 0: NICHE */}
                   {step === 0 && (
                     <div>
-                      <h3 style={{ fontSize: "1.5rem", fontWeight: 400, marginBottom: "2rem", display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Sparkles size={20} color="var(--accent-color)" /> What niche represents your business best?
+                      <h3 style={{ fontSize: isMobile ? "1.15rem" : "1.5rem", fontWeight: 400, marginBottom: isMobile ? "1.25rem" : "2rem", display: "flex", alignItems: "center", gap: "10px", lineHeight: 1.3 }}>
+                        <Sparkles size={isMobile ? 17 : 20} color="var(--accent-color)" style={{ flexShrink: 0 }} /> What niche represents your business best?
                       </h3>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                        {NICHES.map((n) => (
+
+                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: isMobile ? "0.6rem" : "1rem" }}>
+                        {NICHES.map((n) => {
+                          const isActive = niche === n.id;
+                          return (
                           <div
                             key={n.id}
                             onClick={() => setNiche(n.id)}
                             className="glass-card"
                             style={{
-                              padding: "1.75rem",
-                              borderRadius: 16,
+                              padding: isMobile ? "1rem 1.15rem" : "1.75rem",
+                              borderRadius: isMobile ? 12 : 16,
                               cursor: "pointer",
+                              display: "flex",
+                              alignItems: isMobile ? "center" : "flex-start",
+                              justifyContent: "space-between",
+                              gap: "0.75rem",
+                              flexDirection: isMobile ? "row" : "column",
                               border: "1px solid",
-                              borderColor: niche === n.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                              background: niche === n.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
-                              boxShadow: niche === n.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
+                              borderColor: isActive ? "rgba(223, 168, 87, 0.4)" : "rgba(255, 255, 255, 0.06)",
+                              background: isActive ? "rgba(223, 168, 87, 0.06)" : "rgba(255, 255, 255, 0.02)",
+                              boxShadow: isActive ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
                               transition: "all 0.35s ease",
                             }}
                           >
-                            <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: niche === n.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
-                              {n.label}
-                            </h4>
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {n.desc}
-                            </p>
+                            <div>
+                              <h4 style={{ fontSize: isMobile ? "0.98rem" : "1.1rem", fontWeight: 600, color: isActive ? "var(--accent-color)" : "var(--text-primary)", marginBottom: isMobile ? "0.15rem" : "0.5rem" }}>
+                                {n.label}
+                              </h4>
+                              <p style={{ fontSize: isMobile ? "0.78rem" : "0.82rem", color: "var(--text-secondary)", lineHeight: 1.45, margin: 0 }}>
+                                {n.desc}
+                              </p>
+                            </div>
+                            {isMobile && (
+                              <div style={{
+                                width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
+                                border: "2px solid",
+                                borderColor: isActive ? "var(--accent-color)" : "rgba(255,255,255,0.15)",
+                                background: isActive ? "var(--accent-color)" : "transparent",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                transition: "all 0.3s ease",
+                              }}>
+                                {isActive && <Check size={12} color="#0a0a0a" strokeWidth={3} />}
+                              </div>
+                            )}
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
