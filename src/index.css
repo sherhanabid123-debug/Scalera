@@ -810,6 +810,19 @@ body {
   background: #1c1c23 !important;
 }
 
+/* Hide the floating chat button on mobile — it overlaps content, and contact
+   links live in the nav/footer there. */
+@media (max-width: 768px) {
+  .chat-dock {
+    display: none !important;
+  }
+  /* Decorative flanking lines around the hero headline read as stray dashes
+     when the text wraps on small screens — hide them on mobile. */
+  .hero-line {
+    display: none !important;
+  }
+}
+
 /* ── FLOATING CHAT FAB (collapsed pill → expands on hover) ── */
 .chat-fab {
   --fab-pad: 9px;
