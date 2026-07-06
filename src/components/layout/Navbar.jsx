@@ -380,7 +380,7 @@ const Navbar = ({ loading }) => {
                   opacity: mobileAboutOpen ? 1 : 0,
                   pointerEvents: mobileAboutOpen ? "auto" : "none",
                   transition:
-                    "max-height 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease",
+                    "max-height 1s cubic-bezier(0.22,1,0.36,1), opacity 0.8s ease",
                 }}
               >
                 {link.children.map((child, ci) => (
