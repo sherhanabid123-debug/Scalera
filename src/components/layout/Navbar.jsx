@@ -304,37 +304,118 @@ const Navbar = ({ loading }) => {
           top: 0, right: 0,
           width: "100%",
           height: "100dvh",
-          background: "rgba(6,6,8,0.97)",
+          background: "rgba(6,6,8,0.98)",
           backdropFilter: "blur(40px)",
           zIndex: 101,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
-          gap: "2.5rem",
           transform: "translateX(100%)",
           borderLeft: "1px solid var(--border-glass)",
           pointerEvents: "auto",
+          overflowY: "auto",
         }}
       >
-        {NAV_LINKS.map((link, i) => (
-          <a
-            key={link.label}
-            ref={(el) => (linksRef.current[i] = el)}
-            href={link.href}
-            onClick={scrollTo(link.href)}
-            className="mobile-nav-link"
-            style={{
-              fontSize: "3rem",
-              fontWeight: 600,
-              letterSpacing: "-0.03em",
-              textTransform: "uppercase",
-              fontFamily: "var(--font-display)",
-            }}
-          >
-            {link.label}
-          </a>
-        ))}
+        {/* Inner wrapper: centers when short, scrolls when tall (e.g. About expanded) */}
+        <div
+          style={{
+            margin: "auto 0",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "2.25rem",
+            padding: "6rem 1.5rem",
+            width: "100%",
+          }}
+        >
+        {NAV_LINKS.map((link, i) =>
+          link.children ? (
+            <div
+              key={link.label}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: mobileAboutOpen ? "1.5rem" : "0rem",
+                transition: "gap 0.4s cubic-bezier(0.16,1,0.3,1)",
+              }}
+            >
+              <button
+                ref={(el) => (linksRef.current[i] = el)}
+                onClick={() => setMobileAboutOpen((v) => !v)}
+                className="mobile-nav-link"
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 600,
+                  letterSpacing: "-0.03em",
+                  textTransform: "uppercase",
+                  fontFamily: "var(--font-display)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.6rem",
+                }}
+              >
+                {link.label}
+                <ChevronDown
+                  size={26}
+                  style={{
+                    opacity: 0.7,
+                    transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+                    transform: mobileAboutOpen ? "rotate(180deg)" : "none",
+                  }}
+                />
+              </button>
+              {mobileAboutOpen && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "1.1rem",
+                    animation: "fadeSlideUp 0.4s ease",
+                  }}
+                >
+                  {link.children.map((child) => (
+                    <a
+                      key={child.label}
+                      href={child.href}
+                      onClick={scrollTo(child.href)}
+                      className="mobile-nav-link"
+                      style={{
+                        fontSize: "1.3rem",
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em",
+                        fontFamily: "var(--font-display)",
+                      }}
+                    >
+                      {child.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <a
+              key={link.label}
+              ref={(el) => (linksRef.current[i] = el)}
+              href={link.href}
+              onClick={scrollTo(link.href)}
+              className="mobile-nav-link"
+              style={{
+                fontSize: "3rem",
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                textTransform: "uppercase",
+                fontFamily: "var(--font-display)",
+              }}
+            >
+              {link.label}
+            </a>
+          ),
+        )}
         <button
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
