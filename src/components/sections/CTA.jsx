@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PERF_LITE } from "../../utils/perf";
 import { ArrowUpRight, MessageCircle, Check, Mail, User, Globe, FileText, Settings } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -76,11 +77,12 @@ const CTA = () => {
   };
 
   useLayoutEffect(() => {
+    if (PERF_LITE) return; // mobile/low-end: keep content visible (no scroll-reveal holes)
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%",
+          start: "top 90%",
         },
       });
 
@@ -113,7 +115,7 @@ const CTA = () => {
       ref={containerRef}
       id="contact"
       style={{
-        padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
+        padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

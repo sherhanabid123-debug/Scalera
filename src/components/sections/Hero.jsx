@@ -13,17 +13,25 @@ const stats = [
 ];
 
 const nicheDescriptions = {
-  "Business Website": "Custom corporate architecture designed for your specific needs, integrated SEO strategies and responsive lead-generation forms.",
-  "Online Store": "Configuring secure payment checkouts, dynamic inventory grids, and conversion rate optimizations.",
-  "High-End Portfolio": "Structuring bespoke layouts, smooth GSAP transitions, and interactive digital art displays.",
-  "Custom Landing Page": "Designing high-impact single-page scroll layouts, interactive micro-animations, and direct user funnels.",
-  "Other": "Scoping custom backend systems, advanced web application features, and unique branding assets."
+  "Business Website": "Custom corporate sites with built-in SEO and lead capture.",
+  "Online Store": "Secure checkouts and dynamic inventory built to convert.",
+  "High-End Portfolio": "Bespoke layouts with smooth, interactive motion.",
+  "Custom Landing Page": "High-impact single-page funnels that drive action.",
+  "Other": "Custom platforms, web apps, and unique brand builds."
 };
 
 const Hero = () => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
   const [selectedNiche, setSelectedNiche] = useState("Business Website");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     // Cursor-follow glow: desktop / full-fx only. It's meaningless on touch
@@ -295,6 +303,7 @@ const Hero = () => {
                     key={niche}
                     onClick={() => setSelectedNiche(niche)}
                     style={{
+                      gridColumn: isMobile && niche === "Other" ? "1 / -1" : "auto",
                       padding: "0.75rem 0.4rem",
                       borderRadius: "10px",
                       background: active 
@@ -339,8 +348,8 @@ const Hero = () => {
 
             <div style={{ height: "1px", background: "var(--border-subtle)", margin: "0.25rem 0" }} />
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-              <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)", textAlign: "left", maxWidth: "340px", lineHeight: 1.4, display: "inline-block" }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", alignItems: isMobile ? "stretch" : "center", gap: "1rem", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)", textAlign: "left", maxWidth: isMobile ? "100%" : "340px", lineHeight: 1.4, display: "inline-block" }}>
                 {nicheDescriptions[selectedNiche] || "Tailoring custom design specifications, performance optimizations, and backend integrations."}
               </span>
               <button
@@ -360,7 +369,9 @@ const Hero = () => {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
+                  justifyContent: "center",
                   gap: "8px",
+                  width: isMobile ? "100%" : "auto",
                   background: "rgba(223, 168, 87, 0.12)",
                   border: "1px solid rgba(223, 168, 87, 0.35)",
                   color: "#ffffff",

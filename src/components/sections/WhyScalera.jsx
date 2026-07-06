@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PERF_LITE } from "../../utils/perf";
 import { Activity, ShieldAlert, Cpu, Layers, Terminal } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -76,13 +77,14 @@ const WhyScalera = () => {
   }, []);
 
   useLayoutEffect(() => {
+    if (PERF_LITE) return; // mobile/low-end: keep content visible (no scroll-reveal holes)
     let ctx = gsap.context(() => {
       gsap.fromTo(
         ".why-label",
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0, duration: 1,
-          scrollTrigger: { trigger: containerRef.current, start: "top 80%" },
+          scrollTrigger: { trigger: containerRef.current, start: "top 90%" },
         },
       );
       gsap.fromTo(
@@ -90,7 +92,7 @@ const WhyScalera = () => {
         { opacity: 0, y: 40 },
         {
           opacity: 1, y: 0, duration: 1.4, ease: "expo.out",
-          scrollTrigger: { trigger: ".why-title", start: "top 82%" },
+          scrollTrigger: { trigger: ".why-title", start: "top 90%" },
         },
       );
       if (!isMobile) {
@@ -99,7 +101,7 @@ const WhyScalera = () => {
           { opacity: 0, x: -40 },
           {
             opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
-            scrollTrigger: { trigger: ".why-console-hud", start: "top 78%" },
+            scrollTrigger: { trigger: ".why-console-hud", start: "top 90%" },
           },
         );
         gsap.fromTo(
@@ -107,7 +109,7 @@ const WhyScalera = () => {
           { opacity: 0, x: 40 },
           {
             opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
-            scrollTrigger: { trigger: ".why-left-menu", start: "top 78%" },
+            scrollTrigger: { trigger: ".why-left-menu", start: "top 90%" },
           },
         );
       } else {
@@ -116,7 +118,7 @@ const WhyScalera = () => {
           { opacity: 0, y: 30 },
           {
             opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out",
-            scrollTrigger: { trigger: ".why-mobile-spec", start: "top 82%" },
+            scrollTrigger: { trigger: ".why-mobile-spec", start: "top 90%" },
           },
         );
       }
@@ -138,7 +140,7 @@ const WhyScalera = () => {
       id="why"
       ref={containerRef}
       style={{
-        padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
+        padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)",
         position: "relative",
         zIndex: 2,
         overflow: "hidden",
@@ -204,7 +206,7 @@ const WhyScalera = () => {
         {/* Unified Editorial Header */}
         <div
           style={{
-            marginBottom: "4rem",
+            marginBottom: "clamp(2.25rem, 5vw, 4rem)",
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
             gap: "2rem",

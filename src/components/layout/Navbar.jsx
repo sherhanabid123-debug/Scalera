@@ -21,6 +21,7 @@ const NAV_LINKS = [
 const Navbar = ({ loading }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const menuRef = useRef(null);
   const linksRef = useRef([]);
 
@@ -44,6 +45,7 @@ const Navbar = ({ loading }) => {
     } else {
       document.body.style.overflow = "auto";
       gsap.to(menuRef.current, { x: "100%", duration: 0.6, ease: "expo.in" });
+      setMobileAboutOpen(false);
     }
   }, [isOpen]);
 
@@ -292,37 +294,128 @@ const Navbar = ({ loading }) => {
           top: 0, right: 0,
           width: "100%",
           height: "100dvh",
-          background: "rgba(6,6,8,0.97)",
-          backdropFilter: "blur(40px)",
+          background: "#08080c",
           zIndex: 101,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
-          gap: "2.5rem",
           transform: "translateX(100%)",
           borderLeft: "1px solid var(--border-glass)",
           pointerEvents: "auto",
+          overflowY: "auto",
         }}
       >
-        {NAV_LINKS.map((link, i) => (
-          <a
-            key={link.label}
-            ref={(el) => (linksRef.current[i] = el)}
-            href={link.href}
-            onClick={scrollTo(link.href)}
-            className="mobile-nav-link"
-            style={{
-              fontSize: "3rem",
-              fontWeight: 600,
-              letterSpacing: "-0.03em",
-              textTransform: "uppercase",
-              fontFamily: "var(--font-display)",
-            }}
-          >
-            {link.label}
-          </a>
-        ))}
+        {/* Inner wrapper: centers when short, scrolls when tall (e.g. About expanded) */}
+        <div
+          style={{
+            margin: "auto 0",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "2.25rem",
+            padding: "6rem 1.5rem",
+            width: "100%",
+          }}
+        >
+        {NAV_LINKS.map((link, i) =>
+          link.children ? (
+            <div
+              key={link.label}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: mobileAboutOpen ? "1.5rem" : "0rem",
+                transition: "gap 0.9s cubic-bezier(0.22,1,0.36,1)",
+              }}
+            >
+              <button
+                ref={(el) => (linksRef.current[i] = el)}
+                onClick={() => setMobileAboutOpen((v) => !v)}
+                className="mobile-nav-link"
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 600,
+                  letterSpacing: "-0.03em",
+                  textTransform: "uppercase",
+                  fontFamily: "var(--font-display)",
+                  color: "#ffffff",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.6rem",
+                }}
+              >
+                {link.label}
+                <ChevronDown
+                  size={26}
+                  style={{
+                    opacity: 0.7,
+                    transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
+                    transform: mobileAboutOpen ? "rotate(180deg)" : "none",
+                  }}
+                />
+              </button>
+              {/* Always rendered so both expand AND collapse animate smoothly */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "1.1rem",
+                  overflow: "hidden",
+                  maxHeight: mobileAboutOpen ? "460px" : "0px",
+                  opacity: mobileAboutOpen ? 1 : 0,
+                  pointerEvents: mobileAboutOpen ? "auto" : "none",
+                  transition:
+                    "max-height 1s cubic-bezier(0.22,1,0.36,1), opacity 0.8s ease",
+                }}
+              >
+                {link.children.map((child, ci) => (
+                  <a
+                    key={child.label}
+                    href={child.href}
+                    onClick={scrollTo(child.href)}
+                    className="mobile-nav-link"
+                    style={{
+                      fontSize: "1.3rem",
+                      fontWeight: 500,
+                      letterSpacing: "-0.01em",
+                      fontFamily: "var(--font-display)",
+                      opacity: mobileAboutOpen ? 1 : 0,
+                      transform: mobileAboutOpen ? "translateY(0)" : "translateY(-12px)",
+                      transition:
+                        "opacity 0.8s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
+                      transitionDelay: mobileAboutOpen ? `${0.15 + ci * 0.09}s` : "0s",
+                    }}
+                  >
+                    {child.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <a
+              key={link.label}
+              ref={(el) => (linksRef.current[i] = el)}
+              href={link.href}
+              onClick={scrollTo(link.href)}
+              className="mobile-nav-link"
+              style={{
+                fontSize: "3rem",
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                textTransform: "uppercase",
+                fontFamily: "var(--font-display)",
+                color: "#ffffff",
+              }}
+            >
+              {link.label}
+            </a>
+          ),
+        )}
         <button
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
@@ -338,18 +431,18 @@ const Navbar = ({ loading }) => {
           }}
           className="mobile-nav-link btn-glass"
           style={{
-            fontSize: "2rem",
+            fontSize: "1.6rem",
             fontWeight: 700,
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.02em",
             textTransform: "uppercase",
-            color: "#080808",
-            background: "linear-gradient(135deg, var(--accent-warm), var(--accent-color))",
-            padding: "14px 36px",
+            color: "#ffffff",
+            background: "rgba(223, 168, 87, 0.12)",
+            padding: "14px 34px",
             borderRadius: "99px",
-            boxShadow: "0 0 30px rgba(223,168,87,0.3)",
-            marginTop: "1rem",
+            boxShadow: "0 4px 16px rgba(223, 168, 87, 0.1), inset 0 1px 0 rgba(255,255,255,0.15)",
+            marginTop: "1.5rem",
             cursor: "pointer",
-            border: "none",
+            border: "1px solid rgba(223, 168, 87, 0.35)",
             display: "flex",
             alignItems: "center",
             gap: "10px",
@@ -359,6 +452,7 @@ const Navbar = ({ loading }) => {
           <Sparkles size={24} />
           Start Project
         </button>
+        </div>
       </div>
     </>
   );

@@ -36,7 +36,7 @@ const FAQ = () => {
       id="faq"
       style={{
         borderTop: "1px solid var(--border-subtle)",
-        padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
+        padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)",
         position: "relative",
         overflow: "hidden",
       }}

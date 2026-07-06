@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PERF_LITE } from "../../utils/perf";
 import { Monitor, Code2, SearchCheck, Gauge, HeadphonesIcon, Sparkles } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -228,13 +229,14 @@ const Services = () => {
   }, []);
 
   useLayoutEffect(() => {
+    if (PERF_LITE) return; // mobile/low-end: keep content visible (no scroll-reveal holes)
     let ctx = gsap.context(() => {
       gsap.fromTo(
         ".services-label",
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0, duration: 1,
-          scrollTrigger: { trigger: containerRef.current, start: "top 80%" },
+          scrollTrigger: { trigger: containerRef.current, start: "top 90%" },
         },
       );
       gsap.fromTo(
@@ -242,7 +244,7 @@ const Services = () => {
         { opacity: 0, y: 40 },
         {
           opacity: 1, y: 0, duration: 1.4, ease: "expo.out",
-          scrollTrigger: { trigger: ".services-title", start: "top 80%" },
+          scrollTrigger: { trigger: ".services-title", start: "top 90%" },
         },
       );
       gsap.fromTo(
@@ -251,7 +253,7 @@ const Services = () => {
         {
           opacity: 1, y: 0, scale: 1,
           duration: 1.2, stagger: 0.1, ease: "expo.out",
-          scrollTrigger: { trigger: ".service-card", start: "top 85%" },
+          scrollTrigger: { trigger: ".service-card", start: "top 90%" },
         },
       );
     }, containerRef);
@@ -263,7 +265,7 @@ const Services = () => {
       id="services"
       ref={containerRef}
       className="section"
-      style={{ padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)", position: "relative", overflow: "hidden", borderTop: "1px solid var(--border-subtle)" }}
+      style={{ padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)", position: "relative", overflow: "hidden", borderTop: "1px solid var(--border-subtle)" }}
     >
       {/* Background glows */}
       <div
@@ -280,7 +282,7 @@ const Services = () => {
         {/* Unified Editorial Header */}
         <div
           style={{
-            marginBottom: "4rem",
+            marginBottom: "clamp(2.25rem, 5vw, 4rem)",
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
             gap: "2rem",

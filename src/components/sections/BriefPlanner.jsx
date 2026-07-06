@@ -37,6 +37,64 @@ const CURRENCIES = {
   AUD: { symbol: "A$", rate: 0.018 },
 };
 
+/* Compact mobile selector: 2-col label chips + description of the current pick.
+   Keeps every step short and consistent on phones. */
+const MobileChoiceGrid = ({ items, selected, onSelect }) => {
+  const current = items.find((it) => it.id === selected);
+  return (
+    <>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+        {items.map((it) => {
+          const isActive = selected === it.id;
+          return (
+            <button
+              key={it.id}
+              onClick={() => onSelect(it.id)}
+              style={{
+                padding: "0.75rem 0.6rem",
+                minHeight: 58,
+                borderRadius: 12,
+                cursor: "pointer",
+                border: "1px solid",
+                borderColor: isActive ? "rgba(223, 168, 87, 0.5)" : "rgba(255, 255, 255, 0.07)",
+                background: isActive ? "rgba(223, 168, 87, 0.1)" : "rgba(255, 255, 255, 0.02)",
+                color: isActive ? "var(--accent-color)" : "var(--text-secondary)",
+                fontSize: "0.82rem",
+                fontWeight: isActive ? 700 : 500,
+                fontFamily: "inherit",
+                lineHeight: 1.25,
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                boxShadow: isActive ? "0 4px 14px rgba(223,168,87,0.14)" : "none",
+              }}
+            >
+              {it.label}
+            </button>
+          );
+        })}
+      </div>
+      {current?.desc && (
+        <div
+          style={{
+            marginTop: "0.85rem",
+            padding: "0.9rem 1rem",
+            borderRadius: 12,
+            background: "rgba(223, 168, 87, 0.04)",
+            border: "1px solid rgba(223, 168, 87, 0.15)",
+          }}
+        >
+          <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+            {current.desc}
+          </p>
+        </div>
+      )}
+    </>
+  );
+};
+
 const BriefPlanner = () => {
   const [step, setStep] = useState(0); // 0: Niche, 1: Scale, 2: Style, 3: Estimate/Lead Capture
   const [niche, setNiche] = useState("Business Website");
@@ -190,7 +248,7 @@ const BriefPlanner = () => {
       id="estimator"
       className="section"
       style={{
-        padding: "clamp(7rem, 11vw, 10rem) var(--pad-x) clamp(5rem, 8vw, 7rem)",
+        padding: "clamp(3.5rem, 11vw, 9rem) var(--pad-x) clamp(3rem, 8vw, 6.5rem)",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-subtle)",
@@ -269,38 +327,50 @@ const BriefPlanner = () => {
           <div
             style={{
               display: "flex",
+              flexDirection: isMobile ? "column" : "row",
               justifyContent: "space-between",
-              alignItems: "center",
-              padding: "1.5rem 2.5rem",
+              alignItems: isMobile ? "stretch" : "center",
+              padding: isMobile ? "1.25rem 1.25rem" : "1.5rem 2.5rem",
               background: "rgba(0,0,0,0.2)",
               borderBottom: "1px solid var(--border-subtle)",
-              flexWrap: "wrap",
               gap: "1rem",
             }}
           >
-            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-              {[0, 1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: step === i ? 24 : 8,
-                    height: 8,
-                    borderRadius: 4,
-                    background: step === i ? "var(--accent-color)" : step > i ? "rgba(223, 168, 87, 0.4)" : "rgba(255,255,255,0.1)",
-                    transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  }}
-                />
-              ))}
-            </div>
-            
-            <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-              {step === 0 && "Step 1: Project Niche"}
-              {step === 1 && "Step 2: Scale & Pages"}
-              {step === 2 && "Step 3: Design Style"}
-              {step === 3 && "Final: Pricing Summary"}
+            {/* Row 1: step dots + step label */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                justifyContent: isMobile ? "space-between" : "flex-start",
+                width: isMobile ? "100%" : "auto",
+              }}
+            >
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: step === i ? 24 : 8,
+                      height: 8,
+                      borderRadius: 4,
+                      background: step === i ? "var(--accent-color)" : step > i ? "rgba(223, 168, 87, 0.4)" : "rgba(255,255,255,0.1)",
+                      transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div style={{ fontSize: isMobile ? "0.72rem" : "0.8rem", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+                {step === 0 && "Step 1: Project Niche"}
+                {step === 1 && "Step 2: Scale & Pages"}
+                {step === 2 && "Step 3: Design Style"}
+                {step === 3 && "Final: Pricing Summary"}
+              </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            {/* Row 2: currency + live price */}
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem", justifyContent: isMobile ? "space-between" : "flex-end", width: isMobile ? "100%" : "auto" }}>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
@@ -341,7 +411,7 @@ const BriefPlanner = () => {
           </div>
 
           {/* Card Body */}
-          <div style={{ padding: "3rem 2.5rem" }}>
+          <div style={{ padding: isMobile ? "1.75rem 1.25rem" : "3rem 2.5rem" }}>
             
             {!submitted ? (
               <div className="planner-card-inner">
@@ -350,109 +420,124 @@ const BriefPlanner = () => {
                   {/* STEP 0: NICHE */}
                   {step === 0 && (
                     <div>
-                      <h3 style={{ fontSize: "1.5rem", fontWeight: 400, marginBottom: "2rem", display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Sparkles size={20} color="var(--accent-color)" /> What niche represents your business best?
+                      <h3 style={{ fontSize: isMobile ? "1.15rem" : "1.5rem", fontWeight: 400, marginBottom: isMobile ? "1.25rem" : "2rem", display: "flex", alignItems: "center", gap: "10px", lineHeight: 1.3 }}>
+                        <Sparkles size={isMobile ? 17 : 20} color="var(--accent-color)" style={{ flexShrink: 0 }} /> What niche represents your business best?
                       </h3>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                        {NICHES.map((n) => (
-                          <div
-                            key={n.id}
-                            onClick={() => setNiche(n.id)}
-                            className="glass-card"
-                            style={{
-                              padding: "1.75rem",
-                              borderRadius: 16,
-                              cursor: "pointer",
-                              border: "1px solid",
-                              borderColor: niche === n.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                              background: niche === n.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
-                              boxShadow: niche === n.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
-                              transition: "all 0.35s ease",
-                            }}
-                          >
-                            <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: niche === n.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
-                              {n.label}
-                            </h4>
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {n.desc}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
+
+                      {isMobile ? (
+                        <MobileChoiceGrid items={NICHES} selected={niche} onSelect={setNiche} />
+                      ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+                          {NICHES.map((n) => {
+                            const isActive = niche === n.id;
+                            return (
+                              <div
+                                key={n.id}
+                                onClick={() => setNiche(n.id)}
+                                className="glass-card"
+                                style={{
+                                  padding: "1.75rem",
+                                  borderRadius: 16,
+                                  cursor: "pointer",
+                                  border: "1px solid",
+                                  borderColor: isActive ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
+                                  background: isActive ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                                  boxShadow: isActive ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
+                                  transition: "all 0.35s ease",
+                                }}
+                              >
+                                <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: isActive ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
+                                  {n.label}
+                                </h4>
+                                <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+                                  {n.desc}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {/* STEP 1: SCALE */}
                   {step === 1 && (
                     <div>
-                      <h3 style={{ fontSize: "1.5rem", fontWeight: 400, marginBottom: "2rem", display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Layers size={20} color="var(--accent-color)" /> What scale of site do you require?
+                      <h3 style={{ fontSize: isMobile ? "1.15rem" : "1.5rem", fontWeight: 400, marginBottom: isMobile ? "1.25rem" : "2rem", display: "flex", alignItems: "center", gap: "10px", lineHeight: 1.3 }}>
+                        <Layers size={isMobile ? 17 : 20} color="var(--accent-color)" style={{ flexShrink: 0 }} /> What scale of site do you require?
                       </h3>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                        {SCALES.map((s) => (
-                          <div
-                            key={s.id}
-                            onClick={() => setScale(s.id)}
-                            className="glass-card"
-                            style={{
-                              padding: "1.75rem",
-                              borderRadius: 16,
-                              cursor: "pointer",
-                              border: "1px solid",
-                              borderColor: scale === s.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                              background: scale === s.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
-                              boxShadow: scale === s.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
-                              transition: "all 0.35s ease",
-                            }}
-                          >
-                            <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: scale === s.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
-                              {s.label}
-                            </h4>
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {s.desc}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
+
+                      {isMobile ? (
+                        <MobileChoiceGrid items={SCALES} selected={scale} onSelect={setScale} />
+                      ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+                          {SCALES.map((s) => (
+                            <div
+                              key={s.id}
+                              onClick={() => setScale(s.id)}
+                              className="glass-card"
+                              style={{
+                                padding: "1.75rem",
+                                borderRadius: 16,
+                                cursor: "pointer",
+                                border: "1px solid",
+                                borderColor: scale === s.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
+                                background: scale === s.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                                boxShadow: scale === s.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
+                                transition: "all 0.35s ease",
+                              }}
+                            >
+                              <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: scale === s.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
+                                {s.label}
+                              </h4>
+                              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+                                {s.desc}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {/* STEP 2: VISUAL STYLE */}
                   {step === 2 && (
                     <div>
-                      <h3 style={{ fontSize: "1.5rem", fontWeight: 400, marginBottom: "2rem", display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Palette size={20} color="var(--accent-color)" /> Select a visual design aesthetic
+                      <h3 style={{ fontSize: isMobile ? "1.15rem" : "1.5rem", fontWeight: 400, marginBottom: isMobile ? "1.25rem" : "2rem", display: "flex", alignItems: "center", gap: "10px", lineHeight: 1.3 }}>
+                        <Palette size={isMobile ? 17 : 20} color="var(--accent-color)" style={{ flexShrink: 0 }} /> Select a visual design aesthetic
                       </h3>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                        {STYLES.map((st) => (
-                          <div
-                            key={st.id}
-                            onClick={() => setStyle(st.id)}
-                            className="glass-card"
-                            style={{
-                              padding: "1.75rem",
-                              borderRadius: 16,
-                              cursor: "pointer",
-                              border: "1px solid",
-                              borderColor: style === st.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                              background: style === st.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
-                              boxShadow: style === st.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
-                              transition: "all 0.35s ease",
-                            }}
-                          >
-                            <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: style === st.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
-                              {st.label}
-                            </h4>
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {st.desc}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                      
+
+                      {isMobile ? (
+                        <MobileChoiceGrid items={STYLES} selected={style} onSelect={setStyle} />
+                      ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+                          {STYLES.map((st) => (
+                            <div
+                              key={st.id}
+                              onClick={() => setStyle(st.id)}
+                              className="glass-card"
+                              style={{
+                                padding: "1.75rem",
+                                borderRadius: 16,
+                                cursor: "pointer",
+                                border: "1px solid",
+                                borderColor: style === st.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
+                                background: style === st.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                                boxShadow: style === st.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
+                                transition: "all 0.35s ease",
+                              }}
+                            >
+                              <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: style === st.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
+                                {st.label}
+                              </h4>
+                              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+                                {st.desc}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       {style === "Custom Aesthetic" && (
                         <div 
                           style={{ 

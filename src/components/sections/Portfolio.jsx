@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PERF_LITE } from "../../utils/perf";
 import { ArrowUpRight, Lock, ExternalLink, Activity } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -85,13 +86,14 @@ const Portfolio = () => {
   }, []);
 
   useLayoutEffect(() => {
+    if (PERF_LITE) return; // mobile/low-end: keep content visible (no scroll-reveal holes)
     let ctx = gsap.context(() => {
       gsap.fromTo(
         ".portfolio-label",
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0, duration: 1,
-          scrollTrigger: { trigger: containerRef.current, start: "top 80%" },
+          scrollTrigger: { trigger: containerRef.current, start: "top 90%" },
         },
       );
       gsap.fromTo(
@@ -99,7 +101,7 @@ const Portfolio = () => {
         { opacity: 0, y: 40 },
         {
           opacity: 1, y: 0, duration: 1.4, ease: "expo.out",
-          scrollTrigger: { trigger: ".portfolio-title", start: "top 82%" },
+          scrollTrigger: { trigger: ".portfolio-title", start: "top 90%" },
         },
       );
       if (!isMobile) {
@@ -108,7 +110,7 @@ const Portfolio = () => {
           { opacity: 0, x: -45 },
           {
             opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
-            scrollTrigger: { trigger: ".portfolio-left-col", start: "top 78%" },
+            scrollTrigger: { trigger: ".portfolio-left-col", start: "top 90%" },
           },
         );
         gsap.fromTo(
@@ -116,7 +118,7 @@ const Portfolio = () => {
           { opacity: 0, x: 45 },
           {
             opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
-            scrollTrigger: { trigger: ".portfolio-right-col", start: "top 78%" },
+            scrollTrigger: { trigger: ".portfolio-right-col", start: "top 90%" },
           },
         );
       } else {
@@ -125,7 +127,7 @@ const Portfolio = () => {
           { opacity: 0, y: 40 },
           {
             opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out",
-            scrollTrigger: { trigger: ".portfolio-mobile-card", start: "top 82%" },
+            scrollTrigger: { trigger: ".portfolio-mobile-card", start: "top 90%" },
           },
         );
       }
@@ -193,7 +195,7 @@ const Portfolio = () => {
       id="work"
       ref={containerRef}
       style={{
-        padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
+        padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-subtle)",
@@ -228,7 +230,7 @@ const Portfolio = () => {
         {/* Unified Editorial Header */}
         <div
           style={{
-            marginBottom: "4rem",
+            marginBottom: "clamp(2.25rem, 5vw, 4rem)",
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
             gap: "2rem",
