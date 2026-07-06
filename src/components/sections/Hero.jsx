@@ -370,7 +370,9 @@ const Hero = () => {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
+                  justifyContent: "center",
                   gap: "8px",
+                  width: isMobile ? "100%" : "auto",
                   background: "rgba(223, 168, 87, 0.12)",
                   border: "1px solid rgba(223, 168, 87, 0.35)",
                   color: "#ffffff",
