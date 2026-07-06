@@ -269,38 +269,50 @@ const BriefPlanner = () => {
           <div
             style={{
               display: "flex",
+              flexDirection: isMobile ? "column" : "row",
               justifyContent: "space-between",
-              alignItems: "center",
-              padding: "1.5rem 2.5rem",
+              alignItems: isMobile ? "stretch" : "center",
+              padding: isMobile ? "1.25rem 1.25rem" : "1.5rem 2.5rem",
               background: "rgba(0,0,0,0.2)",
               borderBottom: "1px solid var(--border-subtle)",
-              flexWrap: "wrap",
               gap: "1rem",
             }}
           >
-            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-              {[0, 1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: step === i ? 24 : 8,
-                    height: 8,
-                    borderRadius: 4,
-                    background: step === i ? "var(--accent-color)" : step > i ? "rgba(223, 168, 87, 0.4)" : "rgba(255,255,255,0.1)",
-                    transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  }}
-                />
-              ))}
-            </div>
-            
-            <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-              {step === 0 && "Step 1: Project Niche"}
-              {step === 1 && "Step 2: Scale & Pages"}
-              {step === 2 && "Step 3: Design Style"}
-              {step === 3 && "Final: Pricing Summary"}
+            {/* Row 1: step dots + step label */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                justifyContent: isMobile ? "space-between" : "flex-start",
+                width: isMobile ? "100%" : "auto",
+              }}
+            >
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: step === i ? 24 : 8,
+                      height: 8,
+                      borderRadius: 4,
+                      background: step === i ? "var(--accent-color)" : step > i ? "rgba(223, 168, 87, 0.4)" : "rgba(255,255,255,0.1)",
+                      transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div style={{ fontSize: isMobile ? "0.72rem" : "0.8rem", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+                {step === 0 && "Step 1: Project Niche"}
+                {step === 1 && "Step 2: Scale & Pages"}
+                {step === 2 && "Step 3: Design Style"}
+                {step === 3 && "Final: Pricing Summary"}
+              </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            {/* Row 2: currency + live price */}
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem", justifyContent: isMobile ? "space-between" : "flex-end", width: isMobile ? "100%" : "auto" }}>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
