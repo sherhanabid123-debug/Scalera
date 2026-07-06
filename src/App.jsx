@@ -59,6 +59,34 @@ function App() {
     };
   }, []);
 
+  // Global smooth-scroll: any in-page anchor link (href="#section") anywhere on
+  // the site scrolls smoothly to its target. Links that already handle their own
+  // click (they call preventDefault) are skipped, so this never double-fires.
+  useEffect(() => {
+    const onClick = (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey) return;
+      const target = e.target;
+      if (!target || typeof target.closest !== "function") return;
+      const a = target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute("href");
+      if (!href || href === "#") return;
+      const el = document.querySelector(href);
+      if (!el) return;
+      e.preventDefault();
+      if (window.lenis) {
+        window.lenis.scrollTo(href, {
+          duration: 1,
+          easing: (t) => 1 - Math.pow(1 - t, 4),
+        });
+      } else {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
   useEffect(() => {
     // On weak devices, skip Lenis entirely. Its rAF loop + scroll virtualization
     // is a constant per-frame cost and native scrolling is far smoother there.
