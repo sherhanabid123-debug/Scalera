@@ -109,6 +109,13 @@ const Footer = () => {
           <span className="footer-copy">
             © {new Date().getFullYear()} Scalera Studio — Crafted with precision.
           </span>
+          <nav className="footer-legal">
+            <a href="/legal.html#terms">Terms</a>
+            <span className="footer-legal-sep">·</span>
+            <a href="/legal.html#privacy">Privacy</a>
+            <span className="footer-legal-sep">·</span>
+            <a href="/legal.html#cookies">Cookies</a>
+          </nav>
           <button className="footer-top-btn" onClick={scrollTop}>
             Back to top
             <span className="footer-top-icon">
