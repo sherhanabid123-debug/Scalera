@@ -203,6 +203,99 @@ const DOCS = [
 
 const Legal = () => {
   const [active, setActive] = useState(DOCS[0].id);
+  const lenisRef = useRef(null);
+  const rootRef = useRef(null);
+
+  // Smooth scrolling + load & scroll-reveal animations
+  useLayoutEffect(() => {
+    let lenis = null;
+    let tick = null;
+
+    if (!PERF_LITE) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothTouch: false,
+      });
+      lenisRef.current = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      tick = (time) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    const ctx = gsap.context(() => {
+      if (PERF_LITE) return; // low-end: keep everything visible, no motion
+
+      // Entrance / load animation
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      tl.from(".legal-header", { y: -40, opacity: 0, duration: 0.9 })
+        .from(".legal-hero .section-label", { opacity: 0, y: 18, duration: 0.7 }, "-=0.5")
+        .from(".legal-hero h1", { opacity: 0, y: 34, duration: 1 }, "-=0.4")
+        .from(".legal-hero-sub", { opacity: 0, y: 22, duration: 0.9 }, "-=0.7")
+        .from(".legal-toc-inner", { opacity: 0, y: 26, duration: 0.9 }, "-=0.6")
+        .from(
+          ".legal-doc:first-of-type .legal-doc-head, .legal-doc:first-of-type .legal-updated, .legal-doc:first-of-type .legal-intro",
+          { opacity: 0, y: 22, duration: 0.8, stagger: 0.08 },
+          "-=0.6",
+        );
+
+      // Scroll reveals for each document section + the contact card
+      gsap.utils.toArray(".legal-doc").forEach((doc, i) => {
+        if (i === 0) return; // first doc handled by the load timeline
+        gsap.from(doc, {
+          opacity: 0,
+          y: 48,
+          duration: 1.1,
+          ease: "expo.out",
+          scrollTrigger: { trigger: doc, start: "top 85%" },
+        });
+      });
+      gsap.from(".legal-contact", {
+        opacity: 0,
+        y: 40,
+        scale: 0.98,
+        duration: 1,
+        ease: "expo.out",
+        scrollTrigger: { trigger: ".legal-contact", start: "top 88%" },
+      });
+    }, rootRef);
+
+    // Honour an incoming hash (e.g. arriving from footer → /legal.html#privacy)
+    if (window.location.hash) {
+      const el = document.querySelector(window.location.hash);
+      if (el) {
+        requestAnimationFrame(() => {
+          if (lenis) lenis.scrollTo(el, { offset: -80, immediate: false });
+          else el.scrollIntoView();
+        });
+      }
+    }
+
+    return () => {
+      ctx.revert();
+      if (lenis) {
+        lenis.destroy();
+        if (tick) gsap.ticker.remove(tick);
+        lenisRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleTocClick = (id) => (e) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(el, {
+        offset: -80,
+        duration: 1.3,
+        easing: (t) => 1 - Math.pow(1 - t, 4),
+      });
+    } else {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   // Scroll-spy: highlight the current document in the table of contents
   useEffect(() => {
