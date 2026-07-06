@@ -349,8 +349,8 @@ const Hero = () => {
 
             <div style={{ height: "1px", background: "var(--border-subtle)", margin: "0.25rem 0" }} />
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-              <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)", textAlign: "left", maxWidth: "340px", lineHeight: 1.4, display: "inline-block" }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", alignItems: isMobile ? "stretch" : "center", gap: "1rem", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)", textAlign: "left", maxWidth: isMobile ? "100%" : "340px", lineHeight: 1.4, display: "inline-block" }}>
                 {nicheDescriptions[selectedNiche] || "Tailoring custom design specifications, performance optimizations, and backend integrations."}
               </span>
               <button
