@@ -37,6 +37,64 @@ const CURRENCIES = {
   AUD: { symbol: "A$", rate: 0.018 },
 };
 
+/* Compact mobile selector: 2-col label chips + description of the current pick.
+   Keeps every step short and consistent on phones. */
+const MobileChoiceGrid = ({ items, selected, onSelect }) => {
+  const current = items.find((it) => it.id === selected);
+  return (
+    <>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+        {items.map((it) => {
+          const isActive = selected === it.id;
+          return (
+            <button
+              key={it.id}
+              onClick={() => onSelect(it.id)}
+              style={{
+                padding: "0.75rem 0.6rem",
+                minHeight: 58,
+                borderRadius: 12,
+                cursor: "pointer",
+                border: "1px solid",
+                borderColor: isActive ? "rgba(223, 168, 87, 0.5)" : "rgba(255, 255, 255, 0.07)",
+                background: isActive ? "rgba(223, 168, 87, 0.1)" : "rgba(255, 255, 255, 0.02)",
+                color: isActive ? "var(--accent-color)" : "var(--text-secondary)",
+                fontSize: "0.82rem",
+                fontWeight: isActive ? 700 : 500,
+                fontFamily: "inherit",
+                lineHeight: 1.25,
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                boxShadow: isActive ? "0 4px 14px rgba(223,168,87,0.14)" : "none",
+              }}
+            >
+              {it.label}
+            </button>
+          );
+        })}
+      </div>
+      {current?.desc && (
+        <div
+          style={{
+            marginTop: "0.85rem",
+            padding: "0.9rem 1rem",
+            borderRadius: 12,
+            background: "rgba(223, 168, 87, 0.04)",
+            border: "1px solid rgba(223, 168, 87, 0.15)",
+          }}
+        >
+          <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+            {current.desc}
+          </p>
+        </div>
+      )}
+    </>
+  );
+};
+
 const BriefPlanner = () => {
   const [step, setStep] = useState(0); // 0: Niche, 1: Scale, 2: Style, 3: Estimate/Lead Capture
   const [niche, setNiche] = useState("Business Website");
