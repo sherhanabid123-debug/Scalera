@@ -368,34 +368,43 @@ const Navbar = ({ loading }) => {
                   }}
                 />
               </button>
-              {mobileAboutOpen && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "1.1rem",
-                    animation: "fadeSlideUp 0.4s ease",
-                  }}
-                >
-                  {link.children.map((child) => (
-                    <a
-                      key={child.label}
-                      href={child.href}
-                      onClick={scrollTo(child.href)}
-                      className="mobile-nav-link"
-                      style={{
-                        fontSize: "1.3rem",
-                        fontWeight: 500,
-                        letterSpacing: "-0.01em",
-                        fontFamily: "var(--font-display)",
-                      }}
-                    >
-                      {child.label}
-                    </a>
-                  ))}
-                </div>
-              )}
+              {/* Always rendered so both expand AND collapse animate smoothly */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "1.1rem",
+                  overflow: "hidden",
+                  maxHeight: mobileAboutOpen ? "460px" : "0px",
+                  opacity: mobileAboutOpen ? 1 : 0,
+                  pointerEvents: mobileAboutOpen ? "auto" : "none",
+                  transition:
+                    "max-height 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease",
+                }}
+              >
+                {link.children.map((child, ci) => (
+                  <a
+                    key={child.label}
+                    href={child.href}
+                    onClick={scrollTo(child.href)}
+                    className="mobile-nav-link"
+                    style={{
+                      fontSize: "1.3rem",
+                      fontWeight: 500,
+                      letterSpacing: "-0.01em",
+                      fontFamily: "var(--font-display)",
+                      opacity: mobileAboutOpen ? 1 : 0,
+                      transform: mobileAboutOpen ? "translateY(0)" : "translateY(-10px)",
+                      transition:
+                        "opacity 0.45s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1)",
+                      transitionDelay: mobileAboutOpen ? `${0.08 + ci * 0.055}s` : "0s",
+                    }}
+                  >
+                    {child.label}
+                  </a>
+                ))}
+              </div>
             </div>
           ) : (
             <a
