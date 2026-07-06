@@ -150,9 +150,11 @@ function App() {
 
         <Footer />
 
-        {/* Floating WhatsApp Action — fixed wrapper docks above the footer */}
+        {/* Floating WhatsApp Action — fixed wrapper docks above the footer.
+            Hidden on mobile (blocks content); contact is available in the nav/footer. */}
         <div
           ref={chatDockRef}
+          className="chat-dock"
           style={{
             position: "fixed",
             bottom: "30px",

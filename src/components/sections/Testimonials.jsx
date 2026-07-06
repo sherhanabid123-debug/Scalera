@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PERF_LITE } from "../../utils/perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,13 +92,14 @@ const Testimonials = () => {
   }, [isPaused]);
 
   useLayoutEffect(() => {
+    if (PERF_LITE) return; // mobile/low-end: keep content visible (no scroll-reveal holes)
     let ctx = gsap.context(() => {
       gsap.fromTo(
         ".test-label",
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0, duration: 1,
-          scrollTrigger: { trigger: containerRef.current, start: "top 80%" },
+          scrollTrigger: { trigger: containerRef.current, start: "top 90%" },
         },
       );
       gsap.fromTo(
@@ -105,7 +107,7 @@ const Testimonials = () => {
         { opacity: 0, y: 25 },
         {
           opacity: 1, y: 0, duration: 1.2, stagger: 0.1, ease: "power3.out",
-          scrollTrigger: { trigger: ".test-text-display", start: "top 78%" },
+          scrollTrigger: { trigger: ".test-text-display", start: "top 90%" },
         },
       );
     }, containerRef);
@@ -155,7 +157,7 @@ const Testimonials = () => {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       style={{
-        padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)",
+        padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-subtle)",
@@ -188,7 +190,7 @@ const Testimonials = () => {
         {/* Unified Label */}
         <div
           className="test-label section-label"
-          style={{ marginBottom: "4rem", justifyContent: "center" }}
+          style={{ marginBottom: "clamp(2.25rem, 5vw, 4rem)", justifyContent: "center" }}
         >
           <div className="section-label-dot" />
           Client Feedback

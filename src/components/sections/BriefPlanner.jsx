@@ -190,7 +190,7 @@ const BriefPlanner = () => {
       id="estimator"
       className="section"
       style={{
-        padding: "clamp(7rem, 11vw, 10rem) var(--pad-x) clamp(5rem, 8vw, 7rem)",
+        padding: "clamp(3.5rem, 11vw, 9rem) var(--pad-x) clamp(3rem, 8vw, 6.5rem)",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-subtle)",

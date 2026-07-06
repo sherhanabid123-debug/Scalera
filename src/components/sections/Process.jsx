@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PERF_LITE } from "../../utils/perf";
 import { Compass, Cpu, Rocket, Check } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -42,13 +43,14 @@ const Process = () => {
   }, []);
 
   useLayoutEffect(() => {
+    if (PERF_LITE) return; // mobile/low-end: keep content visible (no scroll-reveal holes)
     let ctx = gsap.context(() => {
       gsap.fromTo(
         ".process-label",
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0, duration: 1,
-          scrollTrigger: { trigger: containerRef.current, start: "top 80%" },
+          scrollTrigger: { trigger: containerRef.current, start: "top 90%" },
         },
       );
       gsap.fromTo(
@@ -56,7 +58,7 @@ const Process = () => {
         { opacity: 0, y: 40 },
         {
           opacity: 1, y: 0, duration: 1.4, ease: "expo.out",
-          scrollTrigger: { trigger: ".process-title", start: "top 82%" },
+          scrollTrigger: { trigger: ".process-title", start: "top 90%" },
         },
       );
       if (!isMobile) {
@@ -65,7 +67,7 @@ const Process = () => {
           { opacity: 0, x: -40 },
           {
             opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
-            scrollTrigger: { trigger: ".process-left-col", start: "top 80%" },
+            scrollTrigger: { trigger: ".process-left-col", start: "top 90%" },
           },
         );
         gsap.fromTo(
@@ -73,7 +75,7 @@ const Process = () => {
           { opacity: 0, x: 40 },
           {
             opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
-            scrollTrigger: { trigger: ".process-right-col", start: "top 80%" },
+            scrollTrigger: { trigger: ".process-right-col", start: "top 90%" },
           },
         );
       } else {
@@ -82,7 +84,7 @@ const Process = () => {
           { opacity: 0, y: 30 },
           {
             opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out",
-            scrollTrigger: { trigger: ".process-mobile-item", start: "top 85%" },
+            scrollTrigger: { trigger: ".process-mobile-item", start: "top 90%" },
           },
         );
       }
@@ -98,7 +100,7 @@ const Process = () => {
       id="process"
       ref={containerRef}
       className="section"
-      style={{ padding: "clamp(4.5rem, 7vw, 6rem) var(--pad-x)", position: "relative", overflow: "hidden", borderTop: "1px solid var(--border-subtle)" }}
+      style={{ padding: "clamp(3rem, 7vw, 6rem) var(--pad-x)", position: "relative", overflow: "hidden", borderTop: "1px solid var(--border-subtle)" }}
     >
       {/* Background glow */}
       <div
@@ -115,7 +117,7 @@ const Process = () => {
         {/* Unified Editorial Header */}
         <div
           style={{
-            marginBottom: "4rem",
+            marginBottom: "clamp(2.25rem, 5vw, 4rem)",
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
             gap: "2rem",
