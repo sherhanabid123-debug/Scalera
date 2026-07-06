@@ -452,6 +452,7 @@ const Navbar = ({ loading }) => {
           <Sparkles size={24} />
           Start Project
         </button>
+        </div>
       </div>
     </>
   );
