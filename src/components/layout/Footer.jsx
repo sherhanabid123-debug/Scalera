@@ -72,7 +72,7 @@ const Footer = () => {
             <ul className="footer-list">
               {navLinks.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} className="footer-link">
+                  <a href={l.href} onClick={handleNav(l.href)} className="footer-link">
                     <span className="footer-link-arrow">
                       <ArrowUpRight size={14} strokeWidth={2} />
                     </span>
