@@ -24,6 +24,14 @@ const Hero = () => {
   const containerRef = useRef();
   const cursorGlowRef = useRef();
   const [selectedNiche, setSelectedNiche] = useState("Business Website");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     // Cursor-follow glow: desktop / full-fx only. It's meaningless on touch
