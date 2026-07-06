@@ -819,6 +819,8 @@ body {
   padding: clamp(4rem, 8vw, 6.5rem) var(--pad-x) 2.5rem;
   border-top: 1px solid var(--border-subtle);
   background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.35));
+  /* .main-content sets pointer-events:none; re-enable it for the footer */
+  pointer-events: auto;
 }
 .footer-accent-line {
   position: absolute;
