@@ -425,55 +425,7 @@ const BriefPlanner = () => {
                       </h3>
 
                       {isMobile ? (
-                        /* Mobile: compact 2-col label chips + description of the current pick below */
-                        <>
-                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-                            {NICHES.map((n) => {
-                              const isActive = niche === n.id;
-                              return (
-                                <button
-                                  key={n.id}
-                                  onClick={() => setNiche(n.id)}
-                                  style={{
-                                    padding: "0.75rem 0.6rem",
-                                    minHeight: 58,
-                                    borderRadius: 12,
-                                    cursor: "pointer",
-                                    border: "1px solid",
-                                    borderColor: isActive ? "rgba(223, 168, 87, 0.5)" : "rgba(255, 255, 255, 0.07)",
-                                    background: isActive ? "rgba(223, 168, 87, 0.1)" : "rgba(255, 255, 255, 0.02)",
-                                    color: isActive ? "var(--accent-color)" : "var(--text-secondary)",
-                                    fontSize: "0.82rem",
-                                    fontWeight: isActive ? 700 : 500,
-                                    fontFamily: "inherit",
-                                    lineHeight: 1.25,
-                                    textAlign: "center",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
-                                    boxShadow: isActive ? "0 4px 14px rgba(223,168,87,0.14)" : "none",
-                                  }}
-                                >
-                                  {n.label}
-                                </button>
-                              );
-                            })}
-                          </div>
-                          <div
-                            style={{
-                              marginTop: "0.85rem",
-                              padding: "0.9rem 1rem",
-                              borderRadius: 12,
-                              background: "rgba(223, 168, 87, 0.04)",
-                              border: "1px solid rgba(223, 168, 87, 0.15)",
-                            }}
-                          >
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {NICHES.find((n) => n.id === niche)?.desc}
-                            </p>
-                          </div>
-                        </>
+                        <MobileChoiceGrid items={NICHES} selected={niche} onSelect={setNiche} />
                       ) : (
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
                           {NICHES.map((n) => {
