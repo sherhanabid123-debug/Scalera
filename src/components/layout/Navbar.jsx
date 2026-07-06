@@ -21,6 +21,7 @@ const NAV_LINKS = [
 const Navbar = ({ loading }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const menuRef = useRef(null);
   const linksRef = useRef([]);
 
