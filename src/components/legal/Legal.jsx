@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowLeft, FileText, ShieldCheck, Cookie } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "@studio-freight/lenis";
+import { PERF_LITE } from "../../utils/perf";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const EFFECTIVE = "6 July 2026";
 const COMPANY = "Scalera Studio";
