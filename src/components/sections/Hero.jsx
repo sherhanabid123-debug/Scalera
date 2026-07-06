@@ -304,6 +304,7 @@ const Hero = () => {
                     key={niche}
                     onClick={() => setSelectedNiche(niche)}
                     style={{
+                      gridColumn: isMobile && niche === "Other" ? "1 / -1" : "auto",
                       padding: "0.75rem 0.4rem",
                       borderRadius: "10px",
                       background: active 
