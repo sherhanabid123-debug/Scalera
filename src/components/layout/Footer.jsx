@@ -55,28 +55,23 @@ const Footer = () => {
             <div
               style={{
                 display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
+                alignItems: "baseline",
                 marginBottom: "1.25rem",
+                fontSize: "1.5rem",
+                fontWeight: 800,
+                letterSpacing: "-0.04em",
+                fontFamily: "var(--font-display)",
+                color: "var(--text-primary)",
               }}
             >
-              <div
-                style={{
-                  width: 10, height: 10,
-                  background: "var(--accent-color)",
-                  borderRadius: "50%",
-                  boxShadow: "0 0 12px var(--accent-color)",
-                }}
-              />
+              Scalera
               <span
                 style={{
-                  fontSize: "1.2rem",
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
-                  fontFamily: "var(--font-display)",
+                  color: "var(--accent-color)",
+                  textShadow: "0 0 20px rgba(220,180,128,0.5)",
                 }}
               >
-                SCALERA
+                .
               </span>
             </div>
             <p
