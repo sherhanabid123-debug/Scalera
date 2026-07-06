@@ -463,36 +463,40 @@ const BriefPlanner = () => {
                   {/* STEP 1: SCALE */}
                   {step === 1 && (
                     <div>
-                      <h3 style={{ fontSize: "1.5rem", fontWeight: 400, marginBottom: "2rem", display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Layers size={20} color="var(--accent-color)" /> What scale of site do you require?
+                      <h3 style={{ fontSize: isMobile ? "1.15rem" : "1.5rem", fontWeight: 400, marginBottom: isMobile ? "1.25rem" : "2rem", display: "flex", alignItems: "center", gap: "10px", lineHeight: 1.3 }}>
+                        <Layers size={isMobile ? 17 : 20} color="var(--accent-color)" style={{ flexShrink: 0 }} /> What scale of site do you require?
                       </h3>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                        {SCALES.map((s) => (
-                          <div
-                            key={s.id}
-                            onClick={() => setScale(s.id)}
-                            className="glass-card"
-                            style={{
-                              padding: "1.75rem",
-                              borderRadius: 16,
-                              cursor: "pointer",
-                              border: "1px solid",
-                              borderColor: scale === s.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                              background: scale === s.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
-                              boxShadow: scale === s.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
-                              transition: "all 0.35s ease",
-                            }}
-                          >
-                            <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: scale === s.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
-                              {s.label}
-                            </h4>
-                            <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-                              {s.desc}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
+
+                      {isMobile ? (
+                        <MobileChoiceGrid items={SCALES} selected={scale} onSelect={setScale} />
+                      ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+                          {SCALES.map((s) => (
+                            <div
+                              key={s.id}
+                              onClick={() => setScale(s.id)}
+                              className="glass-card"
+                              style={{
+                                padding: "1.75rem",
+                                borderRadius: 16,
+                                cursor: "pointer",
+                                border: "1px solid",
+                                borderColor: scale === s.id ? "rgba(223, 168, 87, 0.3)" : "rgba(255, 255, 255, 0.06)",
+                                background: scale === s.id ? "rgba(223, 168, 87, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                                boxShadow: scale === s.id ? "var(--glass-shadow-hover)" : "var(--glass-shadow)",
+                                transition: "all 0.35s ease",
+                              }}
+                            >
+                              <h4 style={{ fontSize: "1.1rem", fontWeight: 600, color: scale === s.id ? "var(--accent-color)" : "var(--text-primary)", marginBottom: "0.5rem" }}>
+                                {s.label}
+                              </h4>
+                              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+                                {s.desc}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
