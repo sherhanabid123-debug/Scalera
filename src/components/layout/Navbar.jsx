@@ -410,6 +410,7 @@ const Navbar = ({ loading }) => {
                 letterSpacing: "-0.03em",
                 textTransform: "uppercase",
                 fontFamily: "var(--font-display)",
+                color: "#ffffff",
               }}
             >
               {link.label}
