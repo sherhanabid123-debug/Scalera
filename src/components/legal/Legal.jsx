@@ -59,7 +59,7 @@ const DOCS = [
       {
         h: "8. Warranties & Limitation of Liability",
         p: [
-          'Services are provided with reasonable skill and care but on an "as is" basis without further warranties. To the maximum extent permitted by law, ${COMPANY} is not liable for indirect, incidental, or consequential damages, and our total liability for any claim is limited to the fees paid for the specific work giving rise to the claim.',
+          `Services are provided with reasonable skill and care but on an "as is" basis without further warranties. To the maximum extent permitted by law, ${COMPANY} is not liable for indirect, incidental, or consequential damages, and our total liability for any claim is limited to the fees paid for the specific work giving rise to the claim.`,
         ],
       },
       {
