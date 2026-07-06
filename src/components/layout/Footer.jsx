@@ -21,6 +21,17 @@ const Footer = () => {
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleNav = (href) => (e) => {
+    e.preventDefault();
+    const el = document.querySelector(href);
+    if (!el) return;
+    if (window.lenis) {
+      window.lenis.scrollTo(href, { duration: 1, easing: (t) => 1 - Math.pow(1 - t, 4) });
+    } else {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="site-footer">
       <div className="footer-accent-line" />
