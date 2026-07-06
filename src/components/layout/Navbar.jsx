@@ -336,7 +336,7 @@ const Navbar = ({ loading }) => {
                 flexDirection: "column",
                 alignItems: "center",
                 gap: mobileAboutOpen ? "1.5rem" : "0rem",
-                transition: "gap 0.4s cubic-bezier(0.16,1,0.3,1)",
+                transition: "gap 0.9s cubic-bezier(0.22,1,0.36,1)",
               }}
             >
               <button
