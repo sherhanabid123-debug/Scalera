@@ -4,7 +4,7 @@ import { Plus, HelpCircle } from "lucide-react";
 const FAQ_ITEMS = [
   {
     question: "What services does Scalera specialize in?",
-    answer: "We design and build bespoke, high-performance web experiences, luxury brand showcases, corporate SaaS sites, and immersive interactive products. Every layout is custom-engineered from scratch with an emphasis on rich motion typography, glassmorphism aesthetics, and optional 3D background elements."
+    answer: "We design and build bespoke, high performance web experiences, luxury brand showcases, corporate SaaS sites, and immersive interactive products. Every layout is custom engineered from scratch with an emphasis on rich motion typography, glassmorphism aesthetics, and optional 3D background elements."
   },
   {
     question: "How does the Bespoke Estimator pricing work?",
@@ -12,14 +12,14 @@ const FAQ_ITEMS = [
   },
   {
     question: "How long does a typical project take?",
-    answer: "Project schedules range depending on scale. A high-impact single landing page typically takes 2-3 weeks. A standard corporate or startup site (3-5 pages) takes 4-6 weeks, and deep enterprise-scale architectures or custom storefront platforms range from 8-12 weeks from strategy to deployment."
+    answer: "Project schedules range depending on scale. A high impact single landing page typically takes 2 to 3 weeks. A standard corporate or startup site (3 to 5 pages) takes 4 to 6 weeks, and deep enterprise scale architectures or custom storefront platforms range from 8 to 12 weeks from strategy to deployment."
   },
   {
     question: "Will my website perform well on mobile and search engines?",
-    answer: "Absolutely. Responsive design is core to our build system, using fluid layouts and clamp-based typography that scale perfectly across all screens. We also optimize assets, load critical scripts asynchronously, and enforce semantic markup structure to achieve fast load speeds and index-ready SEO signals."
+    answer: "Absolutely. Responsive design is core to our build system, using fluid layouts and clamp based typography that scale perfectly across all screens. We also optimize assets, load critical scripts asynchronously, and enforce semantic markup structure to achieve fast load speeds and index ready SEO signals."
   },
   {
-    question: "Do you offer post-launch support and updates?",
+    question: "Do you offer post launch support and updates?",
     answer: "Yes, we provide flexible monthly support retainers and maintenance packages. This covers server hosting oversight, regular backups, security patches, performance reviews, and minor styling updates to ensure your digital presence stays fast and modern."
   }
 ];

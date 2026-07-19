@@ -32,7 +32,7 @@ const reasons = [
   { 
     id: 3, 
     title: "Verified SEO", 
-    sub: "Built-in indexing and structured metadata to help you rank on search engines.",
+    sub: "Built in indexing and structured metadata to help you rank on search engines.",
     code: "INDEX_RANK_VERIFIED",
     statName: "INDEXABILITY",
     statVal: "100/100 SCORE",
@@ -43,7 +43,7 @@ const reasons = [
   { 
     id: 4, 
     title: "High Performance", 
-    sub: "Sub-second load times that keep visitors happy and conversion rates high.",
+    sub: "Sub second load times that keep visitors happy and conversion rates high.",
     code: "PERF_COMPILATION_PASS",
     statName: "LATENCY TTFB",
     statVal: "< 150MS TTFB",

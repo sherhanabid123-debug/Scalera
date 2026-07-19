@@ -13,10 +13,10 @@ const stats = [
 ];
 
 const nicheDescriptions = {
-  "Business Website": "Custom corporate sites with built-in SEO and lead capture.",
+  "Business Website": "Custom corporate sites with built in SEO and lead capture.",
   "Online Store": "Secure checkouts and dynamic inventory built to convert.",
-  "High-End Portfolio": "Bespoke layouts with smooth, interactive motion.",
-  "Custom Landing Page": "High-impact single-page funnels that drive action.",
+  "High End Portfolio": "Bespoke layouts with smooth, interactive motion.",
+  "Custom Landing Page": "High impact single page funnels that drive action.",
   "Other": "Custom platforms, web apps, and unique brand builds."
 };
 
@@ -296,7 +296,7 @@ const Hero = () => {
               width: "100%",
               padding: "0.2rem 0"
             }}>
-              {["Business Website", "Online Store", "High-End Portfolio", "Custom Landing Page", "Other"].map((niche) => {
+              {["Business Website", "Online Store", "High End Portfolio", "Custom Landing Page", "Other"].map((niche) => {
                 const active = selectedNiche === niche;
                 return (
                   <button

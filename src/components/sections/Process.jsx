@@ -18,7 +18,7 @@ const steps = [
     num: "02",
     icon: Cpu,
     title: "The Build",
-    desc: "We translate the blueprint into lightweight React code, adding smooth micro-animations. It's clean, responsive, and blazing fast.",
+    desc: "We translate the blueprint into lightweight React code, adding smooth micro animations. It's clean, responsive, and blazing fast.",
     deliverables: ["Clean React Code", "GSAP Motion", "98+ Speed Score Audit"],
   },
   {
@@ -26,7 +26,7 @@ const steps = [
     icon: Rocket,
     title: "The Launch",
     desc: "We hook up your domain, configure analytics, setup Google indexing, and hit publish. A flawless launch with zero stress.",
-    deliverables: ["DNS Setup", "Analytics Integration", "30-Day Support Check"],
+    deliverables: ["DNS Setup", "Analytics Integration", "30 Day Support Check"],
   },
 ];
 
@@ -155,7 +155,7 @@ const Process = () => {
               margin: 0,
             }}
           >
-            Our execution process guarantees strategy alignment, pixel-perfect layouts, responsive code, and domain configuration.
+            Our execution process guarantees strategy alignment, pixel perfect layouts, responsive code, and domain configuration.
           </p>
         </div>
 

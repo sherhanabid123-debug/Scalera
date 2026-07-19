@@ -372,7 +372,7 @@ function App() {
                   </span>
                 </div>
                 <div className="chat-pop-bubble">
-                  Hey there! 👋 Have a project in mind? Message us — real humans,
+                  Hey there! 👋 Have a project in mind? Message us, real humans,
                   fast replies.
                   <span className="chat-typing" aria-hidden="true">
                     <i /><i /><i />

@@ -3,28 +3,28 @@ import gsap from "gsap";
 import { Sparkles, Calendar, Layers, Palette, ArrowRight, Check, MessageSquare } from "lucide-react";
 
 const NICHES = [
-  { id: "Custom Landing Page", label: "Custom Landing Page", desc: "High-converting single scroll experiences for ad campaigns.", basePrice: 4000 },
-  { id: "High-End Portfolio", label: "High-End Portfolio", desc: "For agencies, studios, designers, and luxury creators.", basePrice: 5600 },
+  { id: "Custom Landing Page", label: "Custom Landing Page", desc: "High converting single scroll experiences for ad campaigns.", basePrice: 4000 },
+  { id: "High End Portfolio", label: "High End Portfolio", desc: "For agencies, studios, designers, and luxury creators.", basePrice: 5600 },
   { id: "Business Website", label: "Business Website", desc: "Perfect for startups, corporate brands, and professional services.", basePrice: 7200 },
-  { id: "Digital Publisher", label: "Digital Publisher / News", desc: "High-content portals, digital magazines, and resource hubs.", basePrice: 8800 },
+  { id: "Digital Publisher", label: "Digital Publisher / News", desc: "High content portals, digital magazines, and resource hubs.", basePrice: 8800 },
   { id: "Corporate SaaS", label: "Corporate SaaS Platform", desc: "Startups, software products, and complex tech B2B brands.", basePrice: 10400 },
-  { id: "Online Store", label: "Online Store (E-Commerce)", desc: "High-performance storefronts designed to sell products seamlessly.", basePrice: 12000 },
-  { id: "Luxury Brand", label: "Luxury Brand Showcase", desc: "Premium fashion, jewelry, high-end real estate, and art.", basePrice: 14000 },
+  { id: "Online Store", label: "Online Store (E Commerce)", desc: "High performance storefronts designed to sell products seamlessly.", basePrice: 12000 },
+  { id: "Luxury Brand", label: "Luxury Brand Showcase", desc: "Premium fashion, jewelry, high end real estate, and art.", basePrice: 14000 },
   { id: "Other", label: "Other / Custom Project", desc: "A custom platform, complex application, or unique requirement.", basePrice: 10000 },
 ];
 
 const SCALES = [
-  { id: "1 Page", label: "Single Page Landing", desc: "High-impact single-scroll landing page.", addPrice: 0 },
-  { id: "3-5 Pages", label: "Startup Site (3-5 pages)", desc: "Home, Services, About, Contact, Case Studies.", addPrice: 2000 },
-  { id: "5-10 Pages", label: "Brand Presence (5-10 pages)", desc: "Comprehensive page setup with custom layouts.", addPrice: 4000 },
+  { id: "1 Page", label: "Single Page Landing", desc: "High impact single scroll landing page.", addPrice: 0 },
+  { id: "3 to 5 Pages", label: "Startup Site (3 to 5 pages)", desc: "Home, Services, About, Contact, Case Studies.", addPrice: 2000 },
+  { id: "5 to 10 Pages", label: "Brand Presence (5 to 10 pages)", desc: "Comprehensive page setup with custom layouts.", addPrice: 4000 },
   { id: "10+ Pages", label: "Enterprise Scale (10+ pages)", desc: "Deep site architectures and bespoke template integrations.", addPrice: 6400 },
 ];
 
 const STYLES = [
-  { id: "Minimalist & Clean", label: "Minimalist & Clean", desc: "High-contrast typography, ample white space.", addPrice: 0 },
+  { id: "Minimalist & Clean", label: "Minimalist & Clean", desc: "High contrast typography, ample white space.", addPrice: 0 },
   { id: "Liquid Glass", label: "Liquid Glass (Refractive)", desc: "Immersive glass overlays, soft specular lighting.", addPrice: 3000 },
   { id: "Dark Cyber", label: "Dark Cyber (High Motion)", desc: "Dense text styles, responsive cursor trails, high animation.", addPrice: 6000 },
-  { id: "Ultra-Luxury", label: "Ultra-Luxury (Gold Accent)", desc: "Gilded color palettes, thin outlines, smooth transitions.", addPrice: 9000 },
+  { id: "Ultra Luxury", label: "Ultra Luxury (Gold Accent)", desc: "Gilded color palettes, thin outlines, smooth transitions.", addPrice: 9000 },
   { id: "Custom Aesthetic", label: "Custom Choice", desc: "Describe your own brand theme, custom colors, and design vision.", addPrice: 5000 },
 ];
 
@@ -98,7 +98,7 @@ const MobileChoiceGrid = ({ items, selected, onSelect }) => {
 const BriefPlanner = () => {
   const [step, setStep] = useState(0); // 0: Niche, 1: Scale, 2: Style, 3: Estimate/Lead Capture
   const [niche, setNiche] = useState("Business Website");
-  const [scale, setScale] = useState("3-5 Pages");
+  const [scale, setScale] = useState("3 to 5 Pages");
   const [style, setStyle] = useState("Liquid Glass");
   const [currency, setCurrency] = useState("INR");
   
@@ -662,7 +662,7 @@ const BriefPlanner = () => {
                             <input
                               type="text"
                               required
-                              placeholder="john@example.com or +1 (555) 019-2834"
+                              placeholder="john@example.com or +1 (555) 019 2834"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               style={{

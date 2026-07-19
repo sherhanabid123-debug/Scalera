@@ -6,7 +6,7 @@ import { ArrowUpRight, MessageCircle, Check, Mail, User, Globe, FileText, Settin
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NICHES = ["Corporate SaaS", "E-Commerce", "Luxury Showcase", "Portfolio", "Custom / Other"];
+const NICHES = ["Corporate SaaS", "E Commerce", "Luxury Showcase", "Portfolio", "Custom / Other"];
 const CURRENCIES = ["USD", "INR", "EUR", "GBP", "CAD", "AUD"];
 
 const BUDGET_PLACEHOLDERS = {

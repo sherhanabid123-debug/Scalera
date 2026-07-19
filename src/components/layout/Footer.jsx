@@ -45,7 +45,7 @@ const Footer = () => {
               Scalera<span>.</span>
             </div>
             <p className="footer-tagline">
-              A digital creative studio engineering high-performance presence for
+              A digital creative studio engineering high performance presence for
               ambitious brands.
             </p>
 
@@ -107,7 +107,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="footer-bottom">
           <span className="footer-copy">
-            © {new Date().getFullYear()} Scalera Studio — Crafted with precision.
+            © {new Date().getFullYear()} Scalera Studio. Crafted with precision.
           </span>
           <nav className="footer-legal">
             <a href="/legal.html#terms">Terms</a>

@@ -23,11 +23,11 @@ const projects = [
   {
     id: 2,
     title: "Kryptic",
-    category: "E-Commerce Platform",
-    summary: "A high-performance luxury storefront designed for maximum conversion rates, modular layout setups, and speed.",
+    category: "E Commerce Platform",
+    summary: "A high performance luxury storefront designed for maximum conversion rates, modular layout setups, and speed.",
     link: "https://kryptic.shop",
     img: "/assets/kryptic-preview.jpg",
-    tag: "E-Commerce",
+    tag: "E Commerce",
     accent: "#8c64ff", // Kryptic Purple
     accentGlow: "radial-gradient(circle, rgba(140, 100, 255, 0.07) 0%, transparent 70%)",
     accentBorder: "rgba(140, 100, 255, 0.3)",
@@ -37,7 +37,7 @@ const projects = [
     id: 3,
     title: "The Second House",
     category: "Heritage Dining & Art",
-    summary: "A unique culinary journey blending Goan heritage and modern art in a 108-year-old Indo-Portuguese bungalow.",
+    summary: "A unique culinary journey blending Goan heritage and modern art in a 108 year old Indo Portuguese bungalow.",
     link: "https://the-second-house.vercel.app",
     img: "/assets/second-house-real-v2.jpg",
     tag: "Dining",

@@ -1329,7 +1329,7 @@ ${js}
             onClick={() => {
               setMessages(prev => [
                 ...prev,
-                { role: "assistant", content: "Scalera AI automates your web development. Ask a prompt, customize details, edit elements in-context, and download your full ZIP package instantly." }
+                { role: "assistant", content: "Scalera AI automates your web development. Ask a prompt, customize details, edit elements in context, and download your full ZIP package instantly." }
               ]);
             }}
             title="Help"
@@ -2178,7 +2178,7 @@ ${js}
                   />
                 </div>
                 <div className="form-group">
-                  <label>Skills (Comma-separated)</label>
+                  <label>Skills (Comma separated)</label>
                   <input
                     type="text"
                     value={reviewResumeData.skills}
