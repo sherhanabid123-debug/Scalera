@@ -1,8 +1,14 @@
 {
   "name": "scalera",
+  "description": "Web design agency site with an AI-powered site builder.",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "author": "Sherhan Abid",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sherhanabid123-debug/Scalera"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

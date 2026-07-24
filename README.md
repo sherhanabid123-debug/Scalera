@@ -1,16 +1,71 @@
-# React + Vite
+# Scalera
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web design agency site with an AI-powered site builder. The frontend is the agency's marketing site (services, portfolio, process, testimonials); the backend generates full websites from a brief using templates and an LLM.
 
-Currently, two official plugins are available:
+## Tech stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Frontend**
+- React 19 + Vite
+- Three.js / React Three Fiber for 3D visuals
+- GSAP for animation
+- Lenis for smooth scroll
 
-## React Compiler
+**Backend**
+- FastAPI (Python)
+- Groq (LLM generation)
+- Deployed as a Vercel serverless function (`api/index.py`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project structure
 
-## Expanding the ESLint configuration
+```
+src/
+  components/
+    layout/      Navbar, Footer
+    sections/    Hero, Services, Portfolio, Process, FAQ, Testimonials, etc.
+    canvas/      3D background components
+    legal/       Legal page content
+  utils/         Formatting and performance helpers
+  App.jsx        Main site entry
+  builder-main.jsx   Entry for the AI builder page
+  legal-main.jsx      Entry for the legal page
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+backend/
+  main.py            FastAPI app
+  engine/             Site generation logic (assembler, generator, component library)
+  templates/          Website templates the generator builds from (agency, restaurant, saas, etc.)
+
+public/               Static assets served as-is
+scripts/dev/          Local development and debugging scripts (not used in production)
+```
+
+## Getting started
+
+**Frontend**
+```bash
+npm install
+npm run dev
+```
+
+**Backend**
+```bash
+pip install -r backend/requirements.txt
+uvicorn backend.main:app --reload
+```
+
+You'll need a `.env` file based on `.env.example` for backend API keys.
+
+## Build
+
+```bash
+npm run build
+```
+
+## Linting
+
+```bash
+npm run lint
+```
+
+## Deployment
+
+Deployed on Vercel — the frontend builds statically and the backend runs as a Python serverless function (see `vercel.json`).
