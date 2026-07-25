@@ -1,5 +1,7 @@
 # Scalera
 
+**Live site:** [https://www.scalera.in](https://www.scalera.in)
+
 Web design agency site with an AI-powered site builder. The frontend is the agency's marketing site (services, portfolio, process, testimonials); the backend generates full websites from a brief using templates and an LLM.
 
 ## Tech stack
