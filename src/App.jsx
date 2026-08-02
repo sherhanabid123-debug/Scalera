@@ -19,6 +19,7 @@ import Portfolio from "./components/sections/Portfolio";
 import WhyScalera from "./components/sections/WhyScalera";
 import Testimonials from "./components/sections/Testimonials";
 import CTA from "./components/sections/CTA";
+import Products from "./components/sections/Products";
 import FAQ from "./components/sections/FAQ";
 import Footer from "./components/layout/Footer";
 
@@ -332,6 +333,7 @@ function App() {
           <Testimonials />
           <FAQ />
           <CTA />
+          <Products />
         </main>
 
         <Footer />
