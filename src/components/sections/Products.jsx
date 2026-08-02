@@ -73,7 +73,7 @@ const Products = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 520px))",
             gap: "1.5rem",
           }}
         >
@@ -91,13 +91,15 @@ const Products = () => {
                 textDecoration: "none",
                 color: "inherit",
                 padding: 0,
+                maxWidth: 520,
+                width: "100%",
               }}
             >
               <div
                 style={{
                   position: "relative",
                   width: "100%",
-                  aspectRatio: "16 / 10",
+                  aspectRatio: "16 / 9",
                   overflow: "hidden",
                   borderBottom: "1px solid var(--border-subtle)",
                   background: "rgba(255,255,255,0.02)",
@@ -119,39 +121,39 @@ const Products = () => {
                 <div
                   style={{
                     position: "absolute",
-                    top: 16,
-                    left: 16,
+                    top: 14,
+                    left: 14,
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.4rem",
-                    padding: "0.4rem 0.85rem",
+                    gap: "0.35rem",
+                    padding: "0.35rem 0.75rem",
                     borderRadius: 999,
                     background: "rgba(10,10,14,0.65)",
                     backdropFilter: "blur(8px)",
                     border: `1px solid ${product.accent}55`,
-                    fontSize: "0.75rem",
+                    fontSize: "0.72rem",
                     fontWeight: 600,
                     letterSpacing: "0.02em",
                     color: product.accent,
                   }}
                 >
-                  <LayoutDashboard size={13} />
+                  <LayoutDashboard size={12} />
                   {product.tag}
                 </div>
               </div>
 
-              <div style={{ padding: "1.5rem" }}>
+              <div style={{ padding: "1.25rem" }}>
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    marginBottom: "0.6rem",
+                    marginBottom: "0.5rem",
                   }}
                 >
                   <h3
                     style={{
-                      fontSize: "1.4rem",
+                      fontSize: "1.25rem",
                       fontWeight: 600,
                       margin: 0,
                       letterSpacing: "-0.01em",
@@ -160,7 +162,7 @@ const Products = () => {
                     {product.title}
                   </h3>
                   <ArrowUpRight
-                    size={20}
+                    size={18}
                     style={{
                       color: product.accent,
                       transform: hoveredId === product.id ? "translate(3px, -3px)" : "none",
@@ -171,8 +173,8 @@ const Products = () => {
                 <p
                   style={{
                     color: "var(--text-secondary)",
-                    fontSize: "0.95rem",
-                    lineHeight: 1.6,
+                    fontSize: "0.88rem",
+                    lineHeight: 1.55,
                     margin: 0,
                   }}
                 >
