@@ -18,7 +18,7 @@ const NAV_LINKS = [
   { label: "Work", href: "#work" },
 ];
 
-const Navbar = ({ loading }) => {
+const Navbar = ({ loading, onOpenAIBuilder }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
@@ -196,11 +196,54 @@ const Navbar = ({ loading }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "1rem",
+            gap: "0.75rem",
             flex: 1,
             justifyContent: "flex-end",
           }}
         >
+          {onOpenAIBuilder && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenAIBuilder();
+              }}
+              className="btn-glass"
+              style={{
+                color: "var(--accent-color)",
+                background: "rgba(223, 168, 87, 0.08)",
+                border: "1px solid rgba(223, 168, 87, 0.3)",
+                padding: scrolled ? "7px 16px" : "9px 18px",
+                borderRadius: "100px",
+                fontWeight: 700,
+                fontSize: scrolled ? "0.78rem" : "0.86rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 4px 16px rgba(223, 168, 87, 0.08), inset 0 1px 0 rgba(255,255,255,0.15)",
+                cursor: "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+                fontFamily: "inherit",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
+                e.currentTarget.style.background = "rgba(223, 168, 87, 0.2)";
+                e.currentTarget.style.borderColor = "var(--accent-color)";
+                e.currentTarget.style.boxShadow = "0 8px 24px rgba(223, 168, 87, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.background = "rgba(223, 168, 87, 0.08)";
+                e.currentTarget.style.borderColor = "rgba(223, 168, 87, 0.3)";
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(223, 168, 87, 0.08)";
+              }}
+            >
+              <Sparkles size={13} />
+              Scalera AI
+            </button>
+          )}
+
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -416,6 +459,37 @@ const Navbar = ({ loading }) => {
             </a>
           ),
         )}
+        {onOpenAIBuilder && (
+          <button
+            ref={(el) => (linksRef.current[10] = el)}
+            onClick={() => {
+              setIsOpen(false);
+              onOpenAIBuilder();
+            }}
+            className="mobile-nav-link btn-glass"
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              letterSpacing: "0.02em",
+              textTransform: "uppercase",
+              color: "var(--accent-color)",
+              background: "rgba(223, 168, 87, 0.1)",
+              padding: "12px 30px",
+              borderRadius: "99px",
+              boxShadow: "0 4px 16px rgba(223, 168, 87, 0.1), inset 0 1px 0 rgba(255,255,255,0.15)",
+              marginTop: "1rem",
+              cursor: "pointer",
+              border: "1px solid rgba(223, 168, 87, 0.35)",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              fontFamily: "inherit",
+            }}
+          >
+            <Sparkles size={22} />
+            Scalera AI
+          </button>
+        )}
         <button
           ref={(el) => (linksRef.current[3] = el)}
           onClick={() => {
@@ -440,7 +514,7 @@ const Navbar = ({ loading }) => {
             padding: "14px 34px",
             borderRadius: "99px",
             boxShadow: "0 4px 16px rgba(223, 168, 87, 0.1), inset 0 1px 0 rgba(255,255,255,0.15)",
-            marginTop: "1.5rem",
+            marginTop: "0.75rem",
             cursor: "pointer",
             border: "1px solid rgba(223, 168, 87, 0.35)",
             display: "flex",

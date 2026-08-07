@@ -21,10 +21,12 @@ import Testimonials from "./components/sections/Testimonials";
 import CTA from "./components/sections/CTA";
 import Products from "./components/sections/Products";
 import FAQ from "./components/sections/FAQ";
+import ScaleraAIBuilder from "./components/sections/ScaleraAIBuilder";
 import Footer from "./components/layout/Footer";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [showAIBuilder, setShowAIBuilder] = useState(false);
   const chatDockRef = useRef(null);
 
   // Keep the floating chat button from overlapping the footer: it stays fixed
@@ -314,29 +316,33 @@ function App() {
         <div className="aurora-veil" />
       </div>
 
-      <div
-        className="main-content"
-        style={{ position: "relative", zIndex: 1, pointerEvents: "none" }}
-      >
-        <Navbar
-          loading={loading}
-        />
+      {showAIBuilder ? (
+        <ScaleraAIBuilder onBack={() => setShowAIBuilder(false)} />
+      ) : (
+        <div
+          className="main-content"
+          style={{ position: "relative", zIndex: 1, pointerEvents: "none" }}
+        >
+          <Navbar
+            loading={loading}
+            onOpenAIBuilder={() => setShowAIBuilder(true)}
+          />
 
-        <main style={{ pointerEvents: "auto" }}>
-          <Hero />
-          <About />
-          <Services />
-          <BriefPlanner />
-          <Process />
-          <Portfolio />
-          <WhyScalera />
-          <Testimonials />
-          <FAQ />
-          <CTA />
-          <Products />
-        </main>
+          <main style={{ pointerEvents: "auto" }}>
+            <Hero />
+            <About />
+            <Services />
+            <BriefPlanner />
+            <Process />
+            <Portfolio />
+            <WhyScalera />
+            <Testimonials />
+            <FAQ />
+            <CTA />
+            <Products />
+          </main>
 
-        <Footer />
+          <Footer />
 
         {/* Floating WhatsApp Action — fixed wrapper docks above the footer.
             Hidden on mobile (blocks content); contact is available in the nav/footer. */}
@@ -402,6 +408,7 @@ function App() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Cinematic Branded Preloader */}
       {loading && (

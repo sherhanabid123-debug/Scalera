@@ -1440,6 +1440,37 @@ ${js}
                 </div>
 
                 <div className="header-actions-group">
+                  {onBack && (
+                    <button
+                      onClick={onBack}
+                      style={{
+                        background: "rgba(223, 168, 87, 0.1)",
+                        border: "1px solid rgba(223, 168, 87, 0.3)",
+                        color: "var(--accent-color)",
+                        borderRadius: "100px",
+                        padding: "5px 14px",
+                        fontSize: "0.78rem",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        transition: "all 0.25s ease",
+                        marginRight: "0.5rem",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "rgba(223, 168, 87, 0.22)";
+                        e.currentTarget.style.borderColor = "var(--accent-color)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "rgba(223, 168, 87, 0.1)";
+                        e.currentTarget.style.borderColor = "rgba(223, 168, 87, 0.3)";
+                      }}
+                    >
+                      ← Back to Website
+                    </button>
+                  )}
+
                   <div className="status-indicator">
                     <div className="status-dot pulsing"></div>
                     <span>Engine Active</span>
