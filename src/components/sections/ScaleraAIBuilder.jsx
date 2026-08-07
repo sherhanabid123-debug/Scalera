@@ -34,12 +34,15 @@ import "./ScaleraAIBuilder.css";
 import { FormattedMessage } from "../../utils/messageFormatter";
 
 const ScaleraAIBuilder = ({ onBack }) => {
-  // Authentication & Personalization States
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("scalera_user");
-    return saved ? JSON.parse(saved) : null;
+  // Personalization State (No login required)
+  const [user, setUser] = useState({
+    name: "Scalera Creator",
+    given_name: "Creator",
+    picture: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop",
+    email: "creator@scalera.in",
+    id: "guest-user"
   });
-  const [showLoginModal, setShowLoginModal] = useState(!user);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Get time-based greeting for welcome screen
   const getGreeting = () => {
@@ -1347,9 +1350,7 @@ ${js}
           </button>
           <div 
             className="thin-sidebar-avatar-wrapper" 
-            title={user ? `${user.name} (${user.email}) - Click to Log Out` : "Not Logged In"}
-            onClick={user ? handleLogout : () => setShowLoginModal(true)}
-            style={{ cursor: 'pointer' }}
+            title="Scalera Creator"
           >
             <img
               className="thin-sidebar-avatar"
@@ -2625,30 +2626,7 @@ ${js}
         )}
       </div>
 
-      {showLoginModal && (
-        <div className="login-overlay">
-          <div className="login-card">
-            <div className="login-logo">
-              Scalera<span style={{ color: "var(--accent-color)" }}>.</span>
-            </div>
-            <h2>Access AI Builder</h2>
-            <p>Sign in to unlock personalized website generation, custom styling engines, and live code reviews.</p>
-            
-            <button className="google-signin-custom-btn" onClick={handleGoogleLogin}>
-              <GoogleIcon />
-              Sign in with Google
-            </button>
 
-            <div className="login-divider">
-              <span>or</span>
-            </div>
-
-            <button className="guest-login-btn" onClick={handleGuestLogin}>
-              Use as guest
-            </button>
-          </div>
-        </div>
-      )}
 
       <input
         type="file"
